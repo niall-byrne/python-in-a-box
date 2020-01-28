@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  {{cookiecutter.project_slug}}:
+    build:
+      context: .
+      dockerfile: development/Dockerfile
+    volumes:
+      {%- if cookiecutter.include_ssh_keys|lower == "true" %}
+      - ${HOME}/.ssh:/home/user/.ssh{% endif %}
+      {%- if cookiecutter.include_gitconfig|lower == "true" %}
+      - ${HOME}/.gitconfig:/home/user/.gitconfig{% endif %}
+      {%- if cookiecutter.include_gitconfig_global|lower == "true" %}
+      - ${HOME}/.gitconfig_global:/home/user/.gitconfig_global{% endif %}
+      - ./:/app
+    command: >
+      bash -c 'while true; do sleep 1; done'

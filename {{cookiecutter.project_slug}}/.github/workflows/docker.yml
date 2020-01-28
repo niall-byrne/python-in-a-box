@@ -1,0 +1,19 @@
+name: {{cookiecutter.project_name}} Automation
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build Container
+      run: |
+        docker build -t automation:github --file=development/Dockerfile .
+    - name: Run Linter
+      run: |
+        docker run automation:github bash scripts/commander.sh lint-validate
+    - name: Run Tests
+      run: |
+        docker run automation:github bash scripts/commander.sh test
