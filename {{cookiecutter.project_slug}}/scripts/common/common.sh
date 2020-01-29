@@ -77,7 +77,7 @@ lint() {
   set -e
 
   pushd "${PROJECTHOME}"  > /dev/null
-    yapf -i --recursive --exclude '**/*_pb2.py' --style='{based_on_style: chromium, ALIGN_CLOSING_BRACKET_WITH_VISUAL_INDENT: false, DEDENT_CLOSING_BRACKETS: false}' "{{cookiecutter.project_slug}}/"
+    yapf -i --recursive --exclude '**/*_pb2.py' --style='{based_on_style: google, INDENT_WIDTH: 2, ALIGN_CLOSING_BRACKET_WITH_VISUAL_INDENT: false, DEDENT_CLOSING_BRACKETS: false}' "{{cookiecutter.project_slug}}/"
     isort -y
   popd  > /dev/null
 
@@ -95,6 +95,22 @@ lint_check() {
     pylint --rcfile .pylint.rc {{cookiecutter.project_slug}}/
     shellcheck -x scripts/*.sh
     shellcheck -x scripts/common/*.sh
+  popd  > /dev/null
+
+}
+
+unittests() {
+
+  set -e
+
+  pushd "${PROJECTHOME}"  > /dev/null
+    if [[ $1 == "coverage" ]]; then
+      shift
+      pytest --cov=. "$@"
+      coverage html
+    else
+      pytest "$@"
+    fi
   popd  > /dev/null
 
 }

@@ -25,6 +25,7 @@ This container provides my preferred CLI tooling and a compartmentalized develop
 | isort   | Sorts imports                                               |               
 | pylint  | (Google Style Formatting)                                   |
 | pytest  | Test suite                                                  |
+| pytest-cov | Coverage support for pytest                              |
 | safety  | Dependency vulnerability scanning                           |
 | wheel   | Package distribution tools                                  |
 | yapf    | (Google Style Formatting)                                   |

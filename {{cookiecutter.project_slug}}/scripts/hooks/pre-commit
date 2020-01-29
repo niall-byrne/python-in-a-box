@@ -17,7 +17,7 @@ main() {
     exec < /dev/tty
     echo -e "\nWARNING: You have uncommitted changes!"
     read -r -p "Type 'yes' to confirm you wish to proceed with this commit: " confirm
-    [[ $confirm != "yes" ]] && echo 'ABORTED' && exit 127
+    [[ ${confirm} != "yes" ]] && echo 'ABORTED' && exit 127
 
     exit 0
 

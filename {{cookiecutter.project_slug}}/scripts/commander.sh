@@ -39,12 +39,17 @@ case $1 in
     pipenv shell
     ;;
   'shortlist')
-    echo "lint lint-validate reinstall-requirements sectest setup shell test"
+    echo "lint lint-validate reinstall-requirements sectest setup shell test test-coverage"
     ;;
   'test')
     shift
     source_enviroment
-    pytest "$@"
+    unittests "$@"
+    ;;
+  'test-coverage')
+    shift
+    source_enviroment
+    unittests "coverage" "$@"
     ;;
   *)
     echo "Valid Commands:"
@@ -55,6 +60,7 @@ case $1 in
     echo ' - setup'
     echo ' - shell'
     echo ' - test'
+    echo ' - test-coverage'
     ;;
 
 esac

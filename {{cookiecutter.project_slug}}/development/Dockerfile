@@ -1,4 +1,4 @@
-FROM python:3.7-alpine
+FROM python:3.7-slim
 MAINTAINER {{cookiecutter.email}}
 LABEL PROJECT={{cookiecutter.project_slug}}
 
@@ -13,13 +13,12 @@ COPY . /app
 COPY development/bash /home/user/
 
 # Install Dependencies
-RUN apk add --no-cache  \
-    alpine-sdk          \
+RUN apt-get update   && \
+    apt-get install -y  \
     bash                \
+    build-essential     \
     jq                  \
     openssh-client      \
-    protoc              \
-    protobuf-dev        \
     shellcheck          \
     tig                 \
     vim
@@ -28,14 +27,12 @@ RUN apk add --no-cache  \
 RUN pip install pipenv
 
 # Create the runtime user, and change permissions
-RUN adduser -D user --home /home/user \
-                    --shell /bin/bash \
-                    --no-create-home  \
+RUN useradd user -d /home/user        \
+                 -s /bin/bash         \
+                 -M                   \
  && chown -R user:user /home/user     \
  && chown -R user:user /app
 USER user
 
 # Setup The Dev CLI
 RUN scripts/commander.sh setup
-
-CMD ["bash"]

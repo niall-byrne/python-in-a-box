@@ -21,7 +21,7 @@ Start the environment container:
 - `docker-compose up -d`
 
 Spawn a shell inside the container:
-- `docker-compose exec {{ cookiecutter.project_slug }} bash`
+- `./container`
 
 ## CLI Reference
 
@@ -34,4 +34,5 @@ Valid Commands:
  - setup
  - shell
  - test
+ - test-coverage
 ```

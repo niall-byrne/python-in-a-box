@@ -57,3 +57,7 @@ jobs:
       run: |
         cd mmmm_cookies
         docker-compose exec -T mmmm_cookies bash ./scripts/commander.sh test
+    - name: Test the Test-Coverage Command
+      run: |
+        cd mmmm_cookies
+        docker-compose exec -T mmmm_cookies bash ./scripts/commander.sh test-coverage
