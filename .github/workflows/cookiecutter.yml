@@ -1,0 +1,59 @@
+name: Python In A Box Self Test
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.7]
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: 'template'
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Requirements
+      run: |
+        pip install cookiecutter
+    - name: Create Template
+      run: |
+        echo -e '\n\n\nfalse\nfalse\nfalse\n' | cookiecutter template/
+    - name: Ensure File System is Writable by the Container
+      run: |
+        chmod -R 777 mmmm_cookies
+    - name: Build Docker Image, Start Container
+      run: |
+        cd mmmm_cookies
+        docker-compose build
+        docker-compose up -d
+        sleep 3
+    - name: Test the Lint Command
+      run: |
+        cd mmmm_cookies
+        docker-compose exec -T mmmm_cookies bash ./scripts/commander.sh lint
+    - name: Test the Lint-Validate Command
+      run: |
+        cd mmmm_cookies
+        docker-compose exec -T mmmm_cookies bash ./scripts/commander.sh lint-validate
+    - name: Test the Reinstall Requirements Command
+      run: |
+        cd mmmm_cookies
+        docker-compose exec -T mmmm_cookies bash ./scripts/commander.sh reinstall-requirements
+    - name: Test the Sectest Command
+      run: |
+        cd mmmm_cookies
+        docker-compose exec -T mmmm_cookies bash ./scripts/commander.sh sectest
+    - name: Test the Setup Commands
+      run: |
+        cd mmmm_cookies
+        docker-compose exec -T mmmm_cookies bash ./scripts/commander.sh setup
+    - name: Test the Test Command
+      run: |
+        cd mmmm_cookies
+        docker-compose exec -T mmmm_cookies bash ./scripts/commander.sh test
