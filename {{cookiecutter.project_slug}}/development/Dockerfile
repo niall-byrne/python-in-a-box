@@ -23,8 +23,9 @@ RUN apt-get update   && \
     tig                 \
     vim
 
-# Install Pipenv
-RUN pip install pipenv
+# Install Pipenv and Root Packages
+RUN pip install pipenv  \
+ && pip install -r /app/assets/requirements-root.txt
 
 # Create the runtime user, and change permissions
 RUN useradd user -d /home/user        \

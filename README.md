@@ -22,6 +22,7 @@ This container provides my preferred CLI tooling and a compartmentalized develop
 | package | Description                                                 |
 |---------|-------------------------------------------------------------|
 | bandit  | Finds common security issues.                               |
+| commitizen | Standardizes commit messages                             |
 | isort   | Sorts imports                                               |               
 | pylint  | (Google Style Formatting)                                   |
 | pytest  | Test suite                                                  |
