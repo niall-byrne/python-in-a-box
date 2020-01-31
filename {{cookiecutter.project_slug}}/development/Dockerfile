@@ -20,6 +20,7 @@ RUN apt-get update   && \
     jq                  \
     openssh-client      \
     shellcheck          \
+    sudo                \
     tig                 \
     vim
 
@@ -32,7 +33,8 @@ RUN useradd user -d /home/user        \
                  -s /bin/bash         \
                  -M                   \
  && chown -R user:user /home/user     \
- && chown -R user:user /app
+ && chown -R user:user /app           \
+ && echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 USER user
 
 # Setup The Dev CLI

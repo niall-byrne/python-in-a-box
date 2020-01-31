@@ -61,3 +61,7 @@ jobs:
       run: |
         cd mmmm_cookies
         docker-compose exec -T mmmm_cookies bash ./scripts/commander.sh test-coverage
+    - name: Test Priviledge Escalation
+      run: |
+        cd mmmm_cookies
+        docker-compose exec -T mmmm_cookies bash -c 'sudo ls -la /root'
