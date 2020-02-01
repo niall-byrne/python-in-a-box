@@ -7,7 +7,7 @@ source scripts/dev
 source /home/user/.bash_git_support
 
 # Customize Your Path Here
-export PATH="${PATH}"
+export PATH="/home/user/.local/bin:${PATH}"
 
 # Terminal Colors
 if [[ -x /usr/bin/dircolors ]]; then

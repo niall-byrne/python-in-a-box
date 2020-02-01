@@ -1,2 +1,0 @@
-# Development Requirements Installed As Root During Container Build
-commitizen>=1.16.0,<1.17.0

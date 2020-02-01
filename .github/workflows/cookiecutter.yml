@@ -36,32 +36,32 @@ jobs:
     - name: Test the Lint Command
       run: |
         cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies bash ./scripts/commander.sh lint
+        docker-compose exec -T mmmm_cookies bash -l -c './scripts/commander.sh lint'
     - name: Test the Lint-Validate Command
       run: |
         cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies bash ./scripts/commander.sh lint-validate
+        docker-compose exec -T mmmm_cookies bash -l -c './scripts/commander.sh lint-validate'
     - name: Test the Reinstall Requirements Command
       run: |
         cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies bash ./scripts/commander.sh reinstall-requirements
+        docker-compose exec -T mmmm_cookies bash -l -c './scripts/commander.sh reinstall-requirements'
     - name: Test the Sectest Command
       run: |
         cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies bash ./scripts/commander.sh sectest
+        docker-compose exec -T mmmm_cookies bash -l -c './scripts/commander.sh sectest'
     - name: Test the Setup Commands
       run: |
         cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies bash ./scripts/commander.sh setup
+        docker-compose exec -T mmmm_cookies bash -l -c './scripts/commander.sh setup'
     - name: Test the Test Command
       run: |
         cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies bash ./scripts/commander.sh test
+        docker-compose exec -T mmmm_cookies bash -l -c './scripts/commander.sh test'
     - name: Test the Test-Coverage Command
       run: |
         cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies bash ./scripts/commander.sh test-coverage
+        docker-compose exec -T mmmm_cookies bash -l -c './scripts/commander.sh test-coverage'
     - name: Test Priviledge Escalation
       run: |
         cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies bash -c 'sudo ls -la /root'
+        docker-compose exec -T mmmm_cookies bash -l -c 'sudo ls -la /root'

@@ -4,13 +4,8 @@ LABEL PROJECT={{cookiecutter.project_slug}}
 
 ENV PYTHONUNBUFFERED 1
 
-# Setup directories
-RUN mkdir -p /home/user /app
-WORKDIR /app
-
-# Copy codebase and bash environment
-COPY . /app
-COPY development/bash /home/user/
+# Mark Container
+RUN echo "{{cookiecutter.project_slug}}" > /etc/container_release
 
 # Install Dependencies
 RUN apt-get update   && \
@@ -24,9 +19,13 @@ RUN apt-get update   && \
     tig                 \
     vim
 
-# Install Pipenv and Root Packages
-RUN pip install pipenv  \
- && pip install -r /app/assets/requirements-root.txt
+# Setup directories
+RUN mkdir -p /home/user /app
+WORKDIR /app
+
+# Copy codebase and bash environment
+COPY . /app
+COPY development/bash /home/user/
 
 # Create the runtime user, and change permissions
 RUN useradd user -d /home/user        \

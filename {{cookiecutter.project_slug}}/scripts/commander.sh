@@ -33,13 +33,8 @@ case $1 in
     shift
     setup_python "$@"
     ;;
-  'shell')
-    shift
-    source_enviroment
-    pipenv shell
-    ;;
   'shortlist')
-    echo "lint lint-validate reinstall-requirements sectest setup shell test test-coverage"
+    echo "lint lint-validate reinstall-requirements sectest setup test test-coverage"
     ;;
   'test')
     shift
@@ -58,7 +53,6 @@ case $1 in
     echo ' - reinstall-requirements'
     echo ' - sectest'
     echo ' - setup'
-    echo ' - shell'
     echo ' - test'
     echo ' - test-coverage'
     ;;

@@ -2,18 +2,22 @@
 
 unvirtualize() {
 
-  toggle=1
+  if [[ ! -f /etc/container_release ]]; then
 
-  if [[ -n "${-//[^e]/}" ]]; then set +e; else toggle=0; fi
-  if python -c 'import sys; sys.exit(0 if hasattr(sys, "real_prefix") else 1)'; then
+    toggle=1
+
+    if [[ -n "${-//[^e]/}" ]]; then set +e; else toggle=0; fi
+    if python -c 'import sys; sys.exit(0 if hasattr(sys, "real_prefix") else 1)'; then
     deactivate_present=$(LC_ALL=C type deactivate 2>/dev/null)
     if [[ -n ${deactivate_present} ]]; then
       deactivate
     else
       exit
     fi
+    fi
+    if [[ "${toggle}" == "1" ]]; then set -e; fi
+
   fi
-  if [[ "${toggle}" == "1" ]]; then set -e; fi
 
 }
 
@@ -31,10 +35,14 @@ security() {
 
 source_enviroment() {
 
-  unvirtualize
+  if [[ ! -f /etc/container_release ]]; then
 
-  # shellcheck disable=SC1090
-  source "$(pipenv --venv)/bin/activate"
+    unvirtualize
+
+    # shellcheck disable=SC1090
+    source "$(pipenv --venv)/bin/activate"
+
+  fi
 
   pushd "${PROJECTHOME}"  > /dev/null
     set +e
@@ -50,10 +58,12 @@ setup_python() {
   unvirtualize
 
   pushd "${PROJECTHOME}"  > /dev/null
-    set +e
-    pipenv --rm
-    set -e
-    pipenv --python 3.7
+    if [[ ! -f /etc/container_release ]]; then
+      set +e
+        pipenv --rm
+      set -e
+      pipenv --python 3.7
+    fi
     source_enviroment
     reinstall_requirements
     unvirtualize
@@ -66,8 +76,8 @@ reinstall_requirements() {
   set -e
 
   pushd "${PROJECTHOME}"  > /dev/null
-    pip install -r assets/requirements.txt
-    pip install -r assets/requirements-dev.txt
+    pip install -r assets/requirements.txt --no-warn-script-location
+    pip install -r assets/requirements-dev.txt --no-warn-script-location
   popd  > /dev/null
 
 }
