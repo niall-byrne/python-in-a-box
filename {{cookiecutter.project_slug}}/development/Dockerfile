@@ -8,15 +8,16 @@ ENV PYTHONUNBUFFERED 1
 RUN echo "{{cookiecutter.project_slug}}" > /etc/container_release
 
 # Install Dependencies
-RUN apt-get update   && \
-    apt-get install -y  \
-    bash                \
-    build-essential     \
-    jq                  \
-    openssh-client      \
-    shellcheck          \
-    sudo                \
-    tig                 \
+RUN apt-get update      && \
+    apt-get upgrade -y  && \
+    apt-get install -y     \
+    bash                   \
+    build-essential        \
+    jq                     \
+    openssh-client         \
+    shellcheck             \
+    sudo                   \
+    tig                    \
     vim
 
 # Setup directories
