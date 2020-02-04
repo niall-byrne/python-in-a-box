@@ -2,7 +2,7 @@
 
 [![Python In A Box Self Test](https://github.com/niall-byrne/python-in-a-box/workflows/Python%20In%20A%20Box%20Self%20Test/badge.svg)](https://github.com/niall-byrne/python-in-a-box/actions)
 
-Alpine Linux, Python 3.7 dockerized development environment.
+Python 3.7 dockerized development environment.
 
 Please see the [cookiecutter documentation](https://cookiecutter.readthedocs.io/) for instructions on how to use this project template.
 
@@ -12,7 +12,7 @@ This container provides my preferred CLI tooling and a compartmentalized develop
 
 ## Container
 
-[python:3.7-alpine](https://github.com/docker-library/python/blob/master/3.7/alpine3.11/Dockerfile)
+[python:3.7-slim](https://github.com/docker-library/python/tree/master/3.7/buster/slim)
 
 ## License
 
