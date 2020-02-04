@@ -23,6 +23,8 @@ jobs:
         pip install cookiecutter
     - name: Create Template
       run: |
+        git config --global user.email "somedude@coolstartup.com"
+        git config --global user.name "Pro Buddy Dev"
         echo -e '\n\n\nfalse\nfalse\nfalse\n' | cookiecutter template/
     - name: Ensure File System is Writable by the Container
       run: |
@@ -32,7 +34,7 @@ jobs:
         cd mmmm_cookies
         docker-compose build
         docker-compose up -d
-        sleep 3
+        sleep 1
     - name: Test the Lint Command
       run: |
         cd mmmm_cookies

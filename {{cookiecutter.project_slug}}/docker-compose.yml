@@ -5,6 +5,8 @@ services:
     build:
       context: .
       dockerfile: development/Dockerfile
+    env_file:
+      - development.env
     volumes:
       {%- if cookiecutter.include_ssh_keys|lower == "true" %}
       - ${HOME}/.ssh:/home/user/.ssh{% endif %}
@@ -14,4 +16,4 @@ services:
       - ${HOME}/.gitconfig_global:/home/user/.gitconfig_global{% endif %}
       - ./:/app
     command: >
-      bash -c 'while true; do sleep 1; done'
+      ./{{cookiecutter.project_slug}}/container_boot.sh

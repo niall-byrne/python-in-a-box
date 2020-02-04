@@ -102,7 +102,7 @@ lint_check() {
 
   pushd "${PROJECTHOME}"  > /dev/null
     isort -c
-    pylint --rcfile .pylint.rc {{cookiecutter.project_slug}}/
+    pylint --rcfile .pylint.rc -j 2 "{{cookiecutter.project_slug}}"
     shellcheck -x scripts/*.sh
     shellcheck -x scripts/common/*.sh
   popd  > /dev/null
@@ -116,7 +116,7 @@ unittests() {
   pushd "${PROJECTHOME}"  > /dev/null
     if [[ $1 == "coverage" ]]; then
       shift
-      pytest --cov=. "$@"
+      pytest --cov=. --cov-fail-under=100 "$@"
       coverage html
     else
       pytest "$@"

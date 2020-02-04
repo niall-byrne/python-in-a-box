@@ -2,7 +2,6 @@
 branch = True
 omit = */test*
 source = .
-parallel = true
 
 [report]
 precision = 1

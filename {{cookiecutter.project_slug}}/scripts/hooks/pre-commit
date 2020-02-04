@@ -4,8 +4,11 @@ set -eo pipefail
 
 main() {
 
+  # Bypass Unless GitHooks Are Enabled
+  [[ "${GIT_HOOKS}" == "1" ]] && exit 0
+
   local_branch="$(git rev-parse --abbrev-ref HEAD)"
-  protected_branches="^(master)"
+  protected_branches="${GIT_HOOKS_PROTECTED_BRANCHES}"
 
   if [[ ! ${local_branch} =~ ${protected_branches} ]]; then
         exit 0
