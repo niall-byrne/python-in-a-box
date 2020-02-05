@@ -16,7 +16,7 @@ This container provides my preferred CLI tooling and a compartmentalized develop
 
 ## License
 
-[MIT](LICENSE)
+[MPL-2](LICENSE)
 
 ## Default Packages:
 | package | Description                                                 |

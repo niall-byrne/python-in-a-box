@@ -2,11 +2,15 @@
 
 set -e
 
-PROJECTHOME="$(git rev-parse --show-toplevel)"
-export PROJECTHOME
+PROJECT_HOME="$(git rev-parse --show-toplevel)"
+PROJECT_NAME="{{cookiecutter.project_slug}}"
+export PROJECT_HOME
+export PROJECT_NAME
 
 # shellcheck source=scripts/common/common.sh
 source "$( dirname "${BASH_SOURCE[0]}" )/common/common.sh"
+
+# Add Additional Functionality Via Imports Here
 
 case $1 in
   'lint')

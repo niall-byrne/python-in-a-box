@@ -2,7 +2,7 @@
 
 set -eo pipefail
 
-main() {
+bypass() {
 
   # Bypass Unless GitHooks Are Enabled
   [[ "${GIT_HOOKS}" == "1" ]] && exit 0
@@ -13,6 +13,12 @@ main() {
   if [[ ! ${local_branch} =~ ${protected_branches} ]]; then
         exit 0
   fi
+
+}
+
+main() {
+
+  bypass
 
   bash scripts/commander.sh lint-validate
   bash scripts/commander.sh sectest

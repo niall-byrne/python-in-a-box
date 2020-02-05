@@ -26,8 +26,8 @@ security() {
 
   set -e
 
-  pushd "${PROJECTHOME}"  > /dev/null
-    bandit -r {{ cookiecutter.project_slug }} -c .bandit.rc
+  pushd "${PROJECT_HOME}"  > /dev/null
+    bandit -r "${PROJECT_NAME}" -c .bandit.rc
     safety check
   popd  > /dev/null
 
@@ -44,7 +44,7 @@ source_enviroment() {
 
   fi
 
-  pushd "${PROJECTHOME}"  > /dev/null
+  pushd "${PROJECT_HOME}"  > /dev/null
     set +e
       cd .git/hooks
       ln -sf ../../scripts/hooks/pre-commit pre-commit
@@ -57,7 +57,7 @@ setup_python() {
 
   unvirtualize
 
-  pushd "${PROJECTHOME}"  > /dev/null
+  pushd "${PROJECT_HOME}"  > /dev/null
     if [[ ! -f /etc/container_release ]]; then
       set +e
         pipenv --rm
@@ -75,7 +75,7 @@ reinstall_requirements() {
 
   set -e
 
-  pushd "${PROJECTHOME}"  > /dev/null
+  pushd "${PROJECT_HOME}"  > /dev/null
     pip install -r assets/requirements.txt --no-warn-script-location
     pip install -r assets/requirements-dev.txt --no-warn-script-location
   popd  > /dev/null
@@ -86,8 +86,8 @@ lint() {
 
   set -e
 
-  pushd "${PROJECTHOME}"  > /dev/null
-    yapf -i --recursive --exclude '**/*_pb2.py' --style='{based_on_style: google, INDENT_WIDTH: 2, ALIGN_CLOSING_BRACKET_WITH_VISUAL_INDENT: false, DEDENT_CLOSING_BRACKETS: false}' "{{cookiecutter.project_slug}}/"
+  pushd "${PROJECT_HOME}"  > /dev/null
+    yapf -i --recursive --exclude '**/*_pb2.py' --style='{based_on_style: google, INDENT_WIDTH: 2, ALIGN_CLOSING_BRACKET_WITH_VISUAL_INDENT: false, DEDENT_CLOSING_BRACKETS: false}' "${PROJECT_NAME}/"
     isort -y
   popd  > /dev/null
 
@@ -100,9 +100,11 @@ lint_check() {
 
   set -e
 
-  pushd "${PROJECTHOME}"  > /dev/null
+  pushd "${PROJECT_HOME}"  > /dev/null
     isort -c
-    pylint --rcfile .pylint.rc -j 2 "{{cookiecutter.project_slug}}"
+    pushd "${PROJECT_NAME}" > /dev/null
+      pylint --rcfile ../.pylint.rc -j 2 "${PROJECT_NAME}"
+    popd > /dev/null
     shellcheck -x scripts/*.sh
     shellcheck -x scripts/common/*.sh
   popd  > /dev/null
@@ -113,7 +115,7 @@ unittests() {
 
   set -e
 
-  pushd "${PROJECTHOME}"  > /dev/null
+  pushd "${PROJECT_HOME}"  > /dev/null
     if [[ $1 == "coverage" ]]; then
       shift
       pytest --cov=. --cov-fail-under=100 "$@"
