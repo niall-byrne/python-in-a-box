@@ -34,6 +34,13 @@ This is useful for making your IDE aware of what's installed in a venv.
 ## Environment
 The [development.env](./development.env) file can be modified to inject environment variable content into the container.
 
+You can override the values set in this file by setting shell ENV variables prior to starting the container:
+- `export GIT_HOOKS_PROTECTED_BRANCHES='.*'`
+- `docker-compose kill` (Kill the current running container.)
+- `docker-compose rm` (Remove the stopped container.)
+- `docker-compose up -d` (Restart the dev environment, with a new container, containing the override.)
+- `./container`
+
 ## Git Hooks
 Git hooks are installed that will enforce linting and unit-testing on the specified branches.
 The following environment variables can be used to customize this behavior:
@@ -50,6 +57,7 @@ Valid Commands:
  - lint
  - lint-validate
  - reinstall-requirements
+ - sectest
  - setup
  - test
  - test-coverage
