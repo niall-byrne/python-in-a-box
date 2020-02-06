@@ -13,6 +13,7 @@ RUN apt-get update      && \
     apt-get install -y     \
     bash                   \
     build-essential        \
+    curl                   \
     jq                     \
     openssh-client         \
     shellcheck             \
@@ -24,9 +25,8 @@ RUN apt-get update      && \
 RUN mkdir -p /home/user /app
 WORKDIR /app
 
-# Copy codebase and bash environment
+# Copy the codebase
 COPY . /app
-COPY development/bash /home/user/
 
 # Create the runtime user, and change permissions
 RUN useradd user -d /home/user        \

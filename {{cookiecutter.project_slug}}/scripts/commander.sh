@@ -35,10 +35,11 @@ case $1 in
     ;;
   'setup')
     shift
+    setup_bash "$@"
     setup_python "$@"
     ;;
   'shortlist')
-    echo "lint lint-validate reinstall-requirements sectest setup test test-coverage"
+    echo "lint lint-validate reinstall-requirements sectest setup test test-coverage update"
     ;;
   'test')
     shift
@@ -50,15 +51,20 @@ case $1 in
     source_enviroment
     unittests "coverage" "$@"
     ;;
+  'update')
+    shift
+    update_cli "$@"
+    ;;
   *)
     echo "Valid Commands:"
-    echo ' - lint'
-    echo ' - lint-validate'
-    echo ' - reinstall-requirements'
-    echo ' - sectest'
-    echo ' - setup'
-    echo ' - test'
-    echo ' - test-coverage'
+    echo ' - lint                    (Run the linter)'
+    echo ' - lint-validate           (Validate linting)'
+    echo ' - reinstall-requirements  (Reinstall Packages'
+    echo ' - sectest                 (Run security tests)'
+    echo ' - setup                   (Setup/Reset environment)'
+    echo ' - test                    (Run pytest)'
+    echo ' - test-coverage           (Run pytest with coverage)'
+    echo ' - update                  (Update bash & the CLI)'
     ;;
 
 esac

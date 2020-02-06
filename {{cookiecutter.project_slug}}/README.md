@@ -50,15 +50,4 @@ The following environment variables can be used to customize this behavior:
 
 ## CLI Reference
 The CLI is enabled by default inside the container, and is also available on the host machine.
-
-```
-$ dev
-Valid Commands:
- - lint
- - lint-validate
- - reinstall-requirements
- - sectest
- - setup
- - test
- - test-coverage
-```
+Run the CLI without arguments to see the complete list of available commands: `$ dev`

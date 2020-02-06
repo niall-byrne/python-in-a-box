@@ -67,3 +67,7 @@ jobs:
       run: |
         cd mmmm_cookies
         docker-compose exec -T mmmm_cookies bash -l -c 'sudo ls -la /root'
+    - name: Test CLI Update
+      run: |
+        cd mmmm_cookies
+        docker-compose exec -T mmmm_cookies bash -l -c './scripts/commander.sh update && [[ -f ./scripts/common/.archive/common.sh ]] && [[ -f ./development/bash/.archive/.bashrc ]] && [[ -f ./scripts/common/common.sh ]] && [[ -f ./development/bash/.archive/.bashrc ]] && ./scripts/commander.sh'
