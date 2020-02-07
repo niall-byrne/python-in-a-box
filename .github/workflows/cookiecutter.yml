@@ -25,7 +25,7 @@ jobs:
       run: |
         git config --global user.email "somedude@coolstartup.com"
         git config --global user.name "Pro Buddy Dev"
-        echo -e '\n\n\nfalse\nfalse\nfalse\n' | cookiecutter template/
+        echo -e '\n\n\n\n\nfalse\nfalse\nfalse\n' | cookiecutter template/
     - name: Ensure File System is Writable by the Container
       run: |
         chmod -R 777 mmmm_cookies

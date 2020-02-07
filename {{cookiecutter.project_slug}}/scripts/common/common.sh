@@ -149,7 +149,7 @@ update_cli() {
 
   set -e
 
-  updates=("/scripts/common/common.sh" "/development/bash/.bash_git" "/development/bash/.bash_profile" "/development/bash/.bashrc")
+  updates=("/scripts/common/wheel.sh" "/scripts/common/upload.sh" "/scripts/common/common.sh" "/development/bash/.bash_git" "/development/bash/.bash_profile" "/development/bash/.bashrc")
 
   pushd "${PROJECT_HOME}"  > /dev/null
     mkdir -p scripts/common/.archive
