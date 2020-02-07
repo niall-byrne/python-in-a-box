@@ -3,7 +3,7 @@
 
 # Check dependencies.
 set -e
-[[ -z "${TRACE}" ]] && set -x
+[[ -n "${TRACE}" ]] && set -x
 
 BRed='\033[31m'         # Red
 BGreen='\033[32m'       # Green

@@ -154,10 +154,11 @@ update_cli() {
   pushd "${PROJECT_HOME}"  > /dev/null
     mkdir -p scripts/common/.archive
     mkdir -p development/bash/.archive
-    cp scripts/common/common.sh scripts/common/.archive/common.sh
+    cp scripts/common/*.sh scripts/common/.archive
     cp development/bash/.bash* development/bash/.archive
     for filename in "${updates[@]}"; do
       echo "Downloading: .${filename}"
+      echo "Source: https://raw.githubusercontent.com/niall-byrne/python-in-a-box/master/%7B%7Bcookiecutter.project_slug%7D%7D${filename}"
       curl -s -L "https://raw.githubusercontent.com/niall-byrne/python-in-a-box/master/%7B%7Bcookiecutter.project_slug%7D%7D${filename}" > ".${filename}"
     done
   popd  > /dev/null
