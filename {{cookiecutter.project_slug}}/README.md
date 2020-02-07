@@ -2,6 +2,8 @@
 
 {{ cookiecutter.description }}
 
+[![{{cookiecutter.project_slug}}-automation](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}%20Automation/badge.svg)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
+
 ## Development Dependencies
 
 You'll need to install:

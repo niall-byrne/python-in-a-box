@@ -1,4 +1,4 @@
-name: {{cookiecutter.project_name}} Automation
+name: {{cookiecutter.project_slug}} Automation
 
 on: [push]
 
