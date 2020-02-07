@@ -2,10 +2,6 @@
 
 {{ cookiecutter.description }}
 
-## Template Documentation
-
-[Documentation](development/REFERENCE.md)
-
 ## Development Dependencies
 
 You'll need to install:
