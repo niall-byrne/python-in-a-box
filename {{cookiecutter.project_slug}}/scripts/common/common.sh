@@ -111,8 +111,12 @@ unittests() {
   pushd "${PROJECT_HOME}"  > /dev/null
     if [[ $1 == "coverage" ]]; then
       shift
-      pytest --cov=. --cov-fail-under=100 "$@"
-      coverage html
+      set +e
+        pytest --cov=. --cov-fail-under=100 "$@"
+        exit_code="$?"
+        coverage html
+      set -e
+      exit "${exit_code}"
     else
       pytest "$@"
     fi
