@@ -77,14 +77,14 @@ setup_python() {
       set -e
       pipenv --python 3.7
     fi
-    source_enviroment
+    source_environment
     reinstall_requirements
     unvirtualize
   popd  > /dev/null
 
 }
 
-source_enviroment() {
+source_environment() {
 
   if [[ ! -f /etc/container_release ]]; then
 
@@ -149,7 +149,7 @@ update_cli() {
 
   set -e
 
-  updates=("/scripts/common/wheel.sh" "/scripts/common/upload.sh" "/scripts/common/common.sh" "/development/bash/.bash_git" "/development/bash/.bash_profile" "/development/bash/.bashrc")
+  updates=("/scripts/common/documentation.sh" "/scripts/common/wheel.sh" "/scripts/common/upload.sh" "/scripts/common/common.sh" "/development/bash/.bash_git" "/development/bash/.bash_profile" "/development/bash/.bashrc")
 
   pushd "${PROJECT_HOME}"  > /dev/null
     mkdir -p scripts/common/.archive

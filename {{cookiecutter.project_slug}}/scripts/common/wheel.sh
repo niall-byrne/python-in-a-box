@@ -13,7 +13,7 @@ build_wheel() {
   REPO="${REPO}"
   TAG="${TAG}"
 
-  source_enviroment
+  source_environment
   pushd "${PROJECT_HOME}"  > /dev/null
 
     if [[ -f .gittoken ]]; then

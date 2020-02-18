@@ -27,6 +27,7 @@ This container provides my preferred CLI tooling and a compartmentalized develop
 | pylint  | (Google Style Formatting)                                   |
 | pytest  | Test suite                                                  |
 | pytest-cov | Coverage support for pytest                              |
+| sphinx  | Generating documentation                                    |
 | safety  | Dependency vulnerability scanning                           |
 | wheel   | Package distribution tools                                  |
 | yapf    | (Google Style Formatting)                                   |

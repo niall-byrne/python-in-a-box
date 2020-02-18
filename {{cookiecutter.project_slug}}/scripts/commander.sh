@@ -2,13 +2,14 @@
 
 set -e
 
-PROJECT_HOME="$(git rev-parse --show-toplevel)"
-PROJECT_NAME="{{cookiecutter.project_slug}}"
-export PROJECT_HOME
-export PROJECT_NAME
-
 # shellcheck source=scripts/common/common.sh
 source "$( dirname "${BASH_SOURCE[0]}" )/common/common.sh"
+
+# shellcheck source=scripts/settings.sh
+source "$( dirname "${BASH_SOURCE[0]}" )/settings.sh"
+
+# shellcheck source=scripts/common/documentation.sh
+source "$( dirname "${BASH_SOURCE[0]}" )/common/documentation.sh"
 
 # Optional For Libraries
 # shellcheck source=scripts/common/wheel.sh
@@ -17,24 +18,29 @@ source "$( dirname "${BASH_SOURCE[0]}" )/common/common.sh"
 # Add Additional Functionality Via Imports Here
 
 case $1 in
+  'build-docs')
+    shift
+    source_environment
+    build_documentation "$@"
+    ;;
   'lint')
     shift
-    source_enviroment
+    source_environment
     lint "$@"
     ;;
   'lint-validate')
     shift
-    source_enviroment
+    source_environment
     lint_check "$@"
     ;;
   'reinstall-requirements')
     shift
-    source_enviroment
+    source_environment
     reinstall_requirements "$@"
     ;;
   'sectest')
     shift
-    source_enviroment
+    source_environment
     security "$@"
     ;;
   'setup')
@@ -43,16 +49,16 @@ case $1 in
     setup_python "$@"
     ;;
   'shortlist')
-    echo "lint lint-validate reinstall-requirements sectest setup test test-coverage update"
+    echo "build-docs lint lint-validate reinstall-requirements sectest setup test test-coverage update"
     ;;
   'test')
     shift
-    source_enviroment
+    source_environment
     unittests "$@"
     ;;
   'test-coverage')
     shift
-    source_enviroment
+    source_environment
     unittests "coverage" "$@"
     ;;
   'update')
@@ -61,6 +67,7 @@ case $1 in
     ;;
   *)
     echo "Valid Commands:"
+    echo ' - build-docs              (Build Documentation)'
     echo ' - lint                    (Run the linter)'
     echo ' - lint-validate           (Validate linting)'
     echo ' - reinstall-requirements  (Reinstall Packages'
