@@ -1,5 +1,5 @@
-Repository License
-==================
+License
+=======
 
 .. include:: ../../../LICENSE
    :literal:

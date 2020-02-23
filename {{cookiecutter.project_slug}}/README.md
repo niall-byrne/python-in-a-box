@@ -1,4 +1,6 @@
-# {{ cookiecutter.project_name }}
+# Project Documentation
+
+## {{ cookiecutter.project_name }}
 
 {{ cookiecutter.description }}
 
@@ -21,7 +23,7 @@ Start the environment container:
 Spawn a shell inside the container:
 - `./container`
 
-## Install the Project Packages on your Host Machine:
+## Install the Project Packages on your Host Machine
 This is useful for making your IDE aware of what's installed in a venv.
 
 - `pip install pipenv`

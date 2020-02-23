@@ -7,8 +7,9 @@
 .. toctree::
    :glob:
 
+   codebase/*
    project/*
-   {{cookiecutter.project_slug}}/*
+
 
 Indices and tables
 ==================
