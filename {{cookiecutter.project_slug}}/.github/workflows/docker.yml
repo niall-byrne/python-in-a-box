@@ -1,6 +1,9 @@
 name: {{cookiecutter.project_slug}} Automation
 
-on: [push]
+on:
+  push:
+  schedule:
+    - cron: "0 6 * * 1"
 
 jobs:
   build:

@@ -1,5 +1,9 @@
 name: Python In A Box Self Test
-on: [push]
+
+on:
+  push:
+  schedule:
+    - cron: "0 6 * * 1"
 
 jobs:
   build:
