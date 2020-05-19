@@ -79,3 +79,10 @@ jobs:
       run: |
         cd mmmm_cookies
         docker-compose exec -T mmmm_cookies bash -l -c './scripts/commander.sh build-docs'
+    - name: Report Job Status
+      if: always()
+      run: |
+        if [[ $status == "failure" ]]; then curl -X POST -H 'Content-type: application/json' --data '{"text":"python-in-a-box: build has failed!"}' "${WEBHOOK_URL}"; fi
+      env:
+       status: ${{job.status}}
+       WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
