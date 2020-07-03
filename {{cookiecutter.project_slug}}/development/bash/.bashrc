@@ -19,3 +19,5 @@ set -e
   source /home/user/.bash_git
   source /home/user/.bash_customize
 set +e
+
+[[ -f /usr/share/bash-completion/completions/git ]] && source /usr/share/bash-completion/completions/git
