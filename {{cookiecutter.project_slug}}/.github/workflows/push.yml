@@ -33,11 +33,10 @@ jobs:
       run: |
         docker-compose exec -T {{cookiecutter.project_slug}} bash -l -c 'scripts/commander.sh test coverage'
       - name: Report Job Status
-        if: always()
-        run: |
-          if [[ $status == "failure" ]]; then curl -X POST -H 'Content-type: application/json' --data '{"text":"{{cookiecutter.project_slug}}: build has failed!"}' "${WEBHOOK_URL}"; fi
-        env:
 {% raw %}
-          status: ${{job.status}}
+        if: ${{ failure() }}
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"{{cookiecutter.project_slug}}: build has failed!"}' "${WEBHOOK_URL}"
+        env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 {% endraw %}
