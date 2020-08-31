@@ -10,7 +10,7 @@ lint() {
 
   pushd "${PROJECT_HOME}"  > /dev/null
     yapf -i --recursive --exclude '**/*_pb2.py' --style='{based_on_style: google, INDENT_WIDTH: 2, ALIGN_CLOSING_BRACKET_WITH_VISUAL_INDENT: false, DEDENT_CLOSING_BRACKETS: false}' "${PROJECT_NAME}/"
-    isort -y
+    isort "${PROJECT_NAME}"
   popd  > /dev/null
 
   lint_check
@@ -22,7 +22,7 @@ lint_check() {
   set -e
 
   pushd "${PROJECT_HOME}"  > /dev/null
-    isort -c
+    isort -c "${PROJECT_NAME}"
     pytest --pylint --pylint-rcfile=.pylint.rc --pylint-jobs=2 "${PROJECT_NAME}"
     shellcheck -x scripts/*.sh
     shellcheck -x scripts/common/*.sh
@@ -160,6 +160,9 @@ update_cli() {
       curl -s -L "https://raw.githubusercontent.com/niall-byrne/python-in-a-box/master/%7B%7Bcookiecutter.project_slug%7D%7D${filename}" > ".${filename}"
     done
   popd  > /dev/null
+
+  # Upgrade Note
+  echo "There is a breaking change in the CLI for isort, you may need to update the versions of pylint and isort in your requirements-dev.txt file after this upgrade."
 
   setup_bash
 
