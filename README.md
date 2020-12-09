@@ -5,10 +5,10 @@ Python 3.7 dockerized development environment.
 (Please see the [cookiecutter documentation](https://cookiecutter.readthedocs.io/) for instructions on how to use this project template.)
 
 ##### Develop Branch:
-[![Python In A Box Self Test](https://github.com/niall-byrne/python-in-a-box/workflows/Python%20In%20A%20Box%20Self%20Test/badge.svg)](https://github.com/niall-byrne/python-in-a-box/actions?branch=develop)
+[![Python In A Box Self Test](https://github.com/niall-byrne/python-in-a-box/workflows/Python%20In%20A%20Box%20Self%20Test/badge.svg?branch=develop)](https://github.com/niall-byrne/python-in-a-box/actions)
 
 ##### Master Branch:
-[![Python In A Box Self Test](https://github.com/niall-byrne/python-in-a-box/workflows/Python%20In%20A%20Box%20Self%20Test/badge.svg)](https://github.com/niall-byrne/python-in-a-box/actions?branch=master)
+[![Python In A Box Self Test](https://github.com/niall-byrne/python-in-a-box/workflows/Python%20In%20A%20Box%20Self%20Test/badge.svg?branch=master)](https://github.com/niall-byrne/python-in-a-box/actions)
 
 ## About
 
