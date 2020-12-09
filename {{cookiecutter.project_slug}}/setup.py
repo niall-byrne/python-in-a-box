@@ -13,7 +13,7 @@ setup(
     version="0.0.1",
     author="{{cookiecutter.author}}",
     author_email="{{cookiecutter.email}}",
-    description="Google Play Music Integration",
+    description="{{cookiecutter.description}}",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}",
