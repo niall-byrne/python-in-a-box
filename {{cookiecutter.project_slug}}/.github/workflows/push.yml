@@ -2,10 +2,6 @@ name: {{cookiecutter.project_slug}} Automation
 
 # Workflow Secrets:
 # SLACK_WEBHOOK              (Required, for slack notifications...)
-# DOCKER_USERNAME            (Optional, required for image pushing...)
-# DOCKER_PASSWORD            (Optional, required for image pushing...)
-# DOCKER_REPOSITORY          (Optional, non-dockerhub repository location)
-# DOCKER_REPOSITORY_FOLDER   (Optional Subdivision of Repository, ie. gcr.io uses project ids)
 
 on:
   push:
@@ -20,6 +16,18 @@ jobs:
     steps:
 
     - uses: actions/checkout@v1
+
+    - name: Setup Environment
+      run: |
+        BRANCH_OR_TAG="$(echo "${GITHUB_REF}" | sed 's/refs\/heads\///g' | sed 's/refs\/tags\///g')"
+        echo "BRANCH_OR_TAG=${BRANCH_OR_TAG}" >> $GITHUB_ENV
+        echo "WEBHOOK_URL=${WEBHOOK_URL}" >> $GITHUB_ENV
+        echo "PROJECT_NAME={{cookiecutter.project_slug}}" >> $GITHUB_ENV
+        echo "USERNAME={{cookiecutter.github_username}}" >> $GITHUB_ENV
+        echo "VALID_RELEASE=not_a_validated_release" >> $GITHUB_ENV
+{% raw %}
+      env:
+        WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
     - name: Create Docker Mounted Content
       run: |
@@ -38,79 +46,66 @@ jobs:
 
     - name: Run Linter
       run: |
-        docker-compose exec -T {{cookiecutter.project_slug}} bash -l -c 'scripts/commander.sh lint-validate'
+        docker-compose exec -T "${PROJECT_NAME}" bash -l -c 'scripts/commander.sh lint-validate'
 
     - name: Run Sec Test
       run: |
-        docker-compose exec -T {{cookiecutter.project_slug}} bash -l -c 'scripts/commander.sh sectest'
+        docker-compose exec -T "${PROJECT_NAME}" bash -l -c 'scripts/commander.sh sectest'
 
     - name: Run Unit Tests
       run: |
-        docker-compose exec -T {{cookiecutter.project_slug}} bash -l -c 'scripts/commander.sh test coverage'
+        docker-compose exec -T "${PROJECT_NAME}" bash -l -c 'scripts/commander.sh test coverage'
 
-    - name: Report Job Status
-{% raw %}      if: ${{ failure() }}{% endraw %}
+    - name: Report Build Failures
+      if: failure() == true
       run: |
-        curl -X POST -H 'Content-type: application/json' --data '{"text":"{{cookiecutter.project_slug}}: build has failed!"}' "${WEBHOOK_URL}"
-{% raw %}      env:
-        WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-{% endraw %}
+        ./scripts/ci/slack.sh "${PROJECT_NAME}" "build has failed!"
+
+    - name: Report Build Successes
+      run: |
+        ./scripts/ci/slack.sh "${PROJECT_NAME}" "build succeeded for ${BRANCH_OR_TAG}!"
 
     - name: Releases -- Detect A Release Tag
       if: contains(github.ref, '/tags/v') == true
       run: |
         git checkout .  # Reset file modes
-        GIT_DIFF="$(git diff origin/master)"
-        echo "GIT_DIFF=${GIT_DIFF}" >> $GITHUB_ENV
-
-    - name: Releases -- Ignore Non-Release Tags and Branches
-      if: contains(github.ref, '/tags/v') != true
-      run: |
-        GIT_DIFF="not a release"
-        echo "GIT_DIFF=${GIT_DIFF}" >> $GITHUB_ENV
+        VALID_RELEASE="$(git diff origin/master)"
+        echo "VALID_RELEASE=${VALID_RELEASE}" >> $GITHUB_ENV
 
     - name: Releases -- Prepare Release Content
-      if: env.GIT_DIFF == ''
+      if: contains(github.ref, '/tags/v') == true && env.VALID_RELEASE == ''
       run: |
-        echo "NEWTAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
         echo "{}" > package.json
 
     - name: Production -- Generate Changelog
-      if: env.GIT_DIFF == ''
+      if: contains(github.ref, '/tags/v') == true && env.VALID_RELEASE == ''
       uses: scottbrenner/generate-changelog-action@master
       id: Changelog
-{% raw %}       env:
+      env:
        REPO: ${{ github.repository }}
-{% endraw %}
+
     - name: Production -- Create Release
-      if: env.GIT_DIFF == ''
+      if: contains(github.ref, '/tags/v') == true && env.VALID_RELEASE == ''
       uses: actions/create-release@v1
-{% raw %}      env:
+      env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ env.NEWTAG }}
-        release_name: Release ${{ env.NEWTAG }}
+        tag_name: ${{ env.BRANCH_OR_TAG }}
+        release_name: Release ${{ env.BRANCH_OR_TAG }}
         body: |
           ${{ steps.Changelog.outputs.changelog }}
           ## Deployment Checklist
           - [ ] Ensure unnecessary alerts are ignored/disabled
-          - [ ] Use Admin environment to complete database migrations
         draft: true
         prerelease: false
-{% endraw %}
+
     - name: Production -- Report Success
-      if: env.GIT_DIFF == ''
+      if: contains(github.ref, '/tags/v') == true && env.VALID_RELEASE == ''
       run: |
-        curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"{{cookiecutter.project_slug}}: automated release has been created for ${TAG}: https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.image_name}}/releases\"}" "${WEBHOOK_URL}"
-{% raw %}       env:
-        WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-        TAG: ${{ env.NEWTAG }}
-{% endraw %}
+        ./scripts/ci/slack.sh "${PROJECT_NAME}" "automated release has been created for ${BRANCH_OR_TAG}:\n  https://github.com/${USERNAME}/${PROJECT_NAME}/releases"
+
     - name: Production -- Report Failure
-      if: failure() == true && contains(github.ref, '/tags/v') == true
+      if: failure() == true && contains(github.ref, '/tags/v') == true && env.VALID_RELEASE == ''
       run: |
-        [[ -z ${GIT_DIFF} ]] && curl -X POST -H 'Content-type: application/json' --data '{"text":"{{cookiecutter.project_slug}}: automated production release has failed!"}' "${WEBHOOK_URL}"
-{% raw %}       env:
-        WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-        GIT_DIFF: ${{ env.GIT_DIFF }}
+        ./scripts/ci/slack.sh "${PROJECT_NAME}" "automated release has failed for ${BRANCH_OR_TAG}!"
 {% endraw %}
