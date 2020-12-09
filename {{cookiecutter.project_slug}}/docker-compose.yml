@@ -4,7 +4,8 @@ services:
   {{cookiecutter.project_slug}}:
     build:
       context: .
-      dockerfile: development/Dockerfile
+      dockerfile: assets/Dockerfile
+      target: development
     env_file:
       - development.env
     volumes:

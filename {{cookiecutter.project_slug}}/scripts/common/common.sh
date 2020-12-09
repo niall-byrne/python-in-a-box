@@ -57,7 +57,7 @@ setup_bash() {
 
   [[ ! -f /etc/container_release ]] && return
 
-  for filename in /app/development/bash/.bash*; do
+  for filename in /app/assets/bash/.bash*; do
     echo "Symlinking ${filename} ..."
     ln -sf "${filename}" "/home/user/$(basename "${filename}")"
   done
@@ -147,22 +147,19 @@ update_cli() {
 
   set -e
 
-  updates=("/scripts/common/documentation.sh" "/scripts/common/wheel.sh" "/scripts/common/upload.sh" "/scripts/common/common.sh" "/development/bash/.bash_git" "/development/bash/.bash_profile" "/development/bash/.bashrc")
+  updates=("/scripts/common/documentation.sh" "/scripts/common/wheel.sh" "/scripts/common/upload.sh" "/scripts/common/common.sh" "/assets/bash/.bash_git" "/assets/bash/.bash_profile" "/assets/bash/.bashrc")
 
   pushd "${PROJECT_HOME}"  > /dev/null
     mkdir -p scripts/common/.archive
-    mkdir -p development/bash/.archive
+    mkdir -p assets/bash/.archive
     cp scripts/common/*.sh scripts/common/.archive
-    cp development/bash/.bash* development/bash/.archive
+    cp assets/bash/.bash* assets/bash/.archive
     for filename in "${updates[@]}"; do
       echo "Downloading: .${filename}"
       echo "Source: https://raw.githubusercontent.com/niall-byrne/python-in-a-box/master/%7B%7Bcookiecutter.project_slug%7D%7D${filename}"
       curl -s -L "https://raw.githubusercontent.com/niall-byrne/python-in-a-box/master/%7B%7Bcookiecutter.project_slug%7D%7D${filename}" > ".${filename}"
     done
   popd  > /dev/null
-
-  # Upgrade Note
-  echo "There is a breaking change in the CLI for isort, you may need to update the versions of pylint and isort in your requirements-dev.txt file after this upgrade."
 
   setup_bash
 

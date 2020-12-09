@@ -1,5 +1,5 @@
 # Development Requirements
-bandit>=1.6.2
+bandit>=1.6.2,<1.6.3
 commitizen>=2.8.2,<3.0.0
 isort>=5.6.0,<5.7.0
 m2r>=0.2.1,<0.3.0
