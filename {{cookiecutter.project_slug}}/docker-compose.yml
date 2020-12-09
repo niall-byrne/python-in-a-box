@@ -16,5 +16,3 @@ services:
       {%- if cookiecutter.include_gitconfig_global|lower == "true" %}
       - ${HOME}/.gitconfig_global:/home/user/.gitconfig_global{% endif %}
       - ./:/app
-    command: >
-      ./{{cookiecutter.project_slug}}/container_boot.sh

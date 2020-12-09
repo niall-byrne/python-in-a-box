@@ -32,6 +32,7 @@ RUN useradd user -d /home/user        \
 # Development Environment
 FROM base AS development
 LABEL ENVIRONMENT=DEVELOPMENT
+ENV ENVIRONMENT=DEVELOPMENT
 
 # Install Dev Dependencies
 RUN apt-get install -y     \
@@ -52,11 +53,14 @@ USER user
 # Setup The Dev CLI, and Install all Packages
 RUN scripts/commander.sh setup
 
+CMD ["./{{cookiecutter.project_slug}}/container_init.sh"]
+
 # ======================================================
 
 # Production Environment
 FROM base as production
 LABEL ENVIRONMENT=PRODUCTION
+ENV ENVIRONMENT=PRODUCTION
 
 # Install Production Packages Only
 RUN pip install -r /app/assets/requirements.txt
@@ -64,4 +68,4 @@ RUN pip install -r /app/assets/requirements.txt
 # Set the runtime user
 USER user
 
-
+CMD ["./{{cookiecutter.project_slug}}/container_init.sh"]
