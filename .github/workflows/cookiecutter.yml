@@ -30,7 +30,8 @@ jobs:
       run: |
         git config --global user.email "somedude@coolstartup.com"
         git config --global user.name "Pro Buddy Dev"
-        echo -e '\n\n\n\n\nfalse\nfalse\nfalse\n' | cookiecutter template/
+        echo -e '\n\n\n\n\n\n\nfalse\nfalse\nfalse\n' | cookiecutter template/
+
     - name: Ensure File System is Writable by the Container
       run: |
         chmod -R 777 mmmm_cookies
@@ -75,7 +76,7 @@ jobs:
     - name: Test CLI Update
       run: |
         cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies bash -l -c './scripts/commander.sh update && [[ -f ./scripts/common/.archive/common.sh ]] && [[ -f ./development/bash/.archive/.bashrc ]] && [[ -f ./scripts/common/common.sh ]] && [[ -f ./development/bash/.archive/.bashrc ]] && ./scripts/commander.sh'
+        docker-compose exec -T mmmm_cookies bash -l -c './scripts/commander.sh update && [[ -f ./scripts/common/.archive/common.sh ]] && [[ -f ./assets/bash/.archive/.bashrc ]] && [[ -f ./scripts/common/common.sh ]] && [[ -f ./assets/bash/.archive/.bashrc ]] && ./scripts/commander.sh'
     - name: Test Build Documentation
       run: |
         cd mmmm_cookies
