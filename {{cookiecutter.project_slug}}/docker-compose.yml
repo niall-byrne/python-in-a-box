@@ -7,7 +7,7 @@ services:
       dockerfile: assets/Dockerfile
       target: development
     env_file:
-      - development.env
+      - assets/local.env
     volumes:
       {%- if cookiecutter.include_ssh_keys|lower == "true" %}
       - ${HOME}/.ssh:/home/user/.ssh{% endif %}
