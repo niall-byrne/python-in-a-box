@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -eo pipefail
+ROOT="$(git rev-parse --show-toplevel)"
 
 bypass() {
 
@@ -20,24 +21,27 @@ main() {
 
   bypass
 
-  bash scripts/commander.sh lint-validate
-  bash scripts/commander.sh sectest
-  bash scripts/commander.sh test
-  shellcheck -x scripts/*.sh
-  shellcheck -x scripts/common/*.sh
+  pushd "${ROOT}"  > /dev/null
+  
+    dev lint
+    dev sectest
+    dev test
+    find scripts -type f -exec shellcheck -x "{}" \;
 
-  if [[ -n "$(git diff)" ]]; then
+    if [[ -n "$(git diff)" ]]; then
 
-    git status
+      git status
 
-    exec < /dev/tty
-    echo -e "\nWARNING: You have uncommitted changes!"
-    read -r -p "Type 'yes' to confirm you wish to proceed with this commit: " confirm
-    [[ ${confirm} != "yes" ]] && echo 'ABORTED' && exit 127
+      exec < /dev/tty
+      echo -e "\\nWARNING: You have uncommitted changes!"
+      read -r -p "Type 'yes' to confirm you wish to proceed with this commit: " confirm
+      [[ ${confirm} != "yes" ]] && echo 'ABORTED' && exit 127
 
-    exit 0
+      exit 0
 
-  fi
+    fi
+
+  popd  > /dev/null
 
 }
 
