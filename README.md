@@ -31,9 +31,9 @@ This container provides my preferred CLI tooling and a compartmentalized develop
 The CLI is enabled by default inside the container, and is also available on the host machine.
 Run the CLI without arguments to see the complete list of available commands: `dev`
 
-[PIB CLI Documentation](https://pib_cli.readthedocs.io/en/latest/)
+[PIB CLI Documentation](https://github.com/niall-byrne/pib_cli)
 
-The local CLI configuration is managed by the [cli.yaml](.{{cookiecutter.project_slug}}/assets/cli.yaml) file.
+The local CLI configuration is managed by the [cli.yaml](./{{cookiecutter.project_slug}}/assets/cli.yaml) file.
 
 ## Container OS Tooling
 | package | Description                                                 |
@@ -51,13 +51,13 @@ Files are created in the project root folder for the following:
 
 - [Bandit](https://bandit.readthedocs.io/en/latest/)
   - [.bandit](./{{cookiecutter.project_slug}}/.bandit)
-  - [.banditrc](./{{cookiecutter.project_slug}}/.banditrc)
+  - [.banditrc](./{{cookiecutter.project_slug}}/.bandit.rc)
 - [Coverage](https://coverage.readthedocs.io/en/coverage-5.3.1/)
   - [.coveragerc](./{{cookiecutter.project_slug}}/.coveragerc)
 - [Git](https://git-scm.com/)
   - [.gitignore](./{{cookiecutter.project_slug}}/.gitignore)
 - [iSort](https://pycqa.github.io/isort/)
-  - [.isort.config](./{{cookiecutter.project_slug}}/.isort.config)
+  - [.isort.config](./{{cookiecutter.project_slug}}/.isort.cfg)
 - [pylint](https://www.pylint.org/)
   - [.pylint.rc](./{{cookiecutter.project_slug}}/.pylint.rc)
 - [Read The Docs](https://readthedocs.org/)
