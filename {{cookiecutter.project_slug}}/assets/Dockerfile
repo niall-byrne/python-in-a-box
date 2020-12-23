@@ -1,6 +1,7 @@
 FROM python:3.7-slim AS base
 MAINTAINER {{cookiecutter.email}}
 ENV PYTHONUNBUFFERED 1
+ENV PROJECT_NAME "{{cookiecutter.project_slug}}"
 LABEL PROJECT={{cookiecutter.project_slug}}
 
 # Mark Container
@@ -50,8 +51,10 @@ RUN echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 # Set the runtime user
 USER user
 
-# Setup The Dev CLI, and Install all Packages
-RUN scripts/commander.sh setup
+# Setup The Dev CLI
+RUN pip install pib_cli                               && \
+    /home/user/.local/bin/dev setup-bash              && \
+    /home/user/.local/bin/dev reinstall-requirements
 
 CMD ["./{{cookiecutter.project_slug}}/container_init.sh"]
 
