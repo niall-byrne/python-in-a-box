@@ -1,0 +1,67 @@
+name: {{cookiecutter.project_slug}} Deploys
+
+# Workflow Secrets:
+# SLACK_WEBHOOK              (Required, for slack notifications...)
+# PYPI_API_TOKEN             (Required, for publish to pypi...)
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Environment
+        run: |
+          echo "WEBHOOK_URL=${WEBHOOK_URL}" >> $GITHUB_ENV
+          echo "PROJECT_NAME={{cookiecutter.project_slug}}" >> $GITHUB_ENV
+          echo "USERNAME={{cookiecutter.github_username}}" >> $GITHUB_ENV
+{% raw %}
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Create Docker Mounted Content
+        run: |
+          echo | ssh-keygen
+          touch ${HOME}/.gitconfig
+          touch ${HOME}/.gitconfig_global
+
+      - name: Ensure File System is Writable by the Container
+        run: |
+          sudo chmod -R 777 .
+
+      - name: Build Container
+        run: |
+          docker-compose build
+          docker-compose up -d
+
+      - name: Run Build Wheel
+        run: |
+          docker-compose exec -T "${PROJECT_NAME}" bash -l -c 'dev build-wheel'
+
+      # START Continuous Deployment -- Customize this Section Depending on your strategy
+
+      - name: Publish a Python distribution to PyPI
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
+          verbose: true
+
+      # END Continuous Deployment -- Customize this Section Depending on your strategy
+
+      - name: Production -- Report Success
+        run: |
+          ./scripts/ci/slack.sh "${PROJECT_NAME}:${GITHUB_REF#refs/tags/}" "new release has been pushed to PyPi!"
+
+      - name: Production -- Report Failure
+        if: failure() == true
+        run: |
+          ./scripts/ci/slack.sh "${PROJECT_NAME}:${GITHUB_REF#refs/tags/}" "automated PyPi release has failed!"
+{% endraw %}

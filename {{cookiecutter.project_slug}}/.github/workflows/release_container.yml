@@ -25,7 +25,7 @@ jobs:
           echo "PROJECT_NAME={{cookiecutter.project_slug}}" >> $GITHUB_ENV
           echo "USERNAME={{cookiecutter.github_username}}" >> $GITHUB_ENV
           echo "CD_ENABLED=false" >> $GITHUB_ENV
-  {% raw %}
+{% raw %}
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
