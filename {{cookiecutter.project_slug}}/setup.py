@@ -18,7 +18,7 @@ setup(
     description="{{cookiecutter.description}}",
     entry_points='''
 [console_scripts]
-{{cookiecutter.project_slug}}={{cookiecutter.project_slug}}.app:cli
+{{cookiecutter.project_slug}}={{cookiecutter.project_slug}}.app:main
     ''',
     long_description=long_description,
     long_description_content_type="text/markdown",
