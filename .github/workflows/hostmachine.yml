@@ -1,0 +1,106 @@
+name: Python In A Box Hostmachine
+
+on:
+  push:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.7]
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: 'template'
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Requirements
+      run: |
+        pip install cookiecutter pipenv
+    - name: Create Template
+      run: |
+        git config --global user.email "somedude@coolstartup.com"
+        git config --global user.name "Pro Buddy Dev"
+        echo -e '\n\n\n\n\n\nfalse\nfalse\nfalse\n' | cookiecutter template/
+    - name: Setup Environment
+      run: |
+        BRANCH_OR_TAG="$(echo "${GITHUB_REF}" | sed 's/refs\/heads\///g' | sed 's/refs\/tags\///g')"
+        echo "BRANCH_OR_TAG=${BRANCH_OR_TAG}" >> $GITHUB_ENV
+        echo "PROJECT_NAME=mmmm_cookies" >> $GITHUB_ENV
+
+    - name: Install Hostmachine Scripts
+      run: |
+        cd mmmm_cookies
+        scripts/hostmachine.sh
+    - name: Test Build Documentation
+      run: |
+        cd mmmm_cookies
+        source "$(pipenv --venv)/bin/activate"
+        dev build-docs
+    - name: Test Build Wheel
+      run: |
+        cd mmmm_cookies
+        source "$(pipenv --venv)/bin/activate"
+        dev build-wheel
+    - name: Test the Coverage Command
+      run: |
+        cd mmmm_cookies
+        source "$(pipenv --venv)/bin/activate"
+        dev coverage
+    - name: Test the Fmt Command
+      run: |
+        cd mmmm_cookies
+        source "$(pipenv --venv)/bin/activate"
+        dev fmt
+    - name: Test the Lint Command
+      run: |
+        cd mmmm_cookies
+        source "$(pipenv --venv)/bin/activate"
+        dev lint
+    - name: Test the Reinstall Requirements Command
+      run: |
+        cd mmmm_cookies
+        source "$(pipenv --venv)/bin/activate"
+        dev reinstall-requirements
+    - name: Test the Sectest Command
+      run: |
+        cd mmmm_cookies
+        source "$(pipenv --venv)/bin/activate"
+        dev sectest
+    - name: Test the Setup Command
+      run: |
+        cd mmmm_cookies
+        source "$(pipenv --venv)/bin/activate"
+        dev setup
+    - name: Test the Setup Bash Command
+      run: |
+        cd mmmm_cookies
+        source "$(pipenv --venv)/bin/activate"
+        dev setup-bash
+    - name: Test the Test Command
+      run: |
+        cd mmmm_cookies
+        source "$(pipenv --venv)/bin/activate"
+        dev test
+    - name: Report Job Status on Success
+      run: |
+        MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: build success!\"}"
+        curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"
+      env:
+        WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+    - name: Report Job Status on Failure
+      if: ${{ failure() }}
+      run: |
+        MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: build has failed!\"}"
+        curl -X POST -H 'Content-type: application/json' --data "${MSG}" "${WEBHOOK_URL}"
+      env:
+       WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
