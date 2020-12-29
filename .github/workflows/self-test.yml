@@ -1,5 +1,10 @@
 name: Python In A Box Self Test
 
+# Required Github Repository Secrets:
+# REMOTE_TOKEN      - Github Token With Access To This Repo
+# REMOTE_ORIGIN     - The git remote repository name
+# SLACK_WEBHOOK     - The slack webhook for build notifications
+
 on:
   push:
   schedule:
@@ -7,7 +12,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  container:
+
+  container_cli_test:
 
     runs-on: ubuntu-latest
     strategy:
@@ -92,19 +98,19 @@ jobs:
         docker-compose exec -T mmmm_cookies bash -l -c 'sudo ls -la /root'
     - name: Report Job Status on Success
       run: |
-        MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: build succeeded!\"}"
+        MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: container build succeeded!\"}"
         curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"
       env:
         WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
     - name: Report Job Status on Failure
       if: ${{ failure() }}
       run: |
-        MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: build failed!\"}"
+        MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: container build failed!\"}"
         curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"
       env:
        WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
-  hostmachine:
+  hostmachine_cli_test:
 
     runs-on: ubuntu-latest
     strategy:
@@ -202,8 +208,87 @@ jobs:
       env:
        WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
-  create_release:
-    needs: [container, hostmachine]
+  push_repository_test:
+    needs: [container_cli_test, hostmachine_cli_test]
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.7]
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: 'template'
+        persist-credentials: false
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Requirements
+      run: |
+        pip install cookiecutter
+    - name: Create Template
+      run: |
+        git config --global user.email "action@github.com"
+        git config --global user.name "GitHub Action"
+        echo -e '\n\n\n\n\n\nfalse\nfalse\nfalse\n' | cookiecutter template/
+    - name: Setup Environment
+      run: |
+        BRANCH_OR_TAG="$(echo "${GITHUB_REF}" | sed 's/refs\/heads\///g' | sed 's/refs\/tags\///g')"
+        echo "BRANCH_OR_TAG=${BRANCH_OR_TAG}" >> $GITHUB_ENV
+        echo "VALID_RELEASE=not_a_validated_release" >> $GITHUB_ENV
+    - name: Clean Up Tags for Git Push
+      run: |
+        cd mmmm_cookies
+        git checkout master
+        git tag --delete v0.0.0  # Don't Repush
+        git tag v1.0.0
+    - name: Push To Test Repository (develop)
+      uses: ad-m/github-push-action@v0.6.0
+      with:
+        github_token: ${{ secrets.REMOTE_TOKEN }}
+        branch: develop
+        tags: false
+        directory: mmmm_cookies
+        repository: ${{ secrets.REMOTE_ORIGIN }}
+        force: true
+    - name: Push To Test Repository (master)
+      uses: ad-m/github-push-action@v0.6.0
+      with:
+        github_token: ${{ secrets.REMOTE_TOKEN }}
+        branch: master
+        tags: false
+        directory: mmmm_cookies
+        repository: ${{ secrets.REMOTE_ORIGIN }}
+        force: true
+    - name: Push To Test Repository (release tag)
+      uses: ad-m/github-push-action@v0.6.0
+      with:
+        github_token: ${{ secrets.REMOTE_TOKEN }}
+        branch: master
+        tags: true
+        directory: mmmm_cookies
+        repository: ${{ secrets.REMOTE_ORIGIN }}
+        force: true
+    - name: Report Job Status on Success
+      run: |
+        MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: trigger templated pipelines succeeded!\"}"
+        curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"
+      env:
+        WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+    - name: Report Job Status on Failure
+      if: ${{ failure() }}
+      run: |
+        MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: trigger templated pipelines failed!\"}"
+        curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"
+      env:
+        WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+
+  create_releases:
+    needs: [container_cli_test, hostmachine_cli_test]
 
     runs-on: ubuntu-latest
     strategy:
@@ -257,3 +342,6 @@ jobs:
         run: |
           MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: automated release has failed!\"}"
           curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"
+
+
+
