@@ -3,6 +3,14 @@
 set -e
 
 ROOT="$(git rev-parse --show-toplevel)"
+ARG="${1}"
+
+conditional_source() {
+  if ! pipenv --venv >/dev/null 2>&1; then
+    setup_python
+  fi
+  spawn_shell
+}
 
 setup_python() {
 
@@ -21,7 +29,7 @@ setup_python() {
       pip install pib_cli
     unvirtualize
   popd  > /dev/null
-
+  echo "Pipenv Environment Location: $(pipenv --venv)"
 }
 
 source_environment() {
@@ -44,6 +52,14 @@ source_environment() {
 
 }
 
+spawn_shell() {
+  if [[ "${ARG}" == "shell" ]]; then
+    pipenv shell
+  else
+    echo "Run this script with the *shell* argument to spawn a shell within the virtual environment."
+  fi
+}
+
 unvirtualize() {
 
   if [[ ! -f /etc/container_release ]]; then
@@ -51,18 +67,15 @@ unvirtualize() {
     toggle=1
 
     if [[ -n "${-//[^e]/}" ]]; then set +e; else toggle=0; fi
-    if python -c 'import sys; sys.exit(0 if hasattr(sys, "real_prefix") else 1)'; then
-    deactivate_present=$(LC_ALL=C type deactivate 2>/dev/null)
-    if [[ -n ${deactivate_present} ]]; then
-      deactivate
-    else
-      exit
-    fi
-    fi
+      deactivate_present=$(LC_ALL=C type deactivate 2>/dev/null)
+      if [[ -n ${deactivate_present} ]]; then
+        deactivate
+      fi
     if [[ "${toggle}" == "1" ]]; then set -e; fi
 
   fi
 
 }
 
-setup_python
+export PROJECT_NAME="{{cookiecutter.project_slug}}"
+conditional_source

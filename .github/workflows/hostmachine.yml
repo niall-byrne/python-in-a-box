@@ -40,7 +40,7 @@ jobs:
     - name: Install Hostmachine Scripts
       run: |
         cd mmmm_cookies
-        scripts/hostmachine.sh
+        ./scripts/hostmachine.sh
     - name: Test Build Documentation
       run: |
         cd mmmm_cookies
@@ -93,14 +93,14 @@ jobs:
         dev test
     - name: Report Job Status on Success
       run: |
-        MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: build success!\"}"
+        MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: hostmachine build success!\"}"
         curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"
       env:
         WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
     - name: Report Job Status on Failure
       if: ${{ failure() }}
       run: |
-        MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: build has failed!\"}"
+        MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: hostmachine build has failed!\"}"
         curl -X POST -H 'Content-type: application/json' --data "${MSG}" "${WEBHOOK_URL}"
       env:
        WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
