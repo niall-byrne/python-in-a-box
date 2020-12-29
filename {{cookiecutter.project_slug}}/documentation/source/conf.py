@@ -19,6 +19,7 @@ if os.path.exists('../../{{cookiecutter.project_slug}}'):
 project = '{{cookiecutter.project_slug}}'
 copyright = '2020, {{cookiecutter.author}}'
 author = '{{cookiecutter.author}}'
+os.environ['PROJECT_NAME'] = project
 
 # -- General configuration ---------------------------------------------------
 
