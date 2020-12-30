@@ -67,7 +67,7 @@ Files are created in the project root folder for the following:
   - [.yapfignore](./{{cookiecutter.project_slug}}/.yapfignore)
 - [Software License](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/licensing-a-repository)
   - [LICENSE](./{{cookiecutter.project_slug}}/LICENSE)
-- [pipenv](https://github.com/pypa/pipenv) ([scripts/hostmachine.sh](./scripts/hostmachine.sh))
+- [pipenv](https://github.com/pypa/pipenv) ([scripts/hostmachine.sh](./{{cookiecutter.project_slug}}/scripts/hostmachine.sh))
   - [Pipfile](./{{cookiecutter.project_slug}}/Pipfile) 
 - [pytest](https://docs.pytest.org/en/stable/)
   - [pytest.ini](./{{cookiecutter.project_slug}}/pytest.ini)
