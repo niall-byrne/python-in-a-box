@@ -1,4 +1,4 @@
-name: pib_cli Automation
+name: {{cookiecutter.project_slug}} Wheel Push
 
 # Workflow Secrets:
 # SLACK_WEBHOOK              (Required, for slack notifications...)
@@ -23,7 +23,7 @@ jobs:
         echo "BRANCH_OR_TAG=${BRANCH_OR_TAG}" >> $GITHUB_ENV
         echo "WEBHOOK_URL=${WEBHOOK_URL}" >> $GITHUB_ENV
         echo "PROJECT_NAME={{cookiecutter.project_slug}}" >> $GITHUB_ENV
-        echo "USERNAME=niall-{{cookiecutter.github_username}}" >> $GITHUB_ENV
+        echo "USERNAME={{cookiecutter.github_username}}" >> $GITHUB_ENV
         echo "VALID_RELEASE=not_a_validated_release" >> $GITHUB_ENV
 {% raw %}
       env:
@@ -59,11 +59,11 @@ jobs:
     - name: Report Build Failures
       if: failure() == true
       run: |
-        ./scripts/ci/slack.sh "${PROJECT_NAME}" "build has failed!"
+        ./scripts/ci/slack.sh "${PROJECT_NAME}" "build on push has failed!"
 
     - name: Report Build Successes
       run: |
-        ./scripts/ci/slack.sh "${PROJECT_NAME}" "build succeeded for ${BRANCH_OR_TAG}!"
+        ./scripts/ci/slack.sh "${PROJECT_NAME}" "build on push succeeded for ${BRANCH_OR_TAG}!"
 
     - name: Releases -- Detect A Release Tag
       if: contains(github.ref, '/tags/v') == true
@@ -124,11 +124,11 @@ jobs:
     - name: Production -- Report Success
       if: contains(github.ref, '/tags/v') == true && env.VALID_RELEASE == ''
       run: |
-        ./scripts/ci/slack.sh "${PROJECT_NAME}" "automated release has been created for ${BRANCH_OR_TAG}:\n  https://github.com/${USERNAME}/${PROJECT_NAME}/releases"
+        ./scripts/ci/slack.sh "${PROJECT_NAME}" "automated release (with wheel) has been created for ${BRANCH_OR_TAG}:\n  https://github.com/${USERNAME}/${PROJECT_NAME}/releases"
 
     - name: Production -- Report Failure
       if: failure() == true && contains(github.ref, '/tags/v') == true && env.VALID_RELEASE == ''
       run: |
-        ./scripts/ci/slack.sh "${PROJECT_NAME}" "automated release has failed for ${BRANCH_OR_TAG}!"
+        ./scripts/ci/slack.sh "${PROJECT_NAME}" "automated release (with wheel) has failed for ${BRANCH_OR_TAG}!"
 {% endraw %}
 

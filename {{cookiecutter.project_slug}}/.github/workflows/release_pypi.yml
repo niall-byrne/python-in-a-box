@@ -1,4 +1,4 @@
-name: {{cookiecutter.project_slug}} Deploys
+name: {{cookiecutter.project_slug}} Release Wheel
 
 # Workflow Secrets:
 # SLACK_WEBHOOK              (Required, for slack notifications...)
@@ -15,13 +15,14 @@ jobs:
 
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0
+          fetch-depth: 1
 
       - name: Setup Environment
         run: |
           echo "WEBHOOK_URL=${WEBHOOK_URL}" >> $GITHUB_ENV
           echo "PROJECT_NAME={{cookiecutter.project_slug}}" >> $GITHUB_ENV
           echo "USERNAME={{cookiecutter.github_username}}" >> $GITHUB_ENV
+          echo "CD_ENABLED=false" >> $GITHUB_ENV
 {% raw %}
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
@@ -47,7 +48,15 @@ jobs:
 
       # START Continuous Deployment -- Customize this Section Depending on your strategy
 
+      - name: Is CD enabled?
+        if: env.DOCKER_USERNAME != ''
+        run: |
+          [[ -n "${PYPI_TOKEN}" ]] && echo "CD_ENABLED=true" >> $GITHUB_ENV
+        env:
+          PYPI_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+
       - name: Publish a Python distribution to PyPI
+        if: env.CD_ENABLED == 'true'
         uses: pypa/gh-action-pypi-publish@master
         with:
           user: __token__
@@ -57,8 +66,14 @@ jobs:
       # END Continuous Deployment -- Customize this Section Depending on your strategy
 
       - name: Production -- Report Success
+        if: env.CD_ENABLED == 'true'
         run: |
           ./scripts/ci/slack.sh "${PROJECT_NAME}:${GITHUB_REF#refs/tags/}" "new release has been pushed to PyPi!"
+
+      - name: Production -- Report Success
+        if: env.CD_ENABLED != 'true'
+        run: |
+          ./scripts/ci/slack.sh "${PROJECT_NAME}:${GITHUB_REF#refs/tags/}" "new release wheel has been built, but CD is disabled for this repository!"
 
       - name: Production -- Report Failure
         if: failure() == true

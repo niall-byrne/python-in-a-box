@@ -1,4 +1,4 @@
-name: {{cookiecutter.project_slug}} Automation
+name: {{cookiecutter.project_slug}} Generic Push
 
 # Workflow Secrets:
 # SLACK_WEBHOOK              (Required, for slack notifications...)
@@ -59,11 +59,11 @@ jobs:
     - name: Report Build Failures
       if: failure() == true
       run: |
-        ./scripts/ci/slack.sh "${PROJECT_NAME}" "build has failed!"
+        ./scripts/ci/slack.sh "${PROJECT_NAME}" "build on push has failed!"
 
     - name: Report Build Successes
       run: |
-        ./scripts/ci/slack.sh "${PROJECT_NAME}" "build succeeded for ${BRANCH_OR_TAG}!"
+        ./scripts/ci/slack.sh "${PROJECT_NAME}" "build on push succeeded for ${BRANCH_OR_TAG}!"
 
     - name: Releases -- Detect A Release Tag
       if: contains(github.ref, '/tags/v') == true

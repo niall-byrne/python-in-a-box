@@ -1,4 +1,4 @@
-name: {{cookiecutter.project_slug}} Deploys
+name: {{cookiecutter.project_slug}} Release Container
 
 # Workflow Secrets:
 # SLACK_WEBHOOK              (Required, for slack notifications...)
@@ -16,7 +16,7 @@ jobs:
 
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0
+          fetch-depth: 1
 
       - name: Setup Environment
         run: |
@@ -84,10 +84,15 @@ jobs:
       - name: Production -- Report Success
         if: env.CD_ENABLED == 'true'
         run: |
-          ./scripts/ci/slack.sh "${PROJECT_NAME}:${GITHUB_REF#refs/tags/}" "new image has been produced and pushed!"
+          ./scripts/ci/slack.sh "${PROJECT_NAME}:${GITHUB_REF#refs/tags/}" "new docker image has been produced and pushed!"
+
+      - name: Production -- Report Success
+        if: env.CD_ENABLED != 'true'
+        run: |
+          ./scripts/ci/slack.sh "${PROJECT_NAME}:${GITHUB_REF#refs/tags/}" "new docker image has been built, but CD is disabled for this repository!"
 
       - name: Production -- Report Failure
         if: failure() == true
         run: |
-          ./scripts/ci/slack.sh "${PROJECT_NAME}:${GITHUB_REF#refs/tags/}" "automated image production has failed!"
+          ./scripts/ci/slack.sh "${PROJECT_NAME}:${GITHUB_REF#refs/tags/}" "automated docker image production has failed!"
 {% endraw %}
