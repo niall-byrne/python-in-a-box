@@ -19,12 +19,27 @@
 - [![{{cookiecutter.project_slug}} Release Wheel](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}%20Release%20Wheel/badge.svg)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
 
 ## Tooling Reference
-The CLI is enabled by default inside the container, and is also available on the host machine.
+The CLI is instsalled by default inside the container, and is also available on the host machine.
 Run the CLI without arguments to see the complete list of available commands: `dev`
 
-[PIB CLI Documentation](https://pib_cli.readthedocs.io/en/latest/)
+[The 'pib_cli' Python Package](https://pypi.org/project/pib-cli/)
 
-The local CLI configuration is managed by the [cli.yaml](./assets/cli.yaml) file.
+The local CLI configuration is managed by the [cli.yaml](./{{cookiecutter.project_slug}}/assets/cli.yaml) file.
+
+## Installed Python Packages:
+
+| package    | Description                       |
+| ---------- | --------------------------------- |
+| bandit     | Finds common security issues      |
+| commitizen | Standardizes commit messages      |
+| isort      | Sorts imports                     |
+| pylint     | Static Code Analysis              |
+| pytest     | Test suite                        |
+| pytest-cov | Coverage support for pytest       |
+| sphinx     | Generating documentation          |
+| safety     | Dependency vulnerability scanning |
+| wheel      | Package distribution tools        |
+| yapf       | Customizable Code Formatting      |
 
 ## Third Party Integrations
 
@@ -82,4 +97,10 @@ It will use `pipenv` to create a virtual environment and install both requiremen
 This is useful if you want to make your local IDE aware of what's installed.
 
 (`pip install pipenv` or `brew install pipenv` may be necessary on your system.)
- 
+
+Executing the script will install (or re-install) a complete pipenv environment, with the following dependency files installed automatically:
+- [assets/requirements.txt](./assets/requirements.txt)
+- [assets/requirements-dev.txt](./assets/requirements-dev.txt)
+
+Running the script the `shell` argument, is a convenience wrapper around `pipenv shell`.
+

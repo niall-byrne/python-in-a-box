@@ -28,12 +28,27 @@ This container provides my preferred CLI tooling and a compartmentalized develop
 [MPL-2](LICENSE)
 
 ## Tooling Reference
-The CLI is enabled by default inside the container, and is also available on the host machine.
+The CLI is instsalled by default inside the container, and is also available on the host machine.
 Run the CLI without arguments to see the complete list of available commands: `dev`
 
-[PIB CLI Documentation](https://github.com/shared-vision-solutions/pib_cli)
+[The 'pib_cli' Python Package](https://pypi.org/project/pib-cli/)
 
 The local CLI configuration is managed by the [cli.yaml](./{{cookiecutter.project_slug}}/assets/cli.yaml) file.
+
+## Installed Python Packages:
+
+| package    | Description                       |
+| ---------- | --------------------------------- |
+| bandit     | Finds common security issues      |
+| commitizen | Standardizes commit messages      |
+| isort      | Sorts imports                     |
+| pylint     | Static Code Analysis              |
+| pytest     | Test suite                        |
+| pytest-cov | Coverage support for pytest       |
+| sphinx     | Generating documentation          |
+| safety     | Dependency vulnerability scanning |
+| wheel      | Package distribution tools        |
+| yapf       | Customizable Code Formatting      |
 
 ## Container OS Tooling
 | package | Description                                                 |
@@ -43,7 +58,6 @@ The local CLI configuration is managed by the [cli.yaml](./{{cookiecutter.projec
 | git, ssh|  managing git commits                                       |
 | tig     |  managing git history                                       |
 | vim     |  managing small edits, and git commit messages              |
-
 
 ## Configuration Files
 
