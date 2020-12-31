@@ -5,10 +5,10 @@ Python 3.7 dockerized development environment.
 (Please see the [cookiecutter documentation](https://cookiecutter.readthedocs.io/) for instructions on how to use this project template.)
 
 ##### Develop Branch:
-[![Python In A Box Self Test](https://github.com/niall-byrne/python-in-a-box/workflows/Python%20In%20A%20Box%20Self%20Test/badge.svg?branch=develop)](https://github.com/niall-byrne/python-in-a-box/actions)
+[![Python In A Box Self Test](https://github.com/shared-vision-solutions/python-in-a-box/workflows/Python%20In%20A%20Box%20Self%20Test/badge.svg?branch=develop)](https://github.com/shared-vision-solutions/python-in-a-box/actions)
 
 ##### Master Branch:
-[![Python In A Box Self Test](https://github.com/niall-byrne/python-in-a-box/workflows/Python%20In%20A%20Box%20Self%20Test/badge.svg?branch=master)](https://github.com/niall-byrne/python-in-a-box/actions)
+[![Python In A Box Self Test](https://github.com/shared-vision-solutions/python-in-a-box/workflows/Python%20In%20A%20Box%20Self%20Test/badge.svg?branch=master)](https://github.com/shared-vision-solutions/python-in-a-box/actions)
 
 ## About
 
@@ -17,7 +17,7 @@ This container provides my preferred CLI tooling and a compartmentalized develop
 ## Getting Started
 
 - `pip install cookiecutter`
-- `cookiecutter https://github.com/niall-byrne/python-in-a-box.git`
+- `cookiecutter https://github.com/shared-vision-solutions/python-in-a-box.git`
 
 ## Container
 
@@ -31,7 +31,7 @@ This container provides my preferred CLI tooling and a compartmentalized develop
 The CLI is enabled by default inside the container, and is also available on the host machine.
 Run the CLI without arguments to see the complete list of available commands: `dev`
 
-[PIB CLI Documentation](https://github.com/niall-byrne/pib_cli)
+[PIB CLI Documentation](https://github.com/shared-vision-solutions/pib_cli)
 
 The local CLI configuration is managed by the [cli.yaml](./{{cookiecutter.project_slug}}/assets/cli.yaml) file.
 
