@@ -42,7 +42,6 @@ jobs:
         BRANCH_OR_TAG="$(echo "${GITHUB_REF}" | sed 's/refs\/heads\///g' | sed 's/refs\/tags\///g')"
         echo "BRANCH_OR_TAG=${BRANCH_OR_TAG}" >> $GITHUB_ENV
         echo "VALID_RELEASE=not_a_validated_release" >> $GITHUB_ENV
-
     - name: Ensure File System is Writable by the Container
       run: |
         chmod -R 777 mmmm_cookies
@@ -139,7 +138,6 @@ jobs:
         BRANCH_OR_TAG="$(echo "${GITHUB_REF}" | sed 's/refs\/heads\///g' | sed 's/refs\/tags\///g')"
         echo "BRANCH_OR_TAG=${BRANCH_OR_TAG}" >> $GITHUB_ENV
         echo "PROJECT_NAME=mmmm_cookies" >> $GITHUB_ENV
-
     - name: Install Hostmachine Scripts
       run: |
         cd mmmm_cookies
@@ -194,6 +192,13 @@ jobs:
         cd mmmm_cookies
         source "$(pipenv --venv)/bin/activate"
         dev test
+    - name: Test ShellCheck Passes
+      run: |
+        cd mmmm_cookies
+        shellcheck scripts/*.sh
+        shellcheck scripts/ci/*.sh
+        shellcheck scripts/hooks/*
+        shellcheck scripts/dev
     - name: Report Job Status on Success
       run: |
         MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: hostmachine build success!\"}"
