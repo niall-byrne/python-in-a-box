@@ -58,8 +58,6 @@ source_environment() {
 spawn_shell() {
   if [[ "${ARG}" == "shell" ]]; then
     pushd "${ROOT}"  > /dev/null
-
-    popd  > /dev/null
     pipenv shell
   else
     echo "Run this script with the *shell* argument to spawn a shell within the virtual environment."
