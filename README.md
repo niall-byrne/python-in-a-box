@@ -77,9 +77,6 @@ Files are created in the project root folder for the following:
   - [.pylint.rc](./{{cookiecutter.project_slug}}/.pylint.rc)
 - [Read The Docs](https://readthedocs.org/)
   - [.readthedocs.yml](./{{cookiecutter.project_slug}}/.readthedocs.yml)
-- [yapf](https://readthedocs.org/)
-  - [.style.yapf](./{{cookiecutter.project_slug}}/.style.yapf)
-  - [.yapfignore](./{{cookiecutter.project_slug}}/.yapfignore)
 - [Software License](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/licensing-a-repository)
   - [LICENSE](./{{cookiecutter.project_slug}}/LICENSE)
 - [pipenv](https://github.com/pypa/pipenv) ([scripts/hostmachine.sh](./{{cookiecutter.project_slug}}/scripts/hostmachine.sh))
@@ -89,6 +86,11 @@ Files are created in the project root folder for the following:
 - [pypi.org](https://pypi.org/)
   - [setup.cfg](./{{cookiecutter.project_slug}}/setup.cfg)
   - [setup.py](./{{cookiecutter.project_slug}}/setup.py)
+- [yamllint](https://github.com/adrienverge/yamllint)
+  - [.yamllint.yml](./{{cookiecutter.project_slug}}/.yamllint.yml)  
+- [yapf](https://readthedocs.org/)
+  - [.style.yapf](./{{cookiecutter.project_slug}}/.style.yapf)
+  - [.yapfignore](./{{cookiecutter.project_slug}}/.yapfignore)
 
 ## Third Party Integrations
 
