@@ -5,6 +5,9 @@ set -e
 ROOT="$(git rev-parse --show-toplevel)"
 ARG="${1}"
 
+export PIB_CONFIG_FILE_LOCATION="${ROOT}./assets/cli.yml"
+export PROJECT_NAME="{{cookiecutter.project_slug}}"
+
 conditional_source() {
   if ! pipenv --venv >/dev/null 2>&1; then
     setup_python
@@ -54,6 +57,9 @@ source_environment() {
 
 spawn_shell() {
   if [[ "${ARG}" == "shell" ]]; then
+    pushd "${ROOT}"  > /dev/null
+
+    popd  > /dev/null
     pipenv shell
   else
     echo "Run this script with the *shell* argument to spawn a shell within the virtual environment."
@@ -77,5 +83,4 @@ unvirtualize() {
 
 }
 
-export PROJECT_NAME="{{cookiecutter.project_slug}}"
 conditional_source
