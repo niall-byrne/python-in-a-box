@@ -39,6 +39,7 @@ The local CLI configuration is managed by the [cli.yaml](./{{cookiecutter.projec
 | sphinx     | Generating documentation          |
 | safety     | Dependency vulnerability scanning |
 | wheel      | Package distribution tools        |
+| yamllint   | Lint yaml configuration files     |
 | yapf       | Customizable Code Formatting      |
 
 ## Third Party Integrations
