@@ -1,3 +1,4 @@
+---
 name: {{cookiecutter.project_slug}} Release Wheel
 
 # Workflow Secrets:
