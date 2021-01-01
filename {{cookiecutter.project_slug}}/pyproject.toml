@@ -1,0 +1,148 @@
+
+[build-system]
+  build-backend = "poetry.core.masonry.api"
+  requires = ["poetry-core>=1.0.0"]
+
+[tool]
+
+  [tool.coverage]
+
+    [tool.coverage.report]
+      exclude_lines = ["nocover"]
+      ignore_errors = true
+      precision = 1
+      show_missing = true
+
+    [tool.coverage.run]
+      branch = true
+      omit = ["*/test*","setup.py"]
+      source = ["."]
+
+  [tool.isort]
+    default_section = "FIRSTPARTY"
+    include_trailing_comma = true
+    indent = "  "
+    length_sort = false
+    line_length = 80
+    multi_line_output = 3
+    no_lines_before = "LOCALFOLDER"
+    sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+    skip_glob = "*_pb2.py"
+
+  [tool.poetry]
+    authors = ["{{cookiecutter.author}} <{{cookiecutter.email}}>"]
+    description = "{{cookiecutter.description}}"
+    documentation = "https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/README.md"
+    exclude = ["**/tests/*","**/*.sh"]
+    homepage = "https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}"
+    include = ["README.md"]
+    keywords = []
+    license = "MPL-2.0"
+    name = "{{cookiecutter.project_slug}}"
+    readme = "README.md"
+    repository = "https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}"
+    version = "0.0.1"
+
+    [tool.poetry.dependencies]
+      python = ">=3.7.0,<3.8.0"
+
+    [tool.poetry.dev-dependencies]
+      pib-cli = "^0.0.4"
+
+    [[tool.poetry.packages]]
+      include = "{{cookiecutter.project_slug}}"
+
+    [tool.poetry.scripts]
+      {{cookiecutter.project_slug}} = "{{cookiecutter.project_slug}}.app:main"
+
+  [tool.pylint]
+
+    [tool.pylint.basic]
+      argument-rgx = "[a-z_][a-z0-9_]{2,30}$|^pk$"
+      attr-rgx = "[a-z_][a-z0-9_]{2,30}$"
+      bad-functions = "map,filter,apply,input"
+      bad-names = "foo,bar,baz,toto,tutu,tata"
+      class-attribute-rgx = "([A-Za-z_][A-Za-z0-9_]{2,30}|(__.*__))$"
+      class-rgx = "[A-Z_][a-zA-Z0-9]+$"
+      const-rgx = "(([A-Z_][A-Z0-9_]*)|(__.*__))$|^urls$|^app$|^User$|^router$"
+      docstring-min-length = "-1"
+      function-rgx = "[A-Za-z_][A-Za-z0-9_]{2,40}$"
+      good-names = "i,j,k,ex,Run,_"
+      inlinevar-rgx = "[A-Za-z_][A-Za-z0-9_]*$"
+      method-rgx = "[A-Za-z_][A-Za-z0-9_]{2,50}$"
+      module-rgx = "(([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$"
+      no-docstring-rgx = ".*"
+      required-attributes = []
+      variable-rgx = "[a-z_][a-z0-9_]{2,30}$|^pk$"
+
+    [tool.pylint.classes]
+      defining-attr-methods = "__init__,__new__,setUp"
+      ignore-iface-methods = "        isImplementedBy,\n        deferred,\n        extends,\n        names,\n        namesAndDescriptions,\n        queryDescriptionFor,\n        getBases,\n        getDescriptionFor,\n        getDoc,\n        getName,\n        getTaggedValue,\n        getTaggedValueTags,\n        isEqualOrExtendedBy,\n        setTaggedValue,\n        isImplementedByInstancesOf,\n        adaptWith,\n        is_implemented_by\n      "
+      valid-classmethod-first-arg = "cls"
+      valid-metaclass-classmethod-first-arg = "mcs"
+
+    [tool.pylint.design]
+      ignored-argument-names = "_.*"
+      max-args = 5
+      max-attributes = 7
+      max-branches = 12
+      max-locals = 15
+      max-parents = 10
+      max-public-methods = 200
+      max-returns = 6
+      max-statements = 50
+      min-public-methods = 2
+
+    [tool.pylint.exceptions]
+      overgeneral-exceptions = "Exception"
+
+    [tool.pylint.format]
+      ignore-long-lines = "^\\s*(# )?<?https?://\\S+>?$"
+      indent-string = "  "
+      max-line-length = 80
+      max-module-lines = 1000
+      no-space-check = "trailing-comma,dict-separator"
+      single-line-if-stmt = "no"
+
+    [tool.pylint.imports]
+      deprecated-modules = "regsub,TERMIOS,Bastion,rexec"
+      ext-import-graph = ""
+      import-graph = ""
+      int-import-graph = ""
+
+    [tool.pylint.master]
+      ignore = ""
+      ignore-patterns = "        .*_pb2.py\n      "
+      load-plugins = ""
+      persistent = "yes"
+      profile = "no"
+
+    [tool.pylint.message_control]
+      disable = "        similarities,\n        locally-disabled,\n        fixme,\n        too-few-public-methods,\n        bad-continuation,\n        C0411,\n        E5901,\n        E1101\",\n        R0201\n      "
+
+    [tool.pylint.miscellaneous]
+      notes = "        FIXME,\n        XXX,\n        TODO\n      "
+
+    [tool.pylint.reports]
+      comment = "no"
+      evaluation = "10.0 - ((float(5 * error + warning + refactor + convention) / statement) * 10)"
+      files-output = "no"
+      output-format = "text"
+      reports = "no"
+
+    [tool.pylint.similarities]
+      ignore-comments = "yes"
+      ignore-docstrings = "yes"
+      ignore-imports = "no"
+      min-similarity-lines = 40
+
+    [tool.pylint.typecheck]
+      generated-members = "REQUEST,acl_users,aq_parent"
+      ignore-mixin-members = "yes"
+      ignored-classes = "SQLObject"
+      zope = "no"
+
+    [tool.pylint.variables]
+      additional-builtins = ""
+      dummy-variables-rgx = "_$|dummy"
+      init-import = "no"
