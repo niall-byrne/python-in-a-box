@@ -127,7 +127,8 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Requirements
       run: |
-        pip install cookiecutter pipenv
+        sudo apt-get install -y golang-github-pelletier-go-toml
+        pip install cookiecutter poetry
     - name: Create Template
       run: |
         git config --global user.email "somedude@coolstartup.com"
@@ -135,9 +136,12 @@ jobs:
         echo -e '\n\n\n\n\n\nfalse\nfalse\nfalse\n' | cookiecutter template/
     - name: Setup Environment
       run: |
+        cd mmmm_cookies
         BRANCH_OR_TAG="$(echo "${GITHUB_REF}" | sed 's/refs\/heads\///g' | sed 's/refs\/tags\///g')"
+        ROOT="$(git rev-parse --show-toplevel)"
         echo "BRANCH_OR_TAG=${BRANCH_OR_TAG}" >> $GITHUB_ENV
         echo "PROJECT_NAME=mmmm_cookies" >> $GITHUB_ENV
+        echo "PIB_CONFIG_FILE_LOCATION=${ROOT}/assets/cli.yml" >> $GITHUB_ENV
     - name: Install Hostmachine Scripts
       run: |
         cd mmmm_cookies
@@ -145,52 +149,52 @@ jobs:
     - name: Test Build Documentation
       run: |
         cd mmmm_cookies
-        source "$(pipenv --venv)/bin/activate"
+        source "$(poetry env info --path)/bin/activate"
         dev build-docs
     - name: Test Build Wheel
       run: |
         cd mmmm_cookies
-        source "$(pipenv --venv)/bin/activate"
+        source "$(poetry env info --path)/bin/activate"
         dev build-wheel
     - name: Test the Coverage Command
       run: |
         cd mmmm_cookies
-        source "$(pipenv --venv)/bin/activate"
+        source "$(poetry env info --path)/bin/activate"
         dev coverage
     - name: Test the Fmt Command
       run: |
         cd mmmm_cookies
-        source "$(pipenv --venv)/bin/activate"
+        source "$(poetry env info --path)/bin/activate"
         dev fmt
     - name: Test the Lint Command
       run: |
         cd mmmm_cookies
-        source "$(pipenv --venv)/bin/activate"
+        source "$(poetry env info --path)/bin/activate"
         dev lint
     - name: Test the Reinstall Requirements Command
       run: |
         cd mmmm_cookies
-        source "$(pipenv --venv)/bin/activate"
+        source "$(poetry env info --path)/bin/activate"
         dev reinstall-requirements
     - name: Test the Sectest Command
       run: |
         cd mmmm_cookies
-        source "$(pipenv --venv)/bin/activate"
+        source "$(poetry env info --path)/bin/activate"
         dev sectest
     - name: Test the Setup Command
       run: |
         cd mmmm_cookies
-        source "$(pipenv --venv)/bin/activate"
+        source "$(poetry env info --path)/bin/activate"
         dev setup
     - name: Test the Setup Bash Command
       run: |
         cd mmmm_cookies
-        source "$(pipenv --venv)/bin/activate"
+        source "$(poetry env info --path)/bin/activate"
         dev setup-bash
     - name: Test the Test Command
       run: |
         cd mmmm_cookies
-        source "$(pipenv --venv)/bin/activate"
+        source "$(poetry env info --path)/bin/activate"
         dev test
     - name: Test ShellCheck Passes
       run: |
