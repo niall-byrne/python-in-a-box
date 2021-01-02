@@ -9,7 +9,7 @@ export PIB_CONFIG_FILE_LOCATION="${ROOT}./assets/cli.yml"
 export PROJECT_NAME="{{cookiecutter.project_slug}}"
 
 conditional_source() {
-  if ! pipenv --venv >/dev/null 2>&1; then
+  if [[ -z "$(poetry env list)" ]]; then
     setup_python
   fi
   spawn_shell
@@ -22,17 +22,12 @@ setup_python() {
   pushd "${ROOT}"  > /dev/null
     if [[ ! -f /etc/container_release ]]; then
       set +e
-        pipenv --rm
+        poetry env remove python
       set -e
-      pipenv --python 3.7
+      poetry install
     fi
-    source_environment
-      pip install -r assets/requirements.txt
-      pip install -r assets/requirements-dev.txt
-      pip install pib_cli
-    unvirtualize
   popd  > /dev/null
-  echo "Pipenv Environment Location: $(pipenv --venv)"
+  echo "Poetry Environment Location: $(poetry env list)"
 }
 
 source_environment() {
@@ -42,7 +37,7 @@ source_environment() {
     unvirtualize
 
     # shellcheck disable=SC1090
-    source "$(pipenv --venv)/bin/activate"
+    source "$(poetry env info --path)/bin/activate"
 
   fi
 
@@ -56,27 +51,25 @@ source_environment() {
 }
 
 spawn_shell() {
+
   if [[ "${ARG}" == "shell" ]]; then
-    pushd "${ROOT}"  > /dev/null
-    pipenv shell
+    poetry shell
   else
     echo "Run this script with the *shell* argument to spawn a shell within the virtual environment."
   fi
+
 }
 
 unvirtualize() {
 
   if [[ ! -f /etc/container_release ]]; then
-
     toggle=1
-
     if [[ -n "${-//[^e]/}" ]]; then set +e; else toggle=0; fi
       deactivate_present=$(LC_ALL=C type deactivate 2>/dev/null)
       if [[ -n ${deactivate_present} ]]; then
         deactivate
       fi
     if [[ "${toggle}" == "1" ]]; then set -e; fi
-
   fi
 
 }
