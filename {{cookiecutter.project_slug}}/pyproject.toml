@@ -77,7 +77,7 @@
 
     [tool.pylint.classes]
       defining-attr-methods = "__init__,__new__,setUp"
-      ignore-iface-methods = "        isImplementedBy,\n        deferred,\n        extends,\n        names,\n        namesAndDescriptions,\n        queryDescriptionFor,\n        getBases,\n        getDescriptionFor,\n        getDoc,\n        getName,\n        getTaggedValue,\n        getTaggedValueTags,\n        isEqualOrExtendedBy,\n        setTaggedValue,\n        isImplementedByInstancesOf,\n        adaptWith,\n        is_implemented_by\n      "
+      ignore-iface-methods = "isImplementedBy,deferred,extends,names,namesAndDescriptions,queryDescriptionFor,getBases,getDescriptionFor,getDoc,getName,getTaggedValue,getTaggedValueTags,isEqualOrExtendedBy,setTaggedValue,isImplementedByInstancesOf,adaptWith,is_implemented_by"
       valid-classmethod-first-arg = "cls"
       valid-metaclass-classmethod-first-arg = "mcs"
 
@@ -112,16 +112,16 @@
 
     [tool.pylint.master]
       ignore = ""
-      ignore-patterns = "        .*_pb2.py\n      "
+      ignore-patterns = ".*_pb2.py"
       load-plugins = ""
       persistent = "yes"
       profile = "no"
 
     [tool.pylint.message_control]
-      disable = "        similarities,\n        locally-disabled,\n        fixme,\n        too-few-public-methods,\n        bad-continuation,\n        C0411,\n        E5901,\n        E1101\",\n        R0201\n      "
+      disable = "similarities,locally-disabled,fixme,too-few-public-methods,bad-continuation,C0411,E5901,E1101,R0201"
 
     [tool.pylint.miscellaneous]
-      notes = "        FIXME,\n        XXX,\n        TODO\n      "
+      notes = "FIXME,XXX,TODO"
 
     [tool.pylint.reports]
       comment = "no"
