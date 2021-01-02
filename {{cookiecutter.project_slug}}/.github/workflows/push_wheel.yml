@@ -45,6 +45,10 @@ jobs:
           docker-compose build
           docker-compose up -d
 
+      - name: Run TOML Linter
+        run: |
+          docker-compose exec -T "${PROJECT_NAME}" bash -l -c 'tomll /app/pyproject.toml'
+
       - name: Run Linter
         run: |
           docker-compose exec -T "${PROJECT_NAME}" bash -l -c 'dev lint'

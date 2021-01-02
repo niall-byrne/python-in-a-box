@@ -19,6 +19,7 @@ pushd .. >/dev/null
     docker-compose up -d
     sleep 1
 
+    docker-compose exec -T mmmm_cookies bash -l -c 'tomll /app/pyproject.toml'
     docker-compose exec -T mmmm_cookies bash -l -c 'dev build-docs'
     docker-compose exec -T mmmm_cookies bash -l -c 'dev build-wheel'
     docker-compose exec -T mmmm_cookies bash -l -c 'dev coverage'

@@ -51,6 +51,10 @@ jobs:
         docker-compose build
         docker-compose up -d
         sleep 1
+    - name: Run TOML Linter
+      run: |
+        cd mmmm_cookies
+        docker-compose exec -T mmmm_cookies bash -l -c 'tomll /app/pyproject.toml'
     - name: Test Build Documentation
       run: |
         cd mmmm_cookies
@@ -125,9 +129,11 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Requirements
+    - name: Install TOML Linter
       run: |
         sudo apt-get install -y golang-github-pelletier-go-toml
+    - name: Requirements
+      run: |
         pip install cookiecutter poetry
     - name: Create Template
       run: |
@@ -142,6 +148,10 @@ jobs:
         echo "BRANCH_OR_TAG=${BRANCH_OR_TAG}" >> $GITHUB_ENV
         echo "PROJECT_NAME=mmmm_cookies" >> $GITHUB_ENV
         echo "PIB_CONFIG_FILE_LOCATION=${ROOT}/assets/cli.yml" >> $GITHUB_ENV
+    - name: Lint pyproject.toml
+      run: |
+        cd mmmm_cookies
+        tomll pyproject.toml
     - name: Install Hostmachine Scripts
       run: |
         cd mmmm_cookies

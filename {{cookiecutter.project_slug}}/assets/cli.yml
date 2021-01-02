@@ -31,7 +31,6 @@
 - name: "lint"
   path_method: "project_root"
   commands:
-    - 'tomll pyproject.toml'
     - 'yamllint *.yml .*.yml assets/ .github/workflows/'
     - 'isort -c "${PROJECT_NAME}"'
     - 'pytest --pylint --pylint-jobs=2 "${PROJECT_NAME}"'
