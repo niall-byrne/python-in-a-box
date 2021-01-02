@@ -42,6 +42,7 @@ The local CLI configuration is managed by the [cli.yaml](./{{cookiecutter.projec
 | bandit     | Finds common security issues      |
 | commitizen | Standardizes commit messages      |
 | isort      | Sorts imports                     |
+| poetry     | Python Package Manager            |
 | pylint     | Static Code Analysis              |
 | pytest     | Test suite                        |
 | pytest-cov | Coverage support for pytest       |
@@ -58,6 +59,7 @@ The local CLI configuration is managed by the [cli.yaml](./{{cookiecutter.projec
 | jq      |  processing json                                            |
 | git, ssh|  managing git commits                                       |
 | tig     |  managing git history                                       |
+| tomll   |  a toml file linter                                         |
 | vim     |  managing small edits, and git commit messages              |
 
 ## Configuration Files
@@ -67,30 +69,31 @@ Files are created in the project root folder for the following:
 - [Bandit](https://bandit.readthedocs.io/en/latest/)
   - [.bandit](./{{cookiecutter.project_slug}}/.bandit)
   - [.banditrc](./{{cookiecutter.project_slug}}/.bandit.rc)
-- [Coverage](https://coverage.readthedocs.io/en/coverage-5.3.1/)
-  - [.coveragerc](./{{cookiecutter.project_slug}}/.coveragerc)
+- [Default Software License](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/licensing-a-repository)
+  - [LICENSE](./{{cookiecutter.project_slug}}/LICENSE)
 - [Git](https://git-scm.com/)
   - [.gitignore](./{{cookiecutter.project_slug}}/.gitignore)
-- [iSort](https://pycqa.github.io/isort/)
-  - [.isort.config](./{{cookiecutter.project_slug}}/.isort.cfg)
-- [pylint](https://www.pylint.org/)
-  - [.pylint.rc](./{{cookiecutter.project_slug}}/.pylint.rc)
 - [Read The Docs](https://readthedocs.org/)
   - [.readthedocs.yml](./{{cookiecutter.project_slug}}/.readthedocs.yml)
-- [Software License](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/licensing-a-repository)
-  - [LICENSE](./{{cookiecutter.project_slug}}/LICENSE)
-- [pipenv](https://github.com/pypa/pipenv) ([scripts/hostmachine.sh](./{{cookiecutter.project_slug}}/scripts/hostmachine.sh))
-  - [Pipfile](./{{cookiecutter.project_slug}}/Pipfile) 
+- [poetry](https://python-poetry.org/)  
+  - [poetry.lock](./{{cookiecutter.project_slug}}/poetry.lock)
+  - [pyproject.toml](./{{cookiecutter.project_slug}}/pyproject.tom)
 - [pytest](https://docs.pytest.org/en/stable/)
   - [pytest.ini](./{{cookiecutter.project_slug}}/pytest.ini)
-- [pypi.org](https://pypi.org/)
-  - [setup.cfg](./{{cookiecutter.project_slug}}/setup.cfg)
-  - [setup.py](./{{cookiecutter.project_slug}}/setup.py)
 - [yamllint](https://github.com/adrienverge/yamllint)
   - [.yamllint.yml](./{{cookiecutter.project_slug}}/.yamllint.yml)  
 - [yapf](https://readthedocs.org/)
   - [.style.yapf](./{{cookiecutter.project_slug}}/.style.yapf)
   - [.yapfignore](./{{cookiecutter.project_slug}}/.yapfignore)
+  
+## PEP 518 Compliance
+
+- [pyproject.toml](./{{cookiecutter.project_slug}}/pyproject.tom) centralizes configuration for the following:
+  - [coverage](https://coverage.readthedocs.io/en/coverage-5.3.1/)
+  - [isort](https://pycqa.github.io/isort/)
+  - [poetry](https://python-poetry.org/) ([scripts/hostmachine.sh](./{{cookiecutter.project_slug}}/scripts/hostmachine.sh))
+  - [pylint](https://www.pylint.org/)
+  - [pypi.org](https://pypi.org/)
 
 ## Third Party Integrations
 
@@ -101,6 +104,6 @@ Integrations with the following third party services are configured during templ
 - [Docker Hub](https://hub.docker.com/)
   - [release_container.yml](./{{cookiecutter.project_slug}}/.github/workflows/release_container.yml)
 - [pypi.org](https://pypi.org/)
-  - [setup.py](./{{cookiecutter.project_slug}}/setup.py)
+  - [pyproject.toml](./{{cookiecutter.project_slug}}/pyproject.tom)
 - [Read The Docs](https://readthedocs.org/)
   - [.readthedocs.yml](./{{cookiecutter.project_slug}}/.readthedocs.yml)

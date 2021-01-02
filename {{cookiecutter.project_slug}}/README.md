@@ -33,6 +33,7 @@ The local CLI configuration is managed by the [cli.yaml](./{{cookiecutter.projec
 | bandit     | Finds common security issues      |
 | commitizen | Standardizes commit messages      |
 | isort      | Sorts imports                     |
+| poetry     | Python Package Manager            |
 | pylint     | Static Code Analysis              |
 | pytest     | Test suite                        |
 | pytest-cov | Coverage support for pytest       |
@@ -51,8 +52,7 @@ Integrations with the following third party services are templated and ready to 
 - [Docker Hub](https://hub.docker.com/)
   - [release_container.yml](./.github/workflows/release_container.yml)
 - [pypi.org](https://pypi.org/)
-  - [setup.py](./setup.py)
-  - [setup.cfg](./setup.cfg)  
+  - [pyproject.toml](./pyproject.tom)
 - [Read The Docs](https://readthedocs.org/)
   - [.readthedocs.yml](./.readthedocs.yml)
 
@@ -94,14 +94,14 @@ The following environment variables can be used to customize this behavior:
 
 The [scripts/hostmachine.sh](./scripts/hostmachine.sh) script does this for you.
 
-It will use `pipenv` to create a virtual environment and install both requirements files in the assets folder.  
+It will use [poetry](https://python-poetry.org/) to create a virtual environment and install both requirements files in the assets folder.  
 This is useful if you want to make your local IDE aware of what's installed.
 
-(`pip install pipenv` or `brew install pipenv` may be necessary on your system.)
+(`pip install poetry` or `brew install poetry` may be necessary on your system.)
 
-Executing the script will install (or re-install) a complete pipenv environment, with the following dependency files installed automatically:
-- [assets/requirements.txt](./assets/requirements.txt)
-- [assets/requirements-dev.txt](./assets/requirements-dev.txt)
+Executing the script will install (or re-install) a complete poetry virtual environment.
+- [poetry.lock](./poetry.lock)
+- [pyproject.toml](./pyproject.toml)
 
-Running the script the `shell` argument, is a convenience wrapper around `pipenv shell`.
+Running the script the `shell` argument, is a convenience wrapper around `poetry shell`.
 
