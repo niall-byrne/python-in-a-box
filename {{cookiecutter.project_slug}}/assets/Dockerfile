@@ -57,7 +57,7 @@ RUN echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 USER user
 
 # Setup The Dev CLI
-RUN pip install poetry pib_cli==0.0.4                 && \
+RUN pip install poetry pib_cli==0.0.4 && \
     dev setup
 
 CMD ["./{{cookiecutter.project_slug}}/container_init.sh"]

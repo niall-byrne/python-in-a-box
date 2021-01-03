@@ -24,6 +24,7 @@ setup_python() {
       set +e
         poetry env remove python
       set -e
+      pip install pib_cli==0.0.4
       poetry install
     fi
   popd  > /dev/null
