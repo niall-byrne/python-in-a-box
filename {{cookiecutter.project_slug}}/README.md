@@ -18,43 +18,17 @@
 - [![{{cookiecutter.project_slug}} Release Container](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}%20Release%20Container/badge.svg)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
 - [![{{cookiecutter.project_slug}} Release Wheel](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}%20Release%20Wheel/badge.svg)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
 
+## Getting Started With Python In A Box
+
+Refer to the [python-in-a-box documentation](https://github.com/Shared-Vision-Solutions/python-in-a-box) to get oriented, and learn how to manage your development environment.
+
 ## Tooling Reference
 The CLI is instsalled by default inside the container, and is also available on the host machine.
 Run the CLI without arguments to see the complete list of available commands: `dev`
 
 [The 'pib_cli' Python Package](https://pypi.org/project/pib-cli/)
 
-The local CLI configuration is managed by the [cli.yaml](./{{cookiecutter.project_slug}}/assets/cli.yaml) file.
-
-## Installed Python Packages:
-
-| package    | Description                       |
-| ---------- | --------------------------------- |
-| bandit     | Finds common security issues      |
-| commitizen | Standardizes commit messages      |
-| isort      | Sorts imports                     |
-| poetry     | Python Package Manager            |
-| pylint     | Static Code Analysis              |
-| pytest     | Test suite                        |
-| pytest-cov | Coverage support for pytest       |
-| sphinx     | Generating documentation          |
-| safety     | Dependency vulnerability scanning |
-| wheel      | Package distribution tools        |
-| yamllint   | Lint yaml configuration files     |
-| yapf       | Customizable Code Formatting      |
-
-## Third Party Integrations
-
-Integrations with the following third party services are templated and ready to use:
-
-- [Github Workflows](https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions)
-  - [workflows](./.github/workflows)
-- [Docker Hub](https://hub.docker.com/)
-  - [release_container.yml](./.github/workflows/release_container.yml)
-- [pypi.org](https://pypi.org/)
-  - [pyproject.toml](./pyproject.tom)
-- [Read The Docs](https://readthedocs.org/)
-  - [.readthedocs.yml](./.readthedocs.yml)
+The local CLI configuration is managed by the [cli.yml](./assets/cli.yml) file.
 
 ## Development Dependencies
 
@@ -62,7 +36,7 @@ You'll need to install:
  - [Docker](https://www.docker.com/) 
  - [Docker Compose](https://docs.docker.com/compose/install/)
 
-## Setup the Development Environment
+## Build and Start the Development Environment
 
 Build the development environment container (this takes a few minutes):
 - `docker-compose build`

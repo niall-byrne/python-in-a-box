@@ -28,15 +28,32 @@ This container provides my preferred CLI tooling and a compartmentalized develop
 [MPL-2](LICENSE)
 
 ## Tooling Reference
-The CLI is instsalled by default inside the container, and is also available on the host machine.
+The CLI is installed by default inside the container, and is also available on the host machine.
 Run the CLI without arguments to see the complete list of available commands: `dev`
 
 [The 'pib_cli' Python Package](https://pypi.org/project/pib-cli/)
 
 The local CLI configuration is managed by the [cli.yaml](./{{cookiecutter.project_slug}}/assets/cli.yaml) file.
 
-## Installed Python Packages:
+## Adding / Removing Dependencies For Your Project
 
+#### Python Dependencies:
+
+Use the [pyproject.toml](./pyproject.toml) file to store your project dependencies in accordance with [PEP 518](https://www.python.org/dev/peps/pep-0518/) and [Poetry Dependency Management](https://python-poetry.org/docs/pyproject/#dependencies-and-dev-dependencies).
+
+Poetry is installed inside the container, so you can leverage this tool:
+- [Adding Python Packages with Poetry](https://python-poetry.org/docs/cli/#add)
+- [Removing Python Packages With Poetry](https://python-poetry.org/docs/cli/#remove)
+
+#### OS Level Dependencies:
+
+Modify the [Dockerfile](./assets/Dockerfile) to accomplish to this.
+- Add to the base dependencies list if your package should be in both development and production
+- Add to the dev dependencies list if it's a development only package
+
+The container is using a [Debian](https://www.debian.org/) derived image, so [apt-get](https://linux.die.net/man/8/apt-get) is the package manager.
+
+## Default Installed Python Packages:
 | package    | Description                       |
 | ---------- | --------------------------------- |
 | bandit     | Finds common security issues      |
@@ -52,15 +69,84 @@ The local CLI configuration is managed by the [cli.yaml](./{{cookiecutter.projec
 | yamllint   | Lint yaml configuration files     |
 | yapf       | Customizable Code Formatting      |
 
-## Container OS Tooling
-| package | Description                                                 |
-|---------|-------------------------------------------------------------|
-| bash    |  with a customizable environment and shellcheck for linting |
-| jq      |  processing json                                            |
-| git, ssh|  managing git commits                                       |
-| tig     |  managing git history                                       |
-| tomll   |  a toml file linter                                         |
-| vim     |  managing small edits, and git commit messages              |
+## Default Installed Container OS Packages
+| package         | Description                                                 |
+|-----------------|-------------------------------------------------------------|
+| bash            |  with a customizable environment and shellcheck for linting |
+| build-essential |  A collection of packages for compiling, linking            |
+| curl            |  CLI based web client                                       |
+| jq              |  processing json                                            |
+| git, ssh        |  managing git commits                                       |
+| shellcheck      |  BASH Linting                                               | 
+| tig             |  managing git history                                       |
+| tomll           |  a toml file linter                                         |
+| vim             |  managing small edits, and git commit messages              |
+
+
+## Customizing The Development Environment
+
+After you initialize the template with cookiecutter, you'll likely want to customize the resulting development environment to suit your needs.  Here's a couple of quick examples to get your started...
+
+### Webapps, APIs
+
+Install your framework with poetry before making these modifications (see section above).  After everything noted below is modified to suit your needs, rebuild your container:
+`docker-compose build && docker-compose up`
+
+For a webapp like [Flask](https://flask.palletsprojects.com/) or [Django](https://www.djangoproject.com/), you'll want to customize the container [init script](./{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}/container_init.sh), as well as expose a port in the [docker-compose](./{{cookiecutter.project_slug}}/docker-compose.yml) file.
+
+In the [docker-compose](./{{cookiecutter.project_slug}}/docker-compose.yml) file, find your service, and add a yaml line to include an exposed port or ports:
+
+```yaml
+services:
+  mywebapp:
+    build:
+      context: .
+      dockerfile: assets/Dockerfile
+      target: development
+    env_file:
+      - assets/local.env
+    ports:
+      - "127.0.0.1:8000:8000"
+```
+
+> Here `127.0.0.1` refers to your local dev machine, so you can reach your webservice in your browser
+
+In the [init script](./{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}/container_init.sh), modify either the `DEVELOPMENT` or `PRODUCTION` function, depending on the use case:
+- Remove the line `while true; do sleep 1; done`
+- Replace it with the command to start your development server:
+  - `python manage.py runserver 0.0.0.0:8000` (for Django projects)
+  - `FLASK_ENV=development flask run --host=0.0.0.0` (for Flask projects)
+
+> Besure to bind to 0.0.0.0 inside the container to expose the container to your host machine
+
+### Adding Databases
+
+Databases are fairly straightforward to add to your [docker-compose](./{{cookiecutter.project_slug}}/docker-compose.yml) file, expose them to your host machine if you want to use applications or tools you've installed to manage the database:
+
+```yaml
+services:
+  mywebapp:
+    build:
+      context: .
+      dockerfile: assets/Dockerfile
+      target: development
+    env_file:
+      - assets/local.env
+    ports:
+      - "127.0.0.1:8000:8000"
+  db:
+    image: postgres:12.0-alpine
+    ports:
+      - "127.0.0.1:5432:5432"
+    env_file:
+      - assets/local.env
+```
+
+> `mywebapp` can now reach the database at `db:5432`
+
+> To reach the same database on your hostmachine, build a connection string using `127.0.0.1:5432` 
+
+> Consult the documentation for the database image your are using to learn about how to set credentials, and place any environment variables in the [local.env](./{{cookiecutter.project_slug}}/assets/local.env) file for your development environment (Do not check in production values here.)
 
 ## Configuration Files
 
