@@ -52,7 +52,7 @@ RUN echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 USER user
 
 # Setup The Dev CLI
-RUN pip install pib_cli                               && \
+RUN pip install pib_cli==0.0.4                        && \
     /home/user/.local/bin/dev setup-bash              && \
     /home/user/.local/bin/dev reinstall-requirements
 
