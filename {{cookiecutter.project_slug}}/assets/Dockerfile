@@ -20,9 +20,6 @@ RUN apt-get update      && \
 RUN mkdir -p /home/user /app
 WORKDIR /app
 
-# Copy the codebase
-COPY . /app
-
 # Create the runtime user, and enforce permissions
 RUN useradd user -d /home/user        \
                  -s /bin/bash         \
@@ -30,6 +27,10 @@ RUN useradd user -d /home/user        \
  && chown -R user:user /home/user     \
  && chown -R user:user /app
 
+# Install Poetry
+RUN pip install poetry
+
+# Include the local binary folder in PATH
 ENV PATH "/home/user/.local/bin/:${PATH}"
 
 # ======================================================
@@ -42,6 +43,7 @@ ENV ENVIRONMENT=DEVELOPMENT
 # Install Dev Dependencies
 RUN apt-get install -y              \
     curl                            \
+    fish                            \
     golang-github-pelletier-go-toml \
     jq                              \
     openssh-client                  \
@@ -56,8 +58,16 @@ RUN echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 # Set the runtime user
 USER user
 
+# Copy the codebase
+COPY . /app
+
+# Create A Symlink For the Bash Customizations
+RUN ln -sf /app/assets/.bash_customize /home/user/.bash_customize
+
 # Setup The Dev CLI
-RUN pip install poetry pib_cli==0.0.4 && \
+RUN poetry lock                                                 && \
+    poetry export --without-hashes --dev -f requirements.txt |     \
+    pip install -r /dev/stdin                                   && \
     dev setup
 
 CMD ["./{{cookiecutter.project_slug}}/container_init.sh"]
@@ -69,11 +79,15 @@ FROM base as production
 LABEL ENVIRONMENT=PRODUCTION
 ENV ENVIRONMENT=PRODUCTION
 
-# Install Production Packages Only
-RUN pip install poetry
-RUN poetry install --no-dev --no-root
-
 # Set the runtime user
 USER user
+
+# Copy the codebase
+COPY . /app
+
+# Install Production Packages Only
+RUN poetry lock                                                 && \
+    poetry export --without-hashes -f requirements.txt |           \
+    pip install -r /dev/stdin
 
 CMD ["./{{cookiecutter.project_slug}}/container_init.sh"]

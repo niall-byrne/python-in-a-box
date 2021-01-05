@@ -31,6 +31,7 @@
 - name: "lint"
   path_method: "project_root"
   commands:
+    - 'shellcheck ${PROJECT_NAME}/container_init.sh'
     - 'yamllint *.yml .*.yml assets/ .github/workflows/'
     - 'isort -c "${PROJECT_NAME}"'
     - 'pytest --pylint --pylint-jobs=2 "${PROJECT_NAME}"'
@@ -39,13 +40,15 @@
 - name: "reinstall-requirements"
   path_method: "project_root"
   commands:
-    - "poetry install --no-root"
+    - "poetry lock"
+    - "poetry export --without-hashes --dev -f requirements.txt | pip install -r /dev/stdin"
   success: "Reinstall Succeeded!"
   failure: "Reinstall Failed!"
 - name: "sectest"
   path_method: "project_root"
   commands:
     - 'bandit -r "${PROJECT_NAME}" -c .bandit.rc --ini .bandit'
+    - 'echo "\nPoetry is exporting the lockfile standby..."'
     - 'poetry export --without-hashes --dev -f requirements.txt | safety check --stdin'
   success: "Security Test Passed!"
   failure: "Security Test Failed!"
