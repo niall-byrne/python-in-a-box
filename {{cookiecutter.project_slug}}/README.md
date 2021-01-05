@@ -59,23 +59,30 @@ You can override the values set in this file by setting shell ENV variables prio
 
 ## Git Hooks
 Git hooks are installed that will enforce linting and unit-testing on the specified branches.
-The following environment variables can be used to customize this behavior:
 
+The following environment variables in the  [local.env](./assets/local.env) file can be used to customize this behavior:
 - `GIT_HOOKS` (Set this value to 1 to enable the pre-commit hook)
 - `GIT_HOOKS_PROTECTED_BRANCHES` (Customize this regex to specify the branches that should enforce the Git Hook on commit.)
 
-## Installing a virtual environment on your host machine
+Once installed, the hooks required the presence of `pib_cli`, so either inside the container, or with the help of the `pib_setup_hostmachine` command (documented below). 
 
-The [scripts/hostmachine.sh](./scripts/hostmachine.sh) script does this for you.
+Use the [scripts/extras.sh](scripts/extras.sh) script to install the hooks:
 
-It will use [poetry](https://python-poetry.org/) to create a virtual environment and install both requirements files in the assets folder.  
-This is useful if you want to make your local IDE aware of what's installed.
+- `source scripts/extras.sh`
+- `install_git_hooks`
 
-(`pip install poetry` or `brew install poetry` may be necessary on your system.)
 
-Executing the script will install (or re-install) a complete poetry virtual environment.
-- [poetry.lock](./poetry.lock)
-- [pyproject.toml](./pyproject.toml)
+## Installing a virtual environment, and the CLI on your host machine
 
-Running the script the `shell` argument, is a convenience wrapper around `poetry shell`.
+The [scripts/extras.sh](scripts/extras.sh) script does this for you.
 
+First install [poetry](https://python-poetry.org/) on your host machine:
+- `pip install poetry`
+
+Then source this script, setup the extras, and you can use the `dev` command on your host:
+- `source scripts/extras.sh`
+- `pib_setup_hostmachine` (to install the poetry dependencies)  
+- `dev --help` (to run the cli outside the container)
+
+It is still recommended to work inside the container, as you'll have access to the full managed python environment, 
+as well as any additional services you are running in containers.

@@ -75,6 +75,7 @@ The container is using a [Debian](https://www.debian.org/) derived image, so [ap
 | bash            |  with a customizable environment and shellcheck for linting |
 | build-essential |  A collection of packages for compiling, linking            |
 | curl            |  CLI based web client                                       |
+| fish            |  Alternative Shell                                          |
 | jq              |  processing json                                            |
 | git, ssh        |  managing git commits                                       |
 | shellcheck      |  BASH Linting                                               | 
@@ -170,14 +171,14 @@ Files are created in the project root folder for the following:
   - [.yamllint.yml](./{{cookiecutter.project_slug}}/.yamllint.yml)  
 - [yapf](https://readthedocs.org/)
   - [.style.yapf](./{{cookiecutter.project_slug}}/.style.yapf)
-  - [.yapfignore](./{{cookiecutter.project_slug}}/.yapfignore)
+  - [.yapfignore](../pib_cli/pib_cli/.yapfignore)
   
 ## PEP 518 Compliance
 
 - [pyproject.toml](./{{cookiecutter.project_slug}}/pyproject.tom) centralizes configuration for the following:
   - [coverage](https://coverage.readthedocs.io/en/coverage-5.3.1/)
   - [isort](https://pycqa.github.io/isort/)
-  - [poetry](https://python-poetry.org/) ([scripts/hostmachine.sh](./{{cookiecutter.project_slug}}/scripts/hostmachine.sh))
+  - [poetry](https://python-poetry.org/) ([scripts/extras.sh](./{{cookiecutter.project_slug}}/scripts/extras.sh))
   - [pylint](https://www.pylint.org/)
   - [pypi.org](https://pypi.org/)
 
