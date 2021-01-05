@@ -30,6 +30,8 @@ pushd .. >/dev/null
     docker-compose exec -T mmmm_cookies dev setup
     docker-compose exec -T mmmm_cookies dev setup-bash
     docker-compose exec -T mmmm_cookies dev test
+    docker-compose exec -T mmmm_cookies find scripts -type f -exec shellcheck -x "{}" \;
+    docker-compose exec -T mmmm_cookies ./testing_shim
     docker-compose exec mmmm_cookies bash
     docker-compose kill
   popd >/dev/null
