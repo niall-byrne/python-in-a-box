@@ -19,17 +19,17 @@ pushd .. >/dev/null
     docker-compose up -d
     sleep 1
 
-    docker-compose exec -T mmmm_cookies bash -l -c 'tomll /app/pyproject.toml'
-    docker-compose exec -T mmmm_cookies bash -l -c 'dev build-docs'
-    docker-compose exec -T mmmm_cookies bash -l -c 'dev build-wheel'
-    docker-compose exec -T mmmm_cookies bash -l -c 'dev coverage'
-    docker-compose exec -T mmmm_cookies bash -l -c 'dev fmt'
-    docker-compose exec -T mmmm_cookies bash -l -c 'dev lint'
-    docker-compose exec -T mmmm_cookies bash -l -c 'dev reinstall-requirements'
-    docker-compose exec -T mmmm_cookies bash -l -c 'dev sectest'
-    docker-compose exec -T mmmm_cookies bash -l -c 'dev setup'
-    docker-compose exec -T mmmm_cookies bash -l -c 'dev setup-bash'
-    docker-compose exec -T mmmm_cookies bash -l -c 'dev test'
+    docker-compose exec -T mmmm_cookies tomll /app/pyproject.toml
+    docker-compose exec -T mmmm_cookies dev build-docs
+    docker-compose exec -T mmmm_cookies dev build-wheel
+    docker-compose exec -T mmmm_cookies dev coverage
+    docker-compose exec -T mmmm_cookies dev fmt
+    docker-compose exec -T mmmm_cookies dev lint
+    docker-compose exec -T mmmm_cookies dev reinstall-requirements
+    docker-compose exec -T mmmm_cookies dev sectest
+    docker-compose exec -T mmmm_cookies dev setup
+    docker-compose exec -T mmmm_cookies dev setup-bash
+    docker-compose exec -T mmmm_cookies dev test
     docker-compose exec mmmm_cookies bash
     docker-compose kill
   popd >/dev/null
