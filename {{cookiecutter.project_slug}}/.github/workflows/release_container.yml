@@ -39,7 +39,7 @@ jobs:
 
       - name: Ensure File System is Writable by the Container
         run: |
-          sudo chmod -R 777 .
+          sudo chmod -R o+w .
 
       - name: Construct Image Tag
         run: |

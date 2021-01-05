@@ -36,7 +36,7 @@ jobs:
 
       - name: Ensure File System is Writable by the Container
         run: |
-          sudo chmod -R 777 .
+          sudo chmod -R o+w .
 
       - name: Build Container
         run: |
@@ -45,24 +45,23 @@ jobs:
 
       - name: Run Build Wheel
         run: |
-          docker-compose exec -T "${PROJECT_NAME}" bash -l -c 'dev build-wheel'
+          docker-compose exec -T "${PROJECT_NAME}" dev build-wheel'
 
       # START Continuous Deployment -- Customize this Section Depending on your strategy
 
       - name: Is CD enabled?
-        if: env.DOCKER_USERNAME != ''
+        if: env.PYPI_TOKEN != ''
         run: |
-          [[ -n "${PYPI_TOKEN}" ]] && echo "CD_ENABLED=true" >> $GITHUB_ENV
+          echo "CD_ENABLED=true" >> $GITHUB_ENV
         env:
           PYPI_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
 
       - name: Publish a Python distribution to PyPI
         if: env.CD_ENABLED == 'true'
-        uses: pypa/gh-action-pypi-publish@master
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
-          verbose: true
+        run: |
+          docker-compose exec -T "${PROJECT_NAME}" poetry publish --build --username __token__ --password "${PYPI_API_TOKEN}"
+        env:
+          PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
 
       # END Continuous Deployment -- Customize this Section Depending on your strategy
 

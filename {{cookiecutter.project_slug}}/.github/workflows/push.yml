@@ -38,7 +38,7 @@ jobs:
 
       - name: Ensure File System is Writable by the Container
         run: |
-          sudo chmod -R 777 .
+          sudo chmod -R o+w .
 
       - name: Build Container
         run: |
@@ -47,19 +47,19 @@ jobs:
 
       - name: Run TOML Linter
         run: |
-          docker-compose exec -T "${PROJECT_NAME}" bash -l -c 'tomll /app/pyproject.toml'
+          docker-compose exec -T "${PROJECT_NAME}" tomll /app/pyproject.toml
 
       - name: Run Linter
         run: |
-          docker-compose exec -T "${PROJECT_NAME}" bash -l -c 'dev lint'
+          docker-compose exec -T "${PROJECT_NAME}" dev lint
 
       - name: Run Sec Test
         run: |
-          docker-compose exec -T "${PROJECT_NAME}" bash -l -c 'dev sectest'
+          docker-compose exec -T "${PROJECT_NAME}" dev sectest
 
       - name: Run Unit Tests
         run: |
-          docker-compose exec -T "${PROJECT_NAME}" bash -l -c 'dev coverage'
+          docker-compose exec -T "${PROJECT_NAME}" dev coverage
 
       - name: Report Build Failures
         if: failure() == true
@@ -73,7 +73,6 @@ jobs:
       - name: Releases -- Detect A Release Tag
         if: contains(github.ref, '/tags/v') == true
         run: |
-          git checkout .  # Reset file modes
           VALID_RELEASE=$(git diff origin/master)
           echo 'VALID_RELEASE<<EOF' >> $GITHUB_ENV
           echo "${VALID_RELEASE}" >> $GITHUB_ENV

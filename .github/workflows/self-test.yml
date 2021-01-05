@@ -44,7 +44,7 @@ jobs:
         echo "VALID_RELEASE=not_a_validated_release" >> $GITHUB_ENV
     - name: Ensure File System is Writable by the Container
       run: |
-        chmod -R 777 mmmm_cookies
+        sudo chmod -R o+w .
     - name: Build Docker Image, Start Container
       run: |
         cd mmmm_cookies
@@ -54,51 +54,51 @@ jobs:
     - name: Run TOML Linter
       run: |
         cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies bash -l -c 'tomll /app/pyproject.toml'
+        docker-compose exec -T mmmm_cookies tomll /app/pyproject.toml
     - name: Test Build Documentation
       run: |
         cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies bash -l -c 'dev build-docs'
+        docker-compose exec -T mmmm_cookies dev build-docs
     - name: Test Build Wheel
       run: |
         cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies bash -l -c 'dev build-wheel'
+        docker-compose exec -T mmmm_cookies dev build-wheel
     - name: Test the Coverage Command
       run: |
         cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies bash -l -c 'dev coverage'
+        docker-compose exec -T mmmm_cookies dev coverage
     - name: Test the Fmt Command
       run: |
         cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies bash -l -c 'dev fmt'
+        docker-compose exec -T mmmm_cookies dev fmt
     - name: Test the Lint Command
       run: |
         cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies bash -l -c 'dev lint'
+        docker-compose exec -T mmmm_cookies dev lint
     - name: Test the Reinstall Requirements Command
       run: |
         cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies bash -l -c 'dev reinstall-requirements'
+        docker-compose exec -T mmmm_cookies dev reinstall-requirements
     - name: Test the Sectest Command
       run: |
         cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies bash -l -c 'dev sectest'
+        docker-compose exec -T mmmm_cookies dev sectest
     - name: Test the Setup Command
       run: |
         cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies bash -l -c 'dev setup'
+        docker-compose exec -T mmmm_cookies dev setup
     - name: Test the Setup Bash Command
       run: |
         cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies bash -l -c 'dev setup-bash'
+        docker-compose exec -T mmmm_cookies dev setup-bash
     - name: Test the Test Command
       run: |
         cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies bash -l -c 'dev test'
+        docker-compose exec -T mmmm_cookies dev test
     - name: Test Priviledge Escalation
       run: |
         cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies bash -l -c 'sudo ls -la /root'
+        docker-compose exec -T mmmm_cookies sudo ls -la /root
     - name: Report Job Status on Success
       run: |
         MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: container build succeeded!\"}"
@@ -209,6 +209,7 @@ jobs:
     - name: Test ShellCheck Passes
       run: |
         cd mmmm_cookies
+        shellcheck ${PROJECT_NAME}/container_init.sh
         shellcheck scripts/*.sh
         shellcheck scripts/ci/*.sh
         shellcheck scripts/hooks/*
