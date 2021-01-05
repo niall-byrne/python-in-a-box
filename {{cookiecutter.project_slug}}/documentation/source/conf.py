@@ -15,13 +15,6 @@ if os.path.exists('../../{{cookiecutter.project_slug}}'):
   sys.path.insert(0, os.path.abspath('../..'))
   sys.path.insert(0, os.path.abspath('../../{{cookiecutter.project_slug}}'))
 
-if 'READTHEDOCS' in os.environ:
-  # Workaround to support dev dependencies in readthedocs
-  os.system("poetry lock")
-  os.system(
-      "poetry export --without-hashes --dev -f requirements.txt | pip install -r /dev/stdin"
-  )
-
 # -- Project information -----------------------------------------------------
 project = '{{cookiecutter.project_slug}}'
 copyright = '2020, {{cookiecutter.author}}'

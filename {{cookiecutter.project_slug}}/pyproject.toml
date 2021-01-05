@@ -46,9 +46,15 @@
     [tool.poetry.dependencies]
       python = ">=3.7.0,<3.8.0"
 
+      [tool.poetry.dependencies.pib_cli]
+        optional = true
+        version = "0.0.6"
+
     [tool.poetry.dev-dependencies]
       pib_cli = "0.0.6"
-      poetry = ">=1.1.4,<1.2.0"
+
+    [tool.poetry.extras]
+      readthedocs = ["pib_cli"]
 
     [[tool.poetry.packages]]
       include = "{{cookiecutter.project_slug}}"
