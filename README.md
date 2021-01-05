@@ -33,13 +33,13 @@ Run the CLI without arguments to see the complete list of available commands: `d
 
 [The 'pib_cli' Python Package](https://pypi.org/project/pib-cli/)
 
-The local CLI configuration is managed by the [cli.yaml](./{{cookiecutter.project_slug}}/assets/cli.yaml) file.
+The local CLI configuration is managed by the [cli.yml](./{{cookiecutter.project_slug}}/assets/cli.yml) file.
 
 ## Adding / Removing Dependencies For Your Project
 
 #### Python Dependencies:
 
-Use the [pyproject.toml](./pyproject.toml) file to store your project dependencies in accordance with [PEP 518](https://www.python.org/dev/peps/pep-0518/) and [Poetry Dependency Management](https://python-poetry.org/docs/pyproject/#dependencies-and-dev-dependencies).
+Use the [pyproject.toml](./{{cookiecutter.project_slug}}/pyproject.toml) file to store your project dependencies in accordance with [PEP 518](https://www.python.org/dev/peps/pep-0518/) and [Poetry Dependency Management](https://python-poetry.org/docs/pyproject/#dependencies-and-dev-dependencies).
 
 Poetry is installed inside the container, so you can leverage this tool:
 - [Adding Python Packages with Poetry](https://python-poetry.org/docs/cli/#add)
@@ -47,7 +47,7 @@ Poetry is installed inside the container, so you can leverage this tool:
 
 #### OS Level Dependencies:
 
-Modify the [Dockerfile](./assets/Dockerfile) to accomplish to this.
+Modify the [Dockerfile](./{{cookiecutter.project_slug}}/assets/Dockerfile) to accomplish to this.
 - Add to the base dependencies list if your package should be in both development and production
 - Add to the dev dependencies list if it's a development only package
 
@@ -163,8 +163,7 @@ Files are created in the project root folder for the following:
 - [Read The Docs](https://readthedocs.org/)
   - [.readthedocs.yml](./{{cookiecutter.project_slug}}/.readthedocs.yml)
 - [poetry](https://python-poetry.org/)  
-  - [poetry.lock](./{{cookiecutter.project_slug}}/poetry.lock)
-  - [pyproject.toml](./{{cookiecutter.project_slug}}/pyproject.tom)
+  - [pyproject.toml](./{{cookiecutter.project_slug}}/pyproject.toml)
 - [pytest](https://docs.pytest.org/en/stable/)
   - [pytest.ini](./{{cookiecutter.project_slug}}/pytest.ini)
 - [yamllint](https://github.com/adrienverge/yamllint)
@@ -182,6 +181,8 @@ Files are created in the project root folder for the following:
   - [pylint](https://www.pylint.org/)
   - [pypi.org](https://pypi.org/)
 
+More configurations will be moved into this centralized file as the individual tools support this standard.
+
 ## Third Party Integrations
 
 Integrations with the following third party services are configured during templating:
@@ -191,6 +192,6 @@ Integrations with the following third party services are configured during templ
 - [Docker Hub](https://hub.docker.com/)
   - [release_container.yml](./{{cookiecutter.project_slug}}/.github/workflows/release_container.yml)
 - [pypi.org](https://pypi.org/)
-  - [pyproject.toml](./{{cookiecutter.project_slug}}/pyproject.tom)
+  - [pyproject.toml](./{{cookiecutter.project_slug}}/pyproject.toml)
 - [Read The Docs](https://readthedocs.org/)
   - [.readthedocs.yml](./{{cookiecutter.project_slug}}/.readthedocs.yml)
