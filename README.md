@@ -86,16 +86,16 @@ The container is using a [Debian](https://www.debian.org/) derived image, so [ap
 
 ## Customizing The Development Environment
 
-After you initialize the template with cookiecutter, you'll likely want to customize the resulting development environment to suit your needs.  Here's a couple of quick examples to get your started...
+After you initialize the template with cookiecutter, you'll likely want to customize the resulting development environment to suit your needs.  Here's a couple of quick examples to get you started...
 
 ### Webapps, APIs
 
-Install your framework with poetry before making these modifications (see section above).  After everything noted below is modified to suit your needs, rebuild your container:
+Install your framework with poetry before making these modifications (see section above).  After everything noted below is suits your needs, rebuild your container:
 `docker-compose build && docker-compose up`
 
 For a webapp like [Flask](https://flask.palletsprojects.com/) or [Django](https://www.djangoproject.com/), you'll want to customize the container [init script](./{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}/container_init.sh), as well as expose a port in the [docker-compose](./{{cookiecutter.project_slug}}/docker-compose.yml) file.
 
-In the [docker-compose](./{{cookiecutter.project_slug}}/docker-compose.yml) file, find your service, and add a yaml line to include an exposed port or ports:
+In the [docker-compose](./{{cookiecutter.project_slug}}/docker-compose.yml) file, find your service, and add a yaml line to include one or more exposed port(s):
 
 ```yaml
 services:
@@ -118,7 +118,7 @@ In the [init script](./{{cookiecutter.project_slug}}/{{cookiecutter.project_slug
   - `python manage.py runserver 0.0.0.0:8000` (for Django projects)
   - `FLASK_ENV=development flask run --host=0.0.0.0` (for Flask projects)
 
-> Besure to bind to 0.0.0.0 inside the container to expose the container to your host machine
+> Be sure to bind to 0.0.0.0 inside the container to expose the service to your host machine
 
 ### Adding Databases
 
@@ -145,9 +145,9 @@ services:
 
 > `mywebapp` can now reach the database at `db:5432`
 
-> To reach the same database on your hostmachine, build a connection string using `127.0.0.1:5432` 
+> To reach the same database on your host machine, build a connection string using `127.0.0.1:5432` 
 
-> Consult the documentation for the database image your are using to learn about how to set credentials, and place any environment variables in the [local.env](./{{cookiecutter.project_slug}}/assets/local.env) file for your development environment (Do not check in production values here.)
+> Consult the documentation for the database image you are using to learn about how to set credentials, and place any environment variables in the [local.env](./{{cookiecutter.project_slug}}/assets/local.env) file for your development environment (Do not check-in any production values here.)
 
 ## Configuration Files
 
