@@ -28,7 +28,7 @@ RUN useradd user -d /home/user        \
  && chown -R user:user /app
 
 # Install Poetry
-RUN pip install poetry
+RUN pip install "poetry>=1.1.4,<1.2.0"
 
 # Include the local binary folder in PATH
 ENV PATH "/home/user/.local/bin/:${PATH}"
