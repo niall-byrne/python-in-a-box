@@ -17,7 +17,7 @@ This container provides my preferred CLI tooling and a compartmentalized develop
 ## Getting Started
 
 - `pip install cookiecutter`
-- `cookiecutter https://github.com/shared-vision-solutions/python-in-a-box.git`
+- `cookiecutter https://github.com/shared-vision-solutions/python-in-a-box.git --checkout v0.0.6`
 
 Give your project a name, and populate the other required template inputs.
 
