@@ -1,6 +1,7 @@
 #!/bin/bash
 
-export PIB_PROJECT_ROOT="$(git rev-parse --show-toplevel)"
+PIB_PROJECT_ROOT="$(git rev-parse --show-toplevel)"
+export PIB_PROJECT_ROOT
 
 install_git_hooks() {
   pushd "${PIB_PROJECT_ROOT}"  > /dev/null
@@ -16,8 +17,8 @@ pib_prefer_black() {
   sed -i 's/yapf -i --recursive \./black \./g' "${PIB_PROJECT_ROOT}/assets/cli.yml"
   sed -i 's/indent = "  "/indent = "    "/g' "${PIB_PROJECT_ROOT}/pyproject.toml"
   sed -i 's/indent-string = "  "/indent-string = "    "/g' "${PIB_PROJECT_ROOT}/pyproject.toml"
-  rm -rf ${PIB_PROJECT_ROOT}/.yapfignore
-  rm -rf ${PIB_PROJECT_ROOT}/.style.yapf
+  rm -rf "${PIB_PROJECT_ROOT}/.yapfignore"
+  rm -rf "${PIB_PROJECT_ROOT}/.style.yapf"
   black .
 }
 

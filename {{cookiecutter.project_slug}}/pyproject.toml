@@ -15,7 +15,7 @@
 
     [tool.coverage.run]
       branch = true
-      omit = ["*/test*", "setup.py"]
+      omit = ["*/test*","setup.py"]
       source = ["."]
 
   [tool.isort]
@@ -33,7 +33,7 @@
     authors = ["{{cookiecutter.author}} <{{cookiecutter.email}}>"]
     description = "{{cookiecutter.description}}"
     documentation = "https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/README.md"
-    exclude = ["**/tests/*", "**/*.sh"]
+    exclude = ["**/tests/*","**/*.sh"]
     homepage = "https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}"
     include = ["{{cookiecutter.project_slug}}/data/*"]
     keywords = []
