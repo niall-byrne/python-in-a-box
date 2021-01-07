@@ -19,6 +19,35 @@ This container provides my preferred CLI tooling and a compartmentalized develop
 - `pip install cookiecutter`
 - `cookiecutter https://github.com/shared-vision-solutions/python-in-a-box.git`
 
+Give your project a name, and populate the other required template inputs.
+
+> There is an optional feature to mount your ssh keys into the container to facilitate commits from inside the container.  
+> I've found this approach preferable to bouncing back and forth between the container and the host machine.
+
+Once the templating is finished:
+- `cd <your new project director>`
+- `docker-compose build`  (Build the docker environment, this will take a couple of minutes)
+- `docker-compose up` (Start the environment, if you are running an app like flask or django or other containers in your environment, logs will be produced here.)
+- Open a new shell in your terminal, and go to the same new project folder
+- `./container` (Puts you inside the development environment)
+
+Now open the project folder in your favorite IDE, or use [VIM](https://www.vim.org/) inside the container to begin writing code.
+
+> You can now use `cz` to make [commitzen](https://github.com/commitizen-tools/commitizen) style commits, and have access to the `dev` command line interface to help you work
+
+## Strict PEP Compliance
+
+I personally prefer a 2 space indent.  This might not be your cup of tea.  No problem.
+
+The [scripts/extras.sh](./{{cookiecutter.project_slug}}/scripts/extras.sh) script can help you out:
+- `source scripts/extras.sh`
+- `pib_prefer_black`
+
+> This will patch your template to use black instead of yapf, and remove unncessary configuration files.
+> Check in your changes, and you'll now be using black to achieve full PEP compliance.
+
+Alternatively, modify your [.style.yapf](./{{cookiecutter.project_slug}}/.style.yapf) file to achieve the same results.
+
 ## Container
 
 [python:3.7-slim](https://github.com/docker-library/python/tree/master/3.7/buster/slim)
@@ -76,11 +105,12 @@ The container is using a [Debian](https://www.debian.org/) derived image, so [ap
 | build-essential |  A collection of packages for compiling, linking            |
 | curl            |  CLI based web client                                       |
 | fish            |  Alternative Shell                                          |
+| gitleaks        |  Scans for checked-in credentials                           |                            
 | jq              |  processing json                                            |
 | git, ssh        |  managing git commits                                       |
 | shellcheck      |  BASH Linting                                               | 
 | tig             |  managing git history                                       |
-| tomll           |  a toml file linter                                         |
+| tomll           |  a toml file linter, and formatter                          |
 | vim             |  managing small edits, and git commit messages              |
 
 
