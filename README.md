@@ -27,7 +27,7 @@ Give your project a name, and populate the other required template inputs.
 Once the templating is finished:
 - `cd <your new project director>`
 - `docker-compose build`  (Build the docker environment, this will take a couple of minutes)
-- `docker-compose up` (Start the environment, if you are running an app like flask or django or other containers in your environment, logs will be produced here.)
+- `docker-compose up` (Start the environment, if you are running an app like [Flask](https://flask.palletsprojects.com/) or [Django](https://www.djangoproject.com/) or other containers are in your environment, logs will be produced here.)
 - Open a new shell in your terminal, and go to the same new project folder
 - `./container` (Puts you inside the development environment)
 
