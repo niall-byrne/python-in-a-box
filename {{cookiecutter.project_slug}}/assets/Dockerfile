@@ -54,8 +54,8 @@ RUN apt-get install -y              \
     vim
 
 # Install Git Leaks
-RUN curl -L "https://github.com/zricethezav/gitleaks/releases/download/${GITLEAKSVERSION}/gitleaks-linux-amd64"    \
-    -o /usr/bin/gitleaks                                                                                        && \
+RUN curl -sL "https://github.com/zricethezav/gitleaks/releases/download/${GITLEAKSVERSION}/gitleaks-linux-amd64"    \
+    -o /usr/bin/gitleaks                                                                                         && \
     chmod +x /usr/bin/gitleaks
 
 # Add user to sudoers, and make the default user
