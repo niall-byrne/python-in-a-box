@@ -48,7 +48,7 @@
 - name: "sectest"
   path_method: "project_root"
   commands:
-    - 'gitleaks --path=/app -v'
+    - 'gitleaks --path=. -v'
     - 'bandit -r "${PROJECT_NAME}" -c .bandit.rc --ini .bandit'
     - 'echo "\nPoetry is exporting the lockfile standby..."'
     - 'poetry export --without-hashes --dev -f requirements.txt | safety check --stdin'

@@ -129,9 +129,13 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install TOML Linter
+    - name: Install Additional Hostmachine Software
       run: |
         sudo apt-get install -y golang-github-pelletier-go-toml
+        sudo curl --fail -sL "https://github.com/zricethezav/gitleaks/releases/download/${GITLEAKSVERSION}/gitleaks-linux-amd64" -o /usr/bin/gitleaks                                                                                         && \
+        sudo chmod +x /usr/bin/gitleaks
+      env:
+        GITLEAKSVERSION: "v7.2.0"
     - name: Requirements
       run: |
         pip install cookiecutter poetry
