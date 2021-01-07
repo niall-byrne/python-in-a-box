@@ -1,9 +1,9 @@
 #!/bin/bash
 
-ROOT="$(git rev-parse --show-toplevel)"
+export PIB_PROJECT_ROOT="$(git rev-parse --show-toplevel)"
 
 install_git_hooks() {
-  pushd "${ROOT}"  > /dev/null
+  pushd "${PIB_PROJECT_ROOT}"  > /dev/null
     set +e
       cd .git/hooks
       ln -sf ../../scripts/hooks/pre-commit pre-commit
@@ -11,9 +11,19 @@ install_git_hooks() {
   popd  > /dev/null
 }
 
-pib_setup_hostmachine() {
-  poetry install
+pib_prefer_black() {
+  pip install black
+  sed -i 's/yapf -i --recursive \./black \./g' "${PIB_PROJECT_ROOT}/assets/cli.yml"
+  sed -i 's/indent = "  "/indent = "    "/g' "${PIB_PROJECT_ROOT}/pyproject.toml"
+  sed -i 's/indent-string = "  "/indent-string = "    "/g' "${PIB_PROJECT_ROOT}/pyproject.toml"
+  rm -rf ${PIB_PROJECT_ROOT}/.yapfignore
+  rm -rf ${PIB_PROJECT_ROOT}/.style.yapf
+  black .
 }
 
-# shellcheck disable=SC2139
-alias dev="PROJECT_NAME=\"{{cookiecutter.project_slug}}\" PIB_CONFIG_FILE_LOCATION=\"${ROOT}/assets/cli.yml\" poetry run dev"
+pib_setup_hostmachine() {
+  poetry install
+
+  # shellcheck disable=SC2139
+  alias dev="PROJECT_NAME=\"{{cookiecutter.project_slug}}\" PIB_CONFIG_FILE_LOCATION=\"${PIB_PROJECT_ROOT}/assets/cli.yml\" poetry run dev"
+}
