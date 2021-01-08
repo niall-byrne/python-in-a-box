@@ -99,6 +99,12 @@ jobs:
       run: |
         cd mmmm_cookies
         docker-compose exec -T mmmm_cookies sudo ls -la /root
+    - name: Test Patch Pep Compliance
+      run: |
+        cd mmmm_cookies
+        docker-compose exec -T mmmm_cookies git apply patches/pep.patch
+        docker-compose exec -T mmmm_cookies dev reinstall-requirements
+        docker-compose exec -T mmmm_cookies dev fmt
     - name: Report Job Status on Success
       run: |
         MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: container build succeeded!\"}"
@@ -218,6 +224,13 @@ jobs:
         shellcheck scripts/*.sh
         shellcheck scripts/ci/*.sh
         shellcheck scripts/hooks/*
+    - name: Test Patch Pep Compliance
+      run: |
+        cd mmmm_cookies
+        git apply patches/pep.patch
+        source "$(poetry env info --path)/bin/activate"
+        dev reinstall-requirements
+        dev fmt
     - name: Report Job Status on Success
       run: |
         MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: hostmachine build success!\"}"

@@ -12,16 +12,6 @@ install_git_hooks() {
   popd  > /dev/null
 }
 
-pib_prefer_black() {
-  pip install black
-  sed -i 's/yapf -i --recursive \./black \./g' "${PIB_PROJECT_ROOT}/assets/cli.yml"
-  sed -i 's/indent = "  "/indent = "    "/g' "${PIB_PROJECT_ROOT}/pyproject.toml"
-  sed -i 's/indent-string = "  "/indent-string = "    "/g' "${PIB_PROJECT_ROOT}/pyproject.toml"
-  rm -rf "${PIB_PROJECT_ROOT}/.yapfignore"
-  rm -rf "${PIB_PROJECT_ROOT}/.style.yapf"
-  black .
-}
-
 pib_setup_hostmachine() {
   poetry install
 

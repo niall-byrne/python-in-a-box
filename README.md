@@ -39,11 +39,11 @@ Now open the project folder in your favorite IDE, or use [VIM](https://www.vim.o
 
 I personally prefer a 2 space indent.  This might not be your cup of tea.  No problem.
 
-The [scripts/extras.sh](./{{cookiecutter.project_slug}}/scripts/extras.sh) script can help you out:
-- `source scripts/extras.sh`
-- `pib_prefer_black`
+You can patch your project after you've rendered the template.  Once you're inside your development environment:
+- `git apply patches/pep.patch`
+- `dev reinstall-requirements`
 
-> This will patch your template to use black instead of yapf, and remove unncessary configuration files.
+> This will patch your template to use black instead of yapf, and remove unnecessary configuration files.
 > Check in your changes, and you'll now be using black to achieve full PEP compliance.
 
 Alternatively, modify your [.style.yapf](./{{cookiecutter.project_slug}}/.style.yapf) file to achieve the same results.
