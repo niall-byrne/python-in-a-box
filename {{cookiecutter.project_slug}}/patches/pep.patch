@@ -63,7 +63,7 @@ index d1df78c..b703c17 100644
 
  # -- General configuration ---------------------------------------------------
 
-@@ -27,19 +27,19 @@ os.environ['PROJECT_NAME'] = project
+@@ -27,18 +27,18 @@ os.environ['PROJECT_NAME'] = project
  # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
  # ones.
  extensions = [
@@ -71,12 +71,10 @@ index d1df78c..b703c17 100644
 -    'sphinx.ext.autosummary',
 -    'sphinx.ext.todo',
 -    'sphinx.ext.viewcode',
--    'm2r2',
 +    "sphinx.ext.autodoc",
 +    "sphinx.ext.autosummary",
 +    "sphinx.ext.todo",
 +    "sphinx.ext.viewcode",
-+    "m2r2",
  ]
 
  source_suffix = {
@@ -149,11 +147,11 @@ index dded875..7c5e6ab 100644
      line_length = 80
      multi_line_output = 3
 @@ -51,6 +51,7 @@
-         version = "0.0.6"
+         version = "0.0.7"
 
      [tool.poetry.dev-dependencies]
 +      black = "^20.8b1"
-       pib_cli = "0.0.6"
+       pib_cli = "0.0.7"
 
      [tool.poetry.extras]
 @@ -105,7 +106,7 @@
