@@ -13,6 +13,63 @@ on:
 
 jobs:
 
+  documentation_test:
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [ 3.7 ]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: 'template'
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Requirements
+        run: |
+          pip install cookiecutter
+      - name: Create Template
+        run: |
+          git config --global user.email "somedude@coolstartup.com"
+          git config --global user.name "Pro Buddy Dev"
+          echo -e '\n\n\n\n\n\nfalse\nfalse\nfalse\n' | cookiecutter template/
+      - name: Setup Environment
+        run: |
+          BRANCH_OR_TAG="$(echo "${GITHUB_REF}" | sed 's/refs\/heads\///g' | sed 's/refs\/tags\///g')"
+          echo "BRANCH_OR_TAG=${BRANCH_OR_TAG}" >> $GITHUB_ENV
+          echo "VALID_RELEASE=not_a_validated_release" >> $GITHUB_ENV
+      - name: Check Markdown Links For Readme
+        uses: gaurav-nelson/github-action-markdown-link-check@1.0.11
+        with:
+          use-quiet-mode: 'no'
+          use-verbose-mode: 'yes'
+          folder-path: 'template, template/.github/workflows'
+          max-depth: 1
+      - name: Check Markdown Links For Rendered Template
+        uses: gaurav-nelson/github-action-markdown-link-check@1.0.11
+        with:
+          use-quiet-mode: 'no'
+          use-verbose-mode: 'yes'
+          folder-path: './mmmm_cookies'
+          max-depth: -1
+      - name: Report Job Status on Success
+        run: |
+          MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: documentation checks succeeded!\"}"
+          curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+      - name: Report Job Status on Failure
+        if: ${{ failure() }}
+        run: |
+          MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: documentation checks failed!\"}"
+          curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
   container_cli_test:
 
     runs-on: ubuntu-latest
@@ -246,7 +303,7 @@ jobs:
        WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
   push_repository_test:
-    needs: [container_cli_test, hostmachine_cli_test]
+    needs: [container_cli_test, documentation_test, hostmachine_cli_test]
 
     runs-on: ubuntu-latest
     strategy:
