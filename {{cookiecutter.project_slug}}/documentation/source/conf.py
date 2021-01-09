@@ -31,7 +31,6 @@ extensions = [
     'sphinx.ext.autosummary',
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
-    'm2r2',
 ]
 
 source_suffix = {
