@@ -34,6 +34,7 @@ pushd .. >/dev/null
     docker-compose exec mmmm_cookies ./testing_shim
     docker-compose exec mmmm_cookies git apply patches/pep.patch
     docker-compose exec mmmm_cookies dev reinstall-requirements
+    docker-compose exec mmmm_cookies black --check .
     docker-compose exec mmmm_cookies dev fmt
     docker-compose exec mmmm_cookies bash
     docker-compose kill

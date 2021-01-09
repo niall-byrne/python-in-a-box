@@ -161,6 +161,7 @@ jobs:
         cd mmmm_cookies
         docker-compose exec -T mmmm_cookies git apply patches/pep.patch
         docker-compose exec -T mmmm_cookies dev reinstall-requirements
+        docker-compose exec -T mmmm_cookies black --check .
         docker-compose exec -T mmmm_cookies dev fmt
     - name: Report Job Status on Success
       run: |
@@ -287,6 +288,7 @@ jobs:
         git apply patches/pep.patch
         source "$(poetry env info --path)/bin/activate"
         dev reinstall-requirements
+        black --check .
         dev fmt
     - name: Report Job Status on Success
       run: |
@@ -427,7 +429,6 @@ jobs:
             - [ ] Ensure correct version of pib_cli is installed
             - [ ] Ensure documentation is accurate
             - [ ] Ensure self test passes
-            - [ ] Ensure pep patch works as expected
           draft: true
           prerelease: false
       - name: Production -- Report Success
