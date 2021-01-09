@@ -423,6 +423,11 @@ jobs:
           release_name: Release ${{ env.BRANCH_OR_TAG }}
           body: |
             ${{ steps.Changelog.outputs.changelog }}
+            ## Deployment Checklist
+            - [ ] Ensure correct version of pib_cli is installed
+            - [ ] Ensure documentation is accurate
+            - [ ] Ensure self test passes
+            - [ ] Ensure pep patch works as expected
           draft: true
           prerelease: false
       - name: Production -- Report Success

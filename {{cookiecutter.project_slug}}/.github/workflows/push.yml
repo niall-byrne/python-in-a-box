@@ -111,6 +111,8 @@ jobs:
           body: |
             ${{ steps.Changelog.outputs.changelog }}
             ## Deployment Checklist
+            - [ ] Ensure documentation is accurate
+            - [ ] Ensure readthedocs integration is working
             - [ ] Ensure unnecessary alerts are ignored/disabled
           draft: true
           prerelease: false

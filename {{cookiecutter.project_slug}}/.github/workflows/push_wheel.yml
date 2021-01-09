@@ -111,6 +111,11 @@ jobs:
           release_name: Release ${{ env.BRANCH_OR_TAG }}
           body: |
             ${{ steps.Changelog.outputs.changelog }}
+            ## Deployment Checklist
+            - [ ] Ensure documentation is accurate
+            - [ ] Ensure pyproject.toml links are accurate
+            - [ ] Ensure readthedocs integration is working
+            - [ ] Ensure version is correct
           draft: true
           prerelease: false
 
