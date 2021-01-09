@@ -200,11 +200,11 @@ Files are created in the project root folder for the following:
   - [.yamllint.yml](./{{cookiecutter.project_slug}}/.yamllint.yml)  
 - [yapf](https://readthedocs.org/)
   - [.style.yapf](./{{cookiecutter.project_slug}}/.style.yapf)
-  - [.yapfignore](../pib_cli/pib_cli/.yapfignore)
+  - [.yapfignore](./{{cookiecutter.project_slug}}/.yapfignore)
   
 ## PEP 518 Compliance
 
-- [pyproject.toml](./{{cookiecutter.project_slug}}/pyproject.tom) centralizes configuration for the following:
+- [pyproject.toml](./{{cookiecutter.project_slug}}/pyproject.toml) centralizes configuration for the following:
   - [coverage](https://coverage.readthedocs.io/en/coverage-5.3.1/)
   - [isort](https://pycqa.github.io/isort/)
   - [poetry](https://python-poetry.org/) ([scripts/extras.sh](./{{cookiecutter.project_slug}}/scripts/extras.sh))
