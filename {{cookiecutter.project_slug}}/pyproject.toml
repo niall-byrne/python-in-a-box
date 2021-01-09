@@ -48,10 +48,10 @@
 
       [tool.poetry.dependencies.pib_cli]
         optional = true
-        version = "0.0.6"
+        version = "0.0.7"
 
     [tool.poetry.dev-dependencies]
-      pib_cli = "0.0.6"
+      pib_cli = "0.0.7"
 
     [tool.poetry.extras]
       readthedocs = ["pib_cli"]
