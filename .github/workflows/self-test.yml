@@ -341,15 +341,6 @@ jobs:
         git checkout master
         git tag --delete v0.0.0  # Don't Repush
         git tag v1.0.0
-    - name: Push To Test Repository (develop)
-      uses: ad-m/github-push-action@v0.6.0
-      with:
-        github_token: ${{ secrets.REMOTE_TOKEN }}
-        branch: develop
-        tags: false
-        directory: mmmm_cookies
-        repository: ${{ secrets.REMOTE_ORIGIN }}
-        force: true
     - name: Push To Test Repository (master)
       uses: ad-m/github-push-action@v0.6.0
       with:
@@ -359,11 +350,20 @@ jobs:
         directory: mmmm_cookies
         repository: ${{ secrets.REMOTE_ORIGIN }}
         force: true
+    - name: Push To Test Repository (production)
+      uses: ad-m/github-push-action@v0.6.0
+      with:
+        github_token: ${{ secrets.REMOTE_TOKEN }}
+        branch: production
+        tags: false
+        directory: mmmm_cookies
+        repository: ${{ secrets.REMOTE_ORIGIN }}
+        force: true
     - name: Push To Test Repository (release tag)
       uses: ad-m/github-push-action@v0.6.0
       with:
         github_token: ${{ secrets.REMOTE_TOKEN }}
-        branch: master
+        branch: production
         tags: true
         directory: mmmm_cookies
         repository: ${{ secrets.REMOTE_ORIGIN }}
@@ -401,7 +401,7 @@ jobs:
       - name: Releases -- Detect A Release Tag
         if: contains(github.ref, '/tags/v') == true
         run: |
-          VALID_RELEASE=$(git diff origin/master)
+          VALID_RELEASE=$(git diff origin/production)
           echo 'VALID_RELEASE<<EOF' >> $GITHUB_ENV
           echo "${VALID_RELEASE}" >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
@@ -411,7 +411,7 @@ jobs:
           echo "{}" > package.json
       - name: Production -- Generate Changelog
         if: contains(github.ref, '/tags/v') == true && env.VALID_RELEASE == ''
-        uses: scottbrenner/generate-changelog-action@master
+        uses: scottbrenner/generate-changelog-action@1.0.3
         id: Changelog
         env:
           REPO: ${{ github.repository }}

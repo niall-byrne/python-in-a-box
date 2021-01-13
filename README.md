@@ -4,11 +4,11 @@ Python 3.7 dockerized development environment.
 
 (Please see the [cookiecutter documentation](https://cookiecutter.readthedocs.io/) for instructions on how to use this project template.)
 
-##### Develop Branch:
-[![Python In A Box Self Test](https://github.com/shared-vision-solutions/python-in-a-box/workflows/Python%20In%20A%20Box%20Self%20Test/badge.svg?branch=develop)](https://github.com/shared-vision-solutions/python-in-a-box/actions)
-
 ##### Master Branch:
 [![Python In A Box Self Test](https://github.com/shared-vision-solutions/python-in-a-box/workflows/Python%20In%20A%20Box%20Self%20Test/badge.svg?branch=master)](https://github.com/shared-vision-solutions/python-in-a-box/actions)
+
+##### Production Branch:
+[![Python In A Box Self Test](https://github.com/shared-vision-solutions/python-in-a-box/workflows/Python%20In%20A%20Box%20Self%20Test/badge.svg?branch=production)](https://github.com/shared-vision-solutions/python-in-a-box/actions)
 
 ## About
 
@@ -35,6 +35,8 @@ Now open the project folder in your favorite IDE, or use [VIM](https://www.vim.o
 
 > You can now use `cz` to make [commitzen](https://github.com/commitizen-tools/commitizen) style commits, and have access to the `dev` command line interface to help you work
 
+A `master` branch will be created, allowing you to manage a separate `production` branch in [gitlabflow](https://docs.gitlab.com/ee/topics/gitlab_flow.html) style.
+
 ## Strict PEP Compliance
 
 I personally prefer a 2 space indent.  This might not be your cup of tea.  No problem.
@@ -50,7 +52,7 @@ Alternatively, modify your [.style.yapf](./{{cookiecutter.project_slug}}/.style.
 
 ## Container
 
-[python:3.7-slim](https://github.com/docker-library/python/tree/master/3.7/buster/slim)
+[python:3.7-slim](https://github.com/docker-library/python/blob/master/3.7/buster/slim/Dockerfile)
 
 ## License
 
