@@ -15,7 +15,7 @@ jobs:
 
   documentation_test:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       max-parallel: 4
       matrix:
@@ -72,7 +72,7 @@ jobs:
 
   container_cli_test:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       max-parallel: 4
       matrix:
@@ -179,7 +179,7 @@ jobs:
 
   hostmachine_cli_test:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       max-parallel: 4
       matrix:
@@ -307,7 +307,7 @@ jobs:
   push_repository_test:
     needs: [container_cli_test, documentation_test, hostmachine_cli_test]
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       max-parallel: 4
       matrix:
@@ -385,7 +385,7 @@ jobs:
   create_releases:
     needs: [push_repository_test]
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       max-parallel: 4
       matrix:
