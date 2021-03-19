@@ -63,7 +63,7 @@ jobs:
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
       - name: Report Job Status on Failure
-        if: ${{ failure() }}
+        if: failure()
         run: |
           MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: documentation checks failed!\"}"
           curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"
@@ -170,7 +170,7 @@ jobs:
       env:
         WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
     - name: Report Job Status on Failure
-      if: ${{ failure() }}
+      if: failure()
       run: |
         MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: container build failed!\"}"
         curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"
@@ -297,7 +297,7 @@ jobs:
       env:
         WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
     - name: Report Job Status on Failure
-      if: ${{ failure() }}
+      if: failure()
       run: |
         MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: hostmachine build has failed!\"}"
         curl -X POST -H 'Content-type: application/json' --data "${MSG}" "${WEBHOOK_URL}"
@@ -375,7 +375,7 @@ jobs:
       env:
         WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
     - name: Report Job Status on Failure
-      if: ${{ failure() }}
+      if: failure()
       run: |
         MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: trigger templated pipelines failed!\"}"
         curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"
@@ -398,25 +398,19 @@ jobs:
           BRANCH_OR_TAG="$(echo "${GITHUB_REF}" | sed 's/refs\/heads\///g' | sed 's/refs\/tags\///g')"
           echo "BRANCH_OR_TAG=${BRANCH_OR_TAG}" >> $GITHUB_ENV
           echo "VALID_RELEASE=not_a_validated_release" >> $GITHUB_ENV
-      - name: Releases -- Detect A Release Tag
-        if: contains(github.ref, '/tags/v') == true
-        run: |
-          VALID_RELEASE=$(git diff origin/production)
-          echo 'VALID_RELEASE<<EOF' >> $GITHUB_ENV
-          echo "${VALID_RELEASE}" >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
+
       - name: Releases -- Prepare Release Content
-        if: contains(github.ref, '/tags/v') == true && env.VALID_RELEASE == ''
+        if: contains(github.ref, '/tags/v')
         run: |
           echo "{}" > package.json
       - name: Production -- Generate Changelog
-        if: contains(github.ref, '/tags/v') == true && env.VALID_RELEASE == ''
+        if: contains(github.ref, '/tags/v')
         uses: scottbrenner/generate-changelog-action@1.0.3
         id: Changelog
         env:
           REPO: ${{ github.repository }}
       - name: Production -- Create Release
-        if: contains(github.ref, '/tags/v') == true && env.VALID_RELEASE == ''
+        if: contains(github.ref, '/tags/v')
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -432,14 +426,14 @@ jobs:
           draft: true
           prerelease: false
       - name: Production -- Report Success
-        if: contains(github.ref, '/tags/v') == true && env.VALID_RELEASE == ''
+        if: contains(github.ref, '/tags/v')
         run: |
           MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: automated release has been created!\"}"
           curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
       - name: Production -- Report Failure
-        if: failure() == true && contains(github.ref, '/tags/v') == true && env.VALID_RELEASE == ''
+        if: failure() && contains(github.ref, '/tags/v')
         run: |
           MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: automated release has failed!\"}"
           curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"

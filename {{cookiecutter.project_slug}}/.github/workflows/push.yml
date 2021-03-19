@@ -25,7 +25,6 @@ jobs:
           echo "WEBHOOK_URL=${WEBHOOK_URL}" >> $GITHUB_ENV
           echo "PROJECT_NAME={{cookiecutter.project_slug}}" >> $GITHUB_ENV
           echo "USERNAME={{cookiecutter.github_username}}" >> $GITHUB_ENV
-          echo "VALID_RELEASE=not_a_validated_release" >> $GITHUB_ENV
 {% raw %}
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
@@ -70,6 +69,8 @@ jobs:
         with:
           use-quiet-mode: 'no'
           use-verbose-mode: 'yes'
+          folder-path: '.github'
+          file-path: './README.md'
 
       - name: Report Build Failures
         if: failure() == true
@@ -80,28 +81,20 @@ jobs:
         run: |
           ./scripts/ci/slack.sh "${PROJECT_NAME}" "build on push succeeded for ${BRANCH_OR_TAG}!"
 
-      - name: Releases -- Detect A Release Tag
-        if: contains(github.ref, '/tags/v') == true
-        run: |
-          VALID_RELEASE=$(git diff origin/production)
-          echo 'VALID_RELEASE<<EOF' >> $GITHUB_ENV
-          echo "${VALID_RELEASE}" >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
-
       - name: Releases -- Prepare Release Content
-        if: contains(github.ref, '/tags/v') == true && env.VALID_RELEASE == ''
+        if: contains(github.ref, '/tags/v')
         run: |
           echo "{}" > package.json
 
       - name: Production -- Generate Changelog
-        if: contains(github.ref, '/tags/v') == true && env.VALID_RELEASE == ''
+        if: contains(github.ref, '/tags/v')
         uses: scottbrenner/generate-changelog-action@1.0.3
         id: Changelog
         env:
           REPO: ${{ github.repository }}
 
       - name: Production -- Create Release
-        if: contains(github.ref, '/tags/v') == true && env.VALID_RELEASE == ''
+        if: contains(github.ref, '/tags/v')
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -118,12 +111,12 @@ jobs:
           prerelease: false
 
       - name: Production -- Report Success
-        if: contains(github.ref, '/tags/v') == true && env.VALID_RELEASE == ''
+        if: contains(github.ref, '/tags/v')
         run: |
           ./scripts/ci/slack.sh "${PROJECT_NAME}" "automated release has been created for ${BRANCH_OR_TAG}:\n  https://github.com/${USERNAME}/${PROJECT_NAME}/releases"
 
       - name: Production -- Report Failure
-        if: failure() == true && contains(github.ref, '/tags/v') == true && env.VALID_RELEASE == ''
+        if: failure() && contains(github.ref, '/tags/v')
         run: |
           ./scripts/ci/slack.sh "${PROJECT_NAME}" "automated release has failed for ${BRANCH_OR_TAG}!"
 {% endraw %}
