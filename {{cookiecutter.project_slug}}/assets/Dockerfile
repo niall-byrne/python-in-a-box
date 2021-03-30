@@ -28,7 +28,8 @@ RUN useradd user -d /home/user        \
  && chown -R user:user /app
 
 # Install Latest Poetry
-RUN pip install poetry
+RUN pip install poetry             && \
+    pip install --upgrade pip
 
 # Include the local binary folder in PATH
 ENV PATH "/home/user/.local/bin/:${PATH}"
@@ -72,8 +73,7 @@ RUN ln -sf /app/assets/.bash_customize /home/user/.bash_customize
 
 # Setup The Dev CLI
 RUN poetry lock                                                 && \
-    poetry export --without-hashes --dev -f requirements.txt |     \
-    pip install -r /dev/stdin                                   && \
+    poetry install                                              && \
     dev setup-bash
 
 CMD ["./{{cookiecutter.project_slug}}/container_init.sh"]
@@ -93,7 +93,6 @@ COPY . /app
 
 # Install Production Packages Only
 RUN poetry lock                                                 && \
-    poetry export --without-hashes -f requirements.txt |           \
-    pip install -r /dev/stdin
+    poetry install --no-dev --no-root
 
 CMD ["./{{cookiecutter.project_slug}}/container_init.sh"]
