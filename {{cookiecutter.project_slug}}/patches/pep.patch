@@ -147,13 +147,13 @@ index dded875..7c5e6ab 100644
      line_length = 80
      multi_line_output = 3
 @@ -51,6 +51,7 @@
-         version = "0.0.9"
+       python = ">=3.7.0,<3.8.0"
 
      [tool.poetry.dev-dependencies]
 +      black = "^20.8b1"
        pib_cli = "0.0.9"
 
-     [tool.poetry.extras]
+     [[tool.poetry.packages]]
 @@ -105,7 +106,7 @@
 
      [tool.pylint.format]
