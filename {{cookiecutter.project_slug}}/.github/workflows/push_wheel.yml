@@ -1,6 +1,6 @@
 ---
-name: {{cookiecutter.project_slug}} Wheel Push
-
+name: {{cookiecutter.project_slug}}-push-wheel
+{% raw %}
 # Workflow Secrets:
 # SLACK_WEBHOOK              (Required, for slack notifications...)
 
@@ -16,55 +16,44 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
 
-      - uses: actions/checkout@v1
+      - name: Push Wheel -- Checkout
+        uses: actions/checkout@v1
 
-      - name: Setup Environment
+      - name: Push Wheel -- Setup Environment
         run: |
-          BRANCH_OR_TAG="$(echo "${GITHUB_REF}" | sed 's/refs\/heads\///g' | sed 's/refs\/tags\///g')"
-          echo "BRANCH_OR_TAG=${BRANCH_OR_TAG}" >> $GITHUB_ENV
-          echo "WEBHOOK_URL=${WEBHOOK_URL}" >> $GITHUB_ENV
-          echo "PROJECT_NAME={{cookiecutter.project_slug}}" >> $GITHUB_ENV
-          echo "USERNAME={{cookiecutter.github_username}}" >> $GITHUB_ENV
-{% raw %}
+          source .github/scripts/setup.sh
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
-      - name: Create Docker Mounted Content
+      - name: Push Wheel -- Create Docker Mounted Content
         run: |
           echo | ssh-keygen
           touch ${HOME}/.gitconfig
           touch ${HOME}/.gitconfig_global
-
-      - name: Ensure File System is Writable by the Container
+      - name: Push Wheel -- Ensure File System is Writable by the Container
         run: |
           sudo chmod -R o+w .
-
-      - name: Build Container
+      - name: Push Wheel -- Build Container
         run: |
           docker-compose build
           docker-compose up -d
-
-      - name: Run TOML Linter
+      - name: Push Wheel -- Run TOML Linter
         run: |
           docker-compose exec -T "${PROJECT_NAME}" tomll /app/pyproject.toml
-
-      - name: Run Linter
+      - name: Push Wheel -- Run Linter
         run: |
           docker-compose exec -T "${PROJECT_NAME}" dev lint
-
-      - name: Run Sec Test
+      - name: Push Wheel -- Run Sec Test
         run: |
           docker-compose exec -T "${PROJECT_NAME}" dev sectest
-
-      - name: Run Unit Tests
+      - name: Push Wheel -- Run Unit Tests
         run: |
           docker-compose exec -T "${PROJECT_NAME}" dev coverage
-
-      - name: Run Release Validation
+      - name: Push Wheel -- Run Release Validation
         run: |
           docker-compose exec -T "${PROJECT_NAME}" ./scripts/release.sh
 
-      - name: Documentation Validation
+      - name: Push Wheel -- Documentation Validation
         uses: gaurav-nelson/github-action-markdown-link-check@1.0.11
         with:
           use-quiet-mode: 'no'
@@ -72,28 +61,25 @@ jobs:
           folder-path: '.github'
           file-path: './README.md'
 
-      - name: Report Build Failures
+      - name: Push Wheel -- Report Job Status (Success)
+        run: |
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" "build was successful!"
+      - name: Push Wheel -- Report Job Status (Failure)
         if: failure()
         run: |
-          ./scripts/ci/slack.sh "${PROJECT_NAME}" "build on push has failed!"
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" "build has failed!"
 
-      - name: Report Build Successes
-        run: |
-          ./scripts/ci/slack.sh "${PROJECT_NAME}" "build on push succeeded for ${BRANCH_OR_TAG}!"
-
-      - name: Releases -- Prepare Release Content
+      - name: Push Wheel -- Release -- Prepare Content
         if: contains(github.ref, '/tags/v')
         run: |
           echo "{}" > package.json
-
-      - name: Production -- Generate Changelog
+      - name: Push Wheel -- Release -- Generate Changelog
         if: contains(github.ref, '/tags/v')
         uses: scottbrenner/generate-changelog-action@1.0.3
         id: Changelog
         env:
           REPO: ${{ github.repository }}
-
-      - name: Production -- Create Release
+      - name: Push Wheel -- Release -- Create Github Release
         if: contains(github.ref, '/tags/v')
         id: create_release
         uses: actions/create-release@v1
@@ -111,8 +97,7 @@ jobs:
             - [ ] Ensure version is correct
           draft: true
           prerelease: false
-
-      - name: Production -- Build Wheel
+      - name: Push Wheel -- Release -- Build Wheel
         if: contains(github.ref, '/tags/v')
         run: |
           docker-compose exec -T "${PROJECT_NAME}" dev build-wheel
@@ -120,8 +105,7 @@ jobs:
             WHEEL_NAME=$(ls *.whl)
           cd ..
           echo "WHEEL_NAME=${WHEEL_NAME}" >> $GITHUB_ENV
-
-      - name: Production -- Upload Release Asset
+      - name: Push Wheel -- Release -- Upload Release Asset
         if: contains(github.ref, '/tags/v')
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
@@ -133,13 +117,12 @@ jobs:
           asset_name: ${{ env.WHEEL_NAME }}
           asset_content_type: application/zip
 
-      - name: Production -- Report Success
+      - name: Push Wheel -- Release -- Report Success
         if: contains(github.ref, '/tags/v')
         run: |
-          ./scripts/ci/slack.sh "${PROJECT_NAME}" "automated release (with wheel) has been created for ${BRANCH_OR_TAG}:\n  https://github.com/${USERNAME}/${PROJECT_NAME}/releases"
-
-      - name: Production -- Report Failure
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" "automated release (with wheel) has been created: https://github.com/${USERNAME}/${PROJECT_NAME}/releases"
+      - name: Push Wheel -- Release -- Report Failure
         if: failure() && contains(github.ref, '/tags/v')
         run: |
-          ./scripts/ci/slack.sh "${PROJECT_NAME}" "automated release (with wheel) has failed for ${BRANCH_OR_TAG}!"
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" "automated release generation failed!"
 {% endraw %}

@@ -7,23 +7,23 @@
 [Project Documentation](https://{{cookiecutter.project_slug}}.readthedocs.io/)
 
 ### Master Branch Builds (Staging Environment)
-- [![{{cookiecutter.project_slug}} Generic Push](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}%20Generic%20Push/badge.svg?branch=master)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
-- [![{{cookiecutter.project_slug}} Wheel Push](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}%20Wheel%20Push/badge.svg?branch=master)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
+- [![{{cookiecutter.project_slug}} Generic Push](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-generic/badge.svg?branch=master)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
+- [![{{cookiecutter.project_slug}} Wheel Push](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-wheel/badge.svg?branch=master)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
 
 ### Production Branch Builds (Tags Created on Production Branch)
-- [![{{cookiecutter.project_slug}} Generic Push](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}%20Generic%20Push/badge.svg?branch=production)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
-- [![{{cookiecutter.project_slug}} Wheel Push](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}%20Wheel%20Push/badge.svg?branch=production)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
+- [![{{cookiecutter.project_slug}} Generic Push](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-generic/badge.svg?branch=production)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
+- [![{{cookiecutter.project_slug}} Wheel Push](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-wheel/badge.svg?branch=production)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
 
 ### Release Builds
-- [![{{cookiecutter.project_slug}} Release Container](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}%20Release%20Container/badge.svg)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
-- [![{{cookiecutter.project_slug}} Release Wheel](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}%20Release%20Wheel/badge.svg)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
+- [![{{cookiecutter.project_slug}} Release Container](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-release-container/badge.svg)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
+- [![{{cookiecutter.project_slug}} Release Wheel](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-release-wheel/badge.svg)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
 
 ## Getting Started With Python In A Box
 
 Refer to the [python-in-a-box documentation](https://github.com/Shared-Vision-Solutions/python-in-a-box) to get oriented, and learn how to manage your development environment.
 
 ## Tooling Reference
-The CLI is instsalled by default inside the container, and is also available on the host machine.
+The CLI is installed by default inside the container, and is also available on the host machine.
 Run the CLI without arguments to see the complete list of available commands: `dev`
 
 [The 'pib_cli' Python Package](https://pypi.org/project/pib-cli/)
@@ -79,7 +79,7 @@ The [scripts/extras.sh](scripts/extras.sh) script does this for you.
 First install [poetry](https://python-poetry.org/) on your host machine:
 - `pip install poetry`
 
-Then source this script, setup the extras, and you can use the `dev` command on your host:
+Next, source this script, setup the extras, and use the `dev` command on your host:
 - `source scripts/extras.sh`
 - `pib_setup_hostmachine` (to install the poetry dependencies)  
 - `dev --help` (to run the cli outside the container)

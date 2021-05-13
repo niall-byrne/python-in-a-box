@@ -31,6 +31,7 @@ pushd .. >/dev/null
     docker-compose exec mmmm_cookies dev setup-bash
     docker-compose exec mmmm_cookies dev test
     docker-compose exec mmmm_cookies find scripts -type f -exec shellcheck -x "{}" \;
+    docker-compose exec mmmm_cookies find .github/scripts -type f -exec shellcheck -x "{}" \;
     docker-compose exec mmmm_cookies ./testing_shim
     docker-compose exec mmmm_cookies git apply patches/pep.patch
     docker-compose exec mmmm_cookies dev reinstall-requirements

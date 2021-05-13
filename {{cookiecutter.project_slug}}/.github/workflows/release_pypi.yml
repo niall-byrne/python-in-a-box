@@ -1,9 +1,10 @@
 ---
-name: {{cookiecutter.project_slug}} Release Wheel
-
+name: {{cookiecutter.project_slug}}-release-pypi
+{% raw %}
 # Workflow Secrets:
 # SLACK_WEBHOOK              (Required, for slack notifications...)
-# PYPI_API_TOKEN             (Required, for publish to pypi...)
+# PYPI_API_TOKEN             (Optional, for publishing wheels to pypi...)
+# TEST_PYPI_API_TOKEN        (Optional, for publishing wheels to test-pypi...)
 
 on:
   release:
@@ -14,65 +15,70 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
 
-      - uses: actions/checkout@v2
+      - name: Publish to PyPi -- Checkout
+        uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      - name: Setup Environment
+      - name: Publish to PyPi -- Setup Environment
         run: |
-          echo "WEBHOOK_URL=${WEBHOOK_URL}" >> $GITHUB_ENV
-          echo "PROJECT_NAME={{cookiecutter.project_slug}}" >> $GITHUB_ENV
-          echo "USERNAME={{cookiecutter.github_username}}" >> $GITHUB_ENV
+          source .github/scripts/setup.sh
           echo "CD_ENABLED=false" >> $GITHUB_ENV
-{% raw %}
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
-      - name: Create Docker Mounted Content
+      - name: Publish to PyPi -- Create Docker Mounted Content
         run: |
           echo | ssh-keygen
           touch ${HOME}/.gitconfig
           touch ${HOME}/.gitconfig_global
-
-      - name: Ensure File System is Writable by the Container
+      - name: Publish to PyPi -- Ensure File System is Writable by the Container
         run: |
           sudo chmod -R o+w .
-
-      - name: Build Container
+      - name: Publish to PyPi -- Build Container
         run: |
           docker-compose build
           docker-compose up -d
 
       # START Continuous Deployment -- Customize this Section Depending on your strategy
 
-      - name: Is CD enabled?
+      - name: Publish to PyPi -- Build and Publish a Python Package to Test PyPI
+        if: env.TEST_PYPI_API_TOKEN != ''
+        run: |
+          echo "CD_ENABLED=true" >> $GITHUB_ENV
+          docker-compose exec -T "${PROJECT_NAME}" bash -c "                                                 \
+            poetry config repositories.testpypi https://test.pypi.org/legacy/                             && \
+            poetry publish --build -r testpypi --username __token__ --password \"${TEST_PYPI_API_TOKEN}\"    \
+          "
+        env:
+          TEST_PYPI_API_TOKEN: ${{ secrets.TEST_PYPI_API_TOKEN }}
+
+      - name: Publish to PyPi -- Build and Publish a Python Package to PyPI
         if: env.PYPI_TOKEN != ''
         run: |
           echo "CD_ENABLED=true" >> $GITHUB_ENV
-        env:
-          PYPI_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
-
-      - name: Build and Publish a Python Package to PyPI
-        if: env.CD_ENABLED == 'true'
-        run: |
-          docker-compose exec -T "${PROJECT_NAME}" poetry publish --build --username __token__ --password "${PYPI_API_TOKEN}"
+          docker-compose exec -T "${PROJECT_NAME}" bash -c "                                                 \
+            poetry publish --build --username __token__ --password \"${PYPI_API_TOKEN}\"                     \
+          "
         env:
           PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
 
       # END Continuous Deployment -- Customize this Section Depending on your strategy
 
-      - name: Production -- Report Success
-        if: env.CD_ENABLED == 'true'
+      - name: Publish to PyPi -- Report Success
+        if: env.TEST_PYPI_API_TOKEN != ''
         run: |
-          ./scripts/ci/slack.sh "${PROJECT_NAME}:${GITHUB_REF#refs/tags/}" "new release has been pushed to PyPi!"
-
-      - name: Production -- Report Success
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" "new release has been pushed to Test PyPi!"
+      - name: Publish to PyPi -- Report Success
+        if: env.PYPI_TOKEN != ''
+        run: |
+         ./.github/scripts/notifications.sh "${NOTIFICATION}" "new release has been pushed to PyPi!"
+      - name: Publish to PyPi -- Report Success
         if: env.CD_ENABLED != 'true'
         run: |
-          ./scripts/ci/slack.sh "${PROJECT_NAME}:${GITHUB_REF#refs/tags/}" "new release wheel has been built, but CD is disabled for this repository!"
-
-      - name: Production -- Report Failure
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" "new release wheel has been built, but CD is disabled for this repository!"
+      - name: Publish to PyPi -- Report Failure
         if: failure()
         run: |
-          ./scripts/ci/slack.sh "${PROJECT_NAME}:${GITHUB_REF#refs/tags/}" "automated PyPi release has failed!"
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" "automated PyPi release has failed!"
 {% endraw %}

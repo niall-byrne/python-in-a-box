@@ -1,6 +1,6 @@
 {
     "project_name": "Mmmm Cookies",
-    "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
+    "project_slug": "{{ cookiecutter.project_name|slugify|replace('-', '_') }}",
     "description": "Not the evil tracking type.",
     "author": "Niall Byrne",
     "email": "niall@niallbyrne.ca",

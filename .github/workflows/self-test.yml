@@ -13,6 +13,48 @@ on:
 
 jobs:
 
+  shellcheck_test:
+
+    runs-on: ubuntu-20.04
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [ 3.7 ]
+
+    steps:
+
+      - name: Shellcheck -- Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          path: 'template'
+
+      - name: Shellcheck -- Setup Environment
+        run: |
+          source ./template/.github/scripts/setup.sh
+          source ./template/.github/scripts/template.sh
+          echo "PROJECT_NAME=mmmm_cookies" >> $GITHUB_ENV
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Shellcheck -- Check Template Scripts
+        run: |
+          shellcheck ./template/test.sh
+          shellcheck ./template/.github/scripts/*.sh
+      - name: Shellcheck -- Check Rendered Template Scripts
+        run: |
+          shellcheck ${PROJECT_NAME}/.github/scripts/*.sh
+          shellcheck ${PROJECT_NAME}/${PROJECT_NAME}/container_init.sh
+          shellcheck ${PROJECT_NAME}/scripts/*.sh
+          shellcheck ${PROJECT_NAME}/scripts/hooks/*
+
+      - name: Shellcheck -- Report Job Status on Success
+        run: |
+          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" "shellcheck checks succeeded!"
+      - name: Shellcheck -- Report Job Status on Failure
+        if: failure()
+        run: |
+          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" "shellcheck checks failed!"
+
   documentation_test:
 
     runs-on: ubuntu-20.04
@@ -22,53 +64,45 @@ jobs:
         python-version: [ 3.7 ]
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          path: 'template'
-      - name: Set up Python ${{ matrix.python-version }}
+
+      - name: Documentation -- Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Requirements
+
+      - name: Documentation -- Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          path: 'template'
+      - name: Documentation -- Setup Environment
         run: |
-          pip install cookiecutter
-      - name: Create Template
-        run: |
-          git config --global user.email "somedude@coolstartup.com"
-          git config --global user.name "Pro Buddy Dev"
-          echo -e '\n\n\n\n\n\nfalse\nfalse\nfalse\n' | cookiecutter template/
-      - name: Setup Environment
-        run: |
-          BRANCH_OR_TAG="$(echo "${GITHUB_REF}" | sed 's/refs\/heads\///g' | sed 's/refs\/tags\///g')"
-          echo "BRANCH_OR_TAG=${BRANCH_OR_TAG}" >> $GITHUB_ENV
-          echo "VALID_RELEASE=not_a_validated_release" >> $GITHUB_ENV
-      - name: Check Markdown Links For Readme
+          source ./template/.github/scripts/setup.sh
+          source ./template/.github/scripts/template.sh
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Documentation -- Check Markdown Links For Readme
         uses: gaurav-nelson/github-action-markdown-link-check@1.0.11
         with:
           use-quiet-mode: 'no'
           use-verbose-mode: 'yes'
           folder-path: 'template, template/.github/workflows'
           max-depth: 1
-      - name: Check Markdown Links For Rendered Template
+      - name: Documentation -- Check Markdown Links For Rendered Template
         uses: gaurav-nelson/github-action-markdown-link-check@1.0.11
         with:
           use-quiet-mode: 'no'
           use-verbose-mode: 'yes'
           folder-path: './mmmm_cookies'
           max-depth: -1
-      - name: Report Job Status on Success
+
+      - name: Documentation -- Report Job Status on Success
         run: |
-          MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: documentation checks succeeded!\"}"
-          curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"
-        env:
-          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-      - name: Report Job Status on Failure
+          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" "documentation checks succeeded!"
+      - name: Documentation -- Report Job Status on Failure
         if: failure()
         run: |
-          MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: documentation checks failed!\"}"
-          curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"
-        env:
-          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" "documentation checks failed!"
 
   container_cli_test:
 
@@ -79,103 +113,95 @@ jobs:
         python-version: [3.7]
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        path: 'template'
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Requirements
-      run: |
-        pip install cookiecutter
-    - name: Create Template
-      run: |
-        git config --global user.email "somedude@coolstartup.com"
-        git config --global user.name "Pro Buddy Dev"
-        echo -e '\n\n\n\n\n\nfalse\nfalse\nfalse\n' | cookiecutter template/
-    - name: Setup Environment
-      run: |
-        BRANCH_OR_TAG="$(echo "${GITHUB_REF}" | sed 's/refs\/heads\///g' | sed 's/refs\/tags\///g')"
-        echo "BRANCH_OR_TAG=${BRANCH_OR_TAG}" >> $GITHUB_ENV
-        echo "VALID_RELEASE=not_a_validated_release" >> $GITHUB_ENV
-    - name: Ensure File System is Writable by the Container
-      run: |
-        sudo chmod -R o+w .
-    - name: Build Docker Image, Start Container
-      run: |
-        cd mmmm_cookies
-        docker-compose build
-        docker-compose up -d
-        sleep 1
-    - name: Run TOML Linter
-      run: |
-        cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies tomll /app/pyproject.toml
-    - name: Test Build Documentation
-      run: |
-        cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies dev build-docs
-    - name: Test Build Wheel
-      run: |
-        cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies dev build-wheel
-    - name: Test the Coverage Command
-      run: |
-        cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies dev coverage
-    - name: Test the Fmt Command
-      run: |
-        cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies dev fmt
-    - name: Test the Lint Command
-      run: |
-        cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies dev lint
-    - name: Test the Reinstall Requirements Command
-      run: |
-        cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies dev reinstall-requirements
-    - name: Test the Sectest Command
-      run: |
-        cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies dev sectest
-    - name: Test the Setup Command
-      run: |
-        cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies dev setup
-    - name: Test the Setup Bash Command
-      run: |
-        cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies dev setup-bash
-    - name: Test the Test Command
-      run: |
-        cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies dev test
-    - name: Test Priviledge Escalation
-      run: |
-        cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies sudo ls -la /root
-    - name: Test Patch Pep Compliance
-      run: |
-        cd mmmm_cookies
-        docker-compose exec -T mmmm_cookies git apply patches/pep.patch
-        docker-compose exec -T mmmm_cookies dev reinstall-requirements
-        docker-compose exec -T mmmm_cookies black --check .
-        docker-compose exec -T mmmm_cookies dev fmt
-    - name: Report Job Status on Success
-      run: |
-        MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: container build succeeded!\"}"
-        curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"
-      env:
-        WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-    - name: Report Job Status on Failure
-      if: failure()
-      run: |
-        MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: container build failed!\"}"
-        curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"
-      env:
-       WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Container Test -- Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Container Test -- Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          path: 'template'
+      - name: Container Test -- Setup Environment
+        run: |
+          source ./template/.github/scripts/setup.sh
+          source ./template/.github/scripts/template.sh
+        env:
+            WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Container Test -- Ensure File System is Writable by the Container
+        run: |
+          sudo chmod -R o+w .
+      - name: Container Test -- Build Docker Image, Start Container
+        run: |
+          cd mmmm_cookies
+          docker-compose build
+          docker-compose up -d
+          sleep 1
+      - name: Container Test -- Run TOML Linter
+        run: |
+          cd mmmm_cookies
+          docker-compose exec -T mmmm_cookies tomll /app/pyproject.toml
+      - name: Container Test -- Test Build Documentation
+        run: |
+          cd mmmm_cookies
+          docker-compose exec -T mmmm_cookies dev build-docs
+      - name: Container Test -- Test Build Wheel
+        run: |
+          cd mmmm_cookies
+          docker-compose exec -T mmmm_cookies dev build-wheel
+      - name: Container Test -- Test the Coverage Command
+        run: |
+          cd mmmm_cookies
+          docker-compose exec -T mmmm_cookies dev coverage
+      - name: Container Test -- Test the Fmt Command
+        run: |
+          cd mmmm_cookies
+          docker-compose exec -T mmmm_cookies dev fmt
+      - name: Container Test -- Test the Lint Command
+        run: |
+          cd mmmm_cookies
+          docker-compose exec -T mmmm_cookies dev lint
+      - name: Container Test -- Test the Reinstall Requirements Command
+        run: |
+          cd mmmm_cookies
+          docker-compose exec -T mmmm_cookies dev reinstall-requirements
+      - name: Container Test -- Test the Sectest Command
+        run: |
+          cd mmmm_cookies
+          docker-compose exec -T mmmm_cookies dev sectest
+      - name: Container Test -- Test the Setup Command
+        run: |
+          cd mmmm_cookies
+          docker-compose exec -T mmmm_cookies dev setup
+      - name: Container Test -- Test the Setup Bash Command
+        run: |
+          cd mmmm_cookies
+          docker-compose exec -T mmmm_cookies dev setup-bash
+      - name: Container Test -- Test the Test Command
+        run: |
+          cd mmmm_cookies
+          docker-compose exec -T mmmm_cookies dev test
+      - name: Container Test -- Test Priviledge Escalation
+        run: |
+          cd mmmm_cookies
+          docker-compose exec -T mmmm_cookies sudo ls -la /root
+      - name: Container Test -- Test Patch Pep Compliance
+        run: |
+          cd mmmm_cookies
+          docker-compose exec -T mmmm_cookies git apply patches/pep.patch
+          docker-compose exec -T mmmm_cookies dev reinstall-requirements
+          docker-compose exec -T mmmm_cookies black --check .
+          docker-compose exec -T mmmm_cookies dev fmt
+
+      - name: Container Test -- Report Job Status on Success
+        run: |
+          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" "container build succeeded"
+      - name: Container Test -- Report Job Status on Failure
+        if: failure()
+        run: |
+          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" "container build failed!"
 
   hostmachine_cli_test:
 
@@ -186,126 +212,115 @@ jobs:
         python-version: [3.7]
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        path: 'template'
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install Additional Hostmachine Software
-      run: |
-        sudo apt-get install -y golang-github-pelletier-go-toml
-        sudo curl --fail -sL "https://github.com/zricethezav/gitleaks/releases/download/${GITLEAKSVERSION}/gitleaks-linux-amd64" -o /usr/bin/gitleaks                                                                                         && \
-        sudo chmod +x /usr/bin/gitleaks
-      env:
-        GITLEAKSVERSION: "v7.2.0"
-    - name: Requirements
-      run: |
-        pip install cookiecutter poetry
-    - name: Create Template
-      run: |
-        git config --global user.email "somedude@coolstartup.com"
-        git config --global user.name "Pro Buddy Dev"
-        echo -e '\n\n\n\n\n\nfalse\nfalse\nfalse\n' | cookiecutter template/
-    - name: Setup Environment
-      run: |
-        cd mmmm_cookies
-        BRANCH_OR_TAG="$(echo "${GITHUB_REF}" | sed 's/refs\/heads\///g' | sed 's/refs\/tags\///g')"
-        ROOT="$(git rev-parse --show-toplevel)"
-        echo "BRANCH_OR_TAG=${BRANCH_OR_TAG}" >> $GITHUB_ENV
-        echo "PROJECT_NAME=mmmm_cookies" >> $GITHUB_ENV
-        echo "PIB_CONFIG_FILE_LOCATION=${ROOT}/assets/cli.yml" >> $GITHUB_ENV
-    - name: Lint pyproject.toml
-      run: |
-        cd mmmm_cookies
-        tomll pyproject.toml
-    - name: Install Hostmachine Scripts
-      run: |
-        cd mmmm_cookies
-        source ./scripts/extras.sh
-        pib_setup_hostmachine
-    - name: Test Build Documentation
-      run: |
-        cd mmmm_cookies
-        source "$(poetry env info --path)/bin/activate"
-        dev build-docs
-    - name: Test Build Wheel
-      run: |
-        cd mmmm_cookies
-        source "$(poetry env info --path)/bin/activate"
-        dev build-wheel
-    - name: Test the Coverage Command
-      run: |
-        cd mmmm_cookies
-        source "$(poetry env info --path)/bin/activate"
-        dev coverage
-    - name: Test the Fmt Command
-      run: |
-        cd mmmm_cookies
-        source "$(poetry env info --path)/bin/activate"
-        dev fmt
-    - name: Test the Lint Command
-      run: |
-        cd mmmm_cookies
-        source "$(poetry env info --path)/bin/activate"
-        dev lint
-    - name: Test the Reinstall Requirements Command
-      run: |
-        cd mmmm_cookies
-        source "$(poetry env info --path)/bin/activate"
-        dev reinstall-requirements
-    - name: Test the Sectest Command
-      run: |
-        cd mmmm_cookies
-        source "$(poetry env info --path)/bin/activate"
-        dev sectest
-    - name: Test the Setup Command
-      run: |
-        cd mmmm_cookies
-        source "$(poetry env info --path)/bin/activate"
-        dev setup
-    - name: Test the Setup Bash Command
-      run: |
-        cd mmmm_cookies
-        source "$(poetry env info --path)/bin/activate"
-        dev setup-bash
-    - name: Test the Test Command
-      run: |
-        cd mmmm_cookies
-        source "$(poetry env info --path)/bin/activate"
-        dev test
-    - name: Test ShellCheck Passes
-      run: |
-        cd mmmm_cookies
-        shellcheck ${PROJECT_NAME}/container_init.sh
-        shellcheck scripts/*.sh
-        shellcheck scripts/ci/*.sh
-        shellcheck scripts/hooks/*
-    - name: Test Patch Pep Compliance
-      run: |
-        cd mmmm_cookies
-        git apply patches/pep.patch
-        source "$(poetry env info --path)/bin/activate"
-        dev reinstall-requirements
-        black --check .
-        dev fmt
-    - name: Report Job Status on Success
-      run: |
-        MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: hostmachine build success!\"}"
-        curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"
-      env:
-        WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-    - name: Report Job Status on Failure
-      if: failure()
-      run: |
-        MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: hostmachine build has failed!\"}"
-        curl -X POST -H 'Content-type: application/json' --data "${MSG}" "${WEBHOOK_URL}"
-      env:
-       WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Hostmachine Test -- Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Hostmachine Test -- Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          path: 'template'
+      - name: Hostmachine Test -- Setup Environment
+        run: |
+          source ./template/.github/scripts/setup.sh
+          source ./template/.github/scripts/template.sh
+          pip install poetry
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Hostmachine Test -- Install Additional Hostmachine Software
+        run: |
+          sudo apt-get install -y golang-github-pelletier-go-toml
+          sudo curl --fail -sL "https://github.com/zricethezav/gitleaks/releases/download/${GITLEAKSVERSION}/gitleaks-linux-amd64" -o /usr/bin/gitleaks                                                                                         && \
+          sudo chmod +x /usr/bin/gitleaks
+        env:
+          GITLEAKSVERSION: "v7.2.0"
+      - name: Hostmachine Test -- Setup Hostmachine Test
+        run: |
+          cd mmmm_cookies
+          ROOT="$(git rev-parse --show-toplevel)"
+          echo "PIB_CONFIG_FILE_LOCATION=${ROOT}/assets/cli.yml" >> $GITHUB_ENV
+          echo "PROJECT_NAME=mmmm_cookies" >> $GITHUB_ENV
+
+      - name: Hostmachine Test -- Lint pyproject.toml
+        run: |
+          cd mmmm_cookies
+          tomll pyproject.toml
+      - name: Hostmachine Test -- Install Hostmachine Scripts
+        run: |
+          cd mmmm_cookies
+          source ./scripts/extras.sh
+          pib_setup_hostmachine
+      - name: Hostmachine Test -- Test Build Documentation
+        run: |
+          cd mmmm_cookies
+          source "$(poetry env info --path)/bin/activate"
+          dev build-docs
+      - name: Hostmachine Test -- Test Build Wheel
+        run: |
+          cd mmmm_cookies
+          source "$(poetry env info --path)/bin/activate"
+          dev build-wheel
+      - name: Hostmachine Test -- Test the Coverage Command
+        run: |
+          cd mmmm_cookies
+          source "$(poetry env info --path)/bin/activate"
+          dev coverage
+      - name: Hostmachine Test -- Test the Fmt Command
+        run: |
+          cd mmmm_cookies
+          source "$(poetry env info --path)/bin/activate"
+          dev fmt
+      - name: Hostmachine Test -- Test the Lint Command
+        run: |
+          cd mmmm_cookies
+          source "$(poetry env info --path)/bin/activate"
+          dev lint
+      - name: Hostmachine Test -- Test the Reinstall Requirements Command
+        run: |
+          cd mmmm_cookies
+          source "$(poetry env info --path)/bin/activate"
+          dev reinstall-requirements
+      - name: Hostmachine Test -- Test the Sectest Command
+        run: |
+          cd mmmm_cookies
+          source "$(poetry env info --path)/bin/activate"
+          dev sectest
+      - name: Hostmachine Test -- Test the Setup Command
+        run: |
+          cd mmmm_cookies
+          source "$(poetry env info --path)/bin/activate"
+          dev setup
+      - name: Hostmachine Test -- Test the Setup Bash Command
+        run: |
+          cd mmmm_cookies
+          source "$(poetry env info --path)/bin/activate"
+          dev setup-bash
+      - name: Hostmachine Test -- Test the Test Command
+        run: |
+          cd mmmm_cookies
+          source "$(poetry env info --path)/bin/activate"
+          dev test
+      - name: Hostmachine Test -- Test Patch Pep Compliance
+        run: |
+          cd mmmm_cookies
+          git apply patches/pep.patch
+          source "$(poetry env info --path)/bin/activate"
+          dev reinstall-requirements
+          black --check .
+          dev fmt
+
+      - name: Hostmachine Test -- Report Job Status on Success
+        run: |
+          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" "hostmachine build success!"
+      - name: Hostmachine Test -- Report Job Status on Failure
+        if: failure()
+        run: |
+          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" "hostmachine build failed!"
 
   push_repository_test:
-    needs: [container_cli_test, documentation_test, hostmachine_cli_test]
+    needs: [container_cli_test, documentation_test, hostmachine_cli_test, shellcheck_test]
 
     runs-on: ubuntu-20.04
     strategy:
@@ -314,34 +329,32 @@ jobs:
         python-version: [3.7]
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        path: 'template'
-        persist-credentials: false
-    - name: Set up Python ${{ matrix.python-version }}
+
+    - name: Push Template -- Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Requirements
+
+    - name: Push Template -- Checkout Repository
+      uses: actions/checkout@v2
+      with:
+        path: 'template'
+        persist-credentials: false
+
+    - name: Push Template -- Setup Environment
       run: |
-        pip install cookiecutter
-    - name: Create Template
-      run: |
-        git config --global user.email "action@github.com"
-        git config --global user.name "GitHub Action"
-        echo -e '\n\n\n\n\n\nfalse\nfalse\nfalse\n' | cookiecutter template/
-    - name: Setup Environment
-      run: |
-        BRANCH_OR_TAG="$(echo "${GITHUB_REF}" | sed 's/refs\/heads\///g' | sed 's/refs\/tags\///g')"
-        echo "BRANCH_OR_TAG=${BRANCH_OR_TAG}" >> $GITHUB_ENV
-        echo "VALID_RELEASE=not_a_validated_release" >> $GITHUB_ENV
-    - name: Clean Up Tags for Git Push
+        source ./template/.github/scripts/setup.sh
+        source ./template/.github/scripts/template.sh "GitHub Action" "action@github.com"
+      env:
+        WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+    - name: Push Template -- Clean Up Tags for Git Push
       run: |
         cd mmmm_cookies
         git checkout master
         git tag --delete v0.0.0  # Don't Repush
         git tag v1.0.0
-    - name: Push To Test Repository (master)
+    - name: Push Template -- Push master
       uses: ad-m/github-push-action@v0.6.0
       with:
         github_token: ${{ secrets.REMOTE_TOKEN }}
@@ -350,7 +363,7 @@ jobs:
         directory: mmmm_cookies
         repository: ${{ secrets.REMOTE_ORIGIN }}
         force: true
-    - name: Push To Test Repository (production)
+    - name: Push Template -- Push production
       uses: ad-m/github-push-action@v0.6.0
       with:
         github_token: ${{ secrets.REMOTE_TOKEN }}
@@ -359,7 +372,7 @@ jobs:
         directory: mmmm_cookies
         repository: ${{ secrets.REMOTE_ORIGIN }}
         force: true
-    - name: Push To Test Repository (release tag)
+    - name: Push Template -- Push release tag
       uses: ad-m/github-push-action@v0.6.0
       with:
         github_token: ${{ secrets.REMOTE_TOKEN }}
@@ -368,19 +381,14 @@ jobs:
         directory: mmmm_cookies
         repository: ${{ secrets.REMOTE_ORIGIN }}
         force: true
-    - name: Report Job Status on Success
+
+    - name: Push Template -- Report Job Status on Success
       run: |
-        MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: trigger templated pipelines succeeded!\"}"
-        curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"
-      env:
-        WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-    - name: Report Job Status on Failure
+        ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" "push has been triggered!"
+    - name: Push Template -- Report Job Status on Failure
       if: failure()
       run: |
-        MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: trigger templated pipelines failed!\"}"
-        curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"
-      env:
-        WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+        ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" "push has failed to trigger!"
 
   create_releases:
     needs: [push_repository_test]
@@ -392,24 +400,27 @@ jobs:
         python-version: [ 3.7 ]
 
     steps:
-      - uses: actions/checkout@v1
-      - name: Setup Environment
-        run: |
-          BRANCH_OR_TAG="$(echo "${GITHUB_REF}" | sed 's/refs\/heads\///g' | sed 's/refs\/tags\///g')"
-          echo "BRANCH_OR_TAG=${BRANCH_OR_TAG}" >> $GITHUB_ENV
-          echo "VALID_RELEASE=not_a_validated_release" >> $GITHUB_ENV
+      - name: Create Release -- Checkout Repository
+        uses: actions/checkout@v1
 
-      - name: Releases -- Prepare Release Content
+      - name: Create Release -- Setup Environment
+        if: contains(github.ref, '/tags/v')
+        run: |
+          source .github/scripts/setup.sh
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Create Release -- Prepare Release Content
         if: contains(github.ref, '/tags/v')
         run: |
           echo "{}" > package.json
-      - name: Production -- Generate Changelog
+      - name: Create Release -- Generate Changelog
         if: contains(github.ref, '/tags/v')
         uses: scottbrenner/generate-changelog-action@1.0.3
         id: Changelog
         env:
           REPO: ${{ github.repository }}
-      - name: Production -- Create Release
+      - name: Create Release -- Generate Github Release Draft
         if: contains(github.ref, '/tags/v')
         uses: actions/create-release@v1
         env:
@@ -425,17 +436,12 @@ jobs:
             - [ ] Ensure self test passes
           draft: true
           prerelease: false
-      - name: Production -- Report Success
+
+      - name: Create Release -- Report Job Status on Success
         if: contains(github.ref, '/tags/v')
         run: |
-          MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: automated release has been created!\"}"
-          curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"
-        env:
-          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-      - name: Production -- Report Failure
-        if: failure() && contains(github.ref, '/tags/v')
+          ./{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" "automated release has been created!\nhttps://github.com/${USERNAME}/${PROJECT_NAME}/releases"
+      - name: Create Release -- Report Job Status on Failure
+        if: failure()
         run: |
-          MSG="{\"text\":\"python-in-a-box:${BRANCH_OR_TAG}: automated release has failed!\"}"
-          curl -X POST -H 'Content-type: application/json' --data "${MSG}"  "${WEBHOOK_URL}"
-        env:
-          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+          ./{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" "automated release has failed!"

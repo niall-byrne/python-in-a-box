@@ -27,6 +27,7 @@ main() {
     dev sectest
     dev test
     find scripts -type f -exec shellcheck -x "{}" \;
+    shellcheck .github/*.sh
 
     if [[ -n "$(git diff)" ]]; then
 

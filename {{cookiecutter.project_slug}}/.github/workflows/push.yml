@@ -1,6 +1,6 @@
 ---
-name: {{cookiecutter.project_slug}} Generic Push
-
+name: {{cookiecutter.project_slug}}-push-generic
+{% raw %}
 # Workflow Secrets:
 # SLACK_WEBHOOK              (Required, for slack notifications...)
 
@@ -16,55 +16,44 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
 
-      - uses: actions/checkout@v1
+      - name: Generic Push -- Checkout
+        uses: actions/checkout@v1
 
-      - name: Setup Environment
+      - name: Push -- Setup Environment
         run: |
-          BRANCH_OR_TAG="$(echo "${GITHUB_REF}" | sed 's/refs\/heads\///g' | sed 's/refs\/tags\///g')"
-          echo "BRANCH_OR_TAG=${BRANCH_OR_TAG}" >> $GITHUB_ENV
-          echo "WEBHOOK_URL=${WEBHOOK_URL}" >> $GITHUB_ENV
-          echo "PROJECT_NAME={{cookiecutter.project_slug}}" >> $GITHUB_ENV
-          echo "USERNAME={{cookiecutter.github_username}}" >> $GITHUB_ENV
-{% raw %}
+          source .github/scripts/setup.sh
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
-      - name: Create Docker Mounted Content
+      - name: Push -- Create Docker Mounted Content
         run: |
           echo | ssh-keygen
           touch ${HOME}/.gitconfig
           touch ${HOME}/.gitconfig_global
-
-      - name: Ensure File System is Writable by the Container
+      - name: Push -- Ensure File System is Writable by the Container
         run: |
           sudo chmod -R o+w .
-
-      - name: Build Container
+      - name: Push -- Build Container
         run: |
           docker-compose build
           docker-compose up -d
-
-      - name: Run TOML Linter
+      - name: Push -- Run TOML Linter
         run: |
           docker-compose exec -T "${PROJECT_NAME}" tomll /app/pyproject.toml
-
-      - name: Run Linter
+      - name: Push -- Run Linter
         run: |
           docker-compose exec -T "${PROJECT_NAME}" dev lint
-
-      - name: Run Sec Test
+      - name: Push -- Run Sec Test
         run: |
           docker-compose exec -T "${PROJECT_NAME}" dev sectest
-
-      - name: Run Unit Tests
+      - name: Push -- Run Unit Tests
         run: |
           docker-compose exec -T "${PROJECT_NAME}" dev coverage
-
-      - name: Run Release Validation
+      - name: Push -- Run Release Validation
         run: |
           docker-compose exec -T "${PROJECT_NAME}" ./scripts/release.sh
 
-      - name: Documentation Validation
+      - name: Push -- Documentation Validation
         uses: gaurav-nelson/github-action-markdown-link-check@1.0.11
         with:
           use-quiet-mode: 'no'
@@ -72,28 +61,25 @@ jobs:
           folder-path: '.github'
           file-path: './README.md'
 
-      - name: Report Build Failures
-        if: failure() == true
+      - name: Push -- Report Job Status (Success)
         run: |
-          ./scripts/ci/slack.sh "${PROJECT_NAME}" "build on push has failed!"
-
-      - name: Report Build Successes
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" "build was successful!"
+      - name: Push -- Report Job Status (Failure)
+        if: failure()
         run: |
-          ./scripts/ci/slack.sh "${PROJECT_NAME}" "build on push succeeded for ${BRANCH_OR_TAG}!"
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" "build has failed!"
 
-      - name: Releases -- Prepare Release Content
+      - name: Push -- Release -- Prepare Content
         if: contains(github.ref, '/tags/v')
         run: |
           echo "{}" > package.json
-
-      - name: Production -- Generate Changelog
+      - name: Push -- Release -- Generate Changelog
         if: contains(github.ref, '/tags/v')
         uses: scottbrenner/generate-changelog-action@1.0.3
         id: Changelog
         env:
           REPO: ${{ github.repository }}
-
-      - name: Production -- Create Release
+      - name: Push -- Release -- Create Github Release
         if: contains(github.ref, '/tags/v')
         uses: actions/create-release@v1
         env:
@@ -110,13 +96,12 @@ jobs:
           draft: true
           prerelease: false
 
-      - name: Production -- Report Success
+      - name: Push -- Release -- Report Success
         if: contains(github.ref, '/tags/v')
         run: |
-          ./scripts/ci/slack.sh "${PROJECT_NAME}" "automated release has been created for ${BRANCH_OR_TAG}:\n  https://github.com/${USERNAME}/${PROJECT_NAME}/releases"
-
-      - name: Production -- Report Failure
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" "automated release has been created: https://github.com/${USERNAME}/${PROJECT_NAME}/releases"
+      - name: Push -- Release -- Report Failure
         if: failure() && contains(github.ref, '/tags/v')
         run: |
-          ./scripts/ci/slack.sh "${PROJECT_NAME}" "automated release has failed for ${BRANCH_OR_TAG}!"
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" "automated release generation failed!"
 {% endraw %}

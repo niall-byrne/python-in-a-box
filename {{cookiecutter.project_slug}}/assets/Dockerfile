@@ -85,14 +85,17 @@ FROM base as production
 LABEL ENVIRONMENT=PRODUCTION
 ENV ENVIRONMENT=PRODUCTION
 
-# Set the runtime user
-USER user
-
 # Copy the codebase
+USER user
 COPY . /app
 
-# Install Production Packages Only
+# Install the Production Dependencies
+USER root
 RUN poetry lock                                                 && \
-    poetry install --no-dev --no-root
+    poetry install --no-dev                                     && \
+    pip uninstall -y poetry
+
+# Set the Runtime User
+USER user
 
 CMD ["./{{cookiecutter.project_slug}}/container_init.sh"]
