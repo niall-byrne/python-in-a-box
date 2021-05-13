@@ -11,75 +11,129 @@ on:
   workflow_dispatch:
 
 jobs:
+
   build:
 
-    runs-on: ubuntu-20.04
-    steps:
+    runs-on: ubuntu-latest
 
-      - name: Push Wheel -- Checkout
+    steps:
+      - name: Build -- Checkout
         uses: actions/checkout@v1
 
-      - name: Push Wheel -- Setup Environment
+      - name: Build -- Setup Environment
         run: |
           source .github/scripts/setup.sh
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
-      - name: Push Wheel -- Create Docker Mounted Content
+      - name: Build -- Create Docker Mounted Content
         run: |
           echo | ssh-keygen
           touch ${HOME}/.gitconfig
           touch ${HOME}/.gitconfig_global
-      - name: Push Wheel -- Ensure File System is Writable by the Container
+      - name: Build -- Ensure File System is Writable by the Container
         run: |
           sudo chmod -R o+w .
-      - name: Push Wheel -- Build Container
+      - name: Build -- Build Container
         run: |
           docker-compose build
           docker-compose up -d
-      - name: Push Wheel -- Run TOML Linter
+      - name: Build -- Run TOML Linter
         run: |
           docker-compose exec -T "${PROJECT_NAME}" tomll /app/pyproject.toml
-      - name: Push Wheel -- Run Linter
+      - name: Build -- Run Linter
         run: |
           docker-compose exec -T "${PROJECT_NAME}" dev lint
-      - name: Push Wheel -- Run Sec Test
+      - name: Build -- Run Sec Test
         run: |
           docker-compose exec -T "${PROJECT_NAME}" dev sectest
-      - name: Push Wheel -- Run Unit Tests
+      - name: Build -- Run Unit Tests
         run: |
           docker-compose exec -T "${PROJECT_NAME}" dev coverage
-      - name: Push Wheel -- Run Release Validation
+      - name: Build -- Run Release Validation
         run: |
           docker-compose exec -T "${PROJECT_NAME}" ./scripts/release.sh
 
-      - name: Push Wheel -- Documentation Validation
-        uses: gaurav-nelson/github-action-markdown-link-check@1.0.11
-        with:
-          use-quiet-mode: 'no'
-          use-verbose-mode: 'yes'
-          folder-path: '.github'
-          file-path: './README.md'
-
-      - name: Push Wheel -- Report Job Status (Success)
+      - name: Build -- Report Job Status (Success)
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" "build was successful!"
-      - name: Push Wheel -- Report Job Status (Failure)
+      - name: Build -- Report Job Status (Failure)
         if: failure()
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" "build has failed!"
 
-      - name: Push Wheel -- Release -- Prepare Content
+  documentation_test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Documentation Test -- Checkout Repository
+        uses: actions/checkout@v1
+      - name: Documentation Test -- Documentation Validation
+        uses: gaurav-nelson/github-action-markdown-link-check@1.0.11
+        with:
+          use-quiet-mode: 'no'
+          use-verbose-mode: 'yes'
+
+      - name: Documentation Test -- Report Success
+        run: |
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" "documentation test has passed!"
+      - name: Documentation Test -- Report Failure
+        run: |
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" "documentation test has failed!"
+
+  security_test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Security Test -- Checkout Repository
+        uses: actions/checkout@v1
+      - name: Security Test -- Run Gitleaks
+        uses: zricethezav/gitleaks-action@master
+
+      - name: Security Test -- Report Success
+        run: |
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" "security test has passed!"
+      - name: Security Test -- Report Failure
+        run: |
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" "security test has failed!"
+
+  release:
+    needs: [build, documentation_test, security_test]
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.7]
+
+    steps:
+      - name: Release -- Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Release -- Checkout
+        uses: actions/checkout@v1
+
+      - name: Release -- Setup Environment
+        run: |
+          source .github/scripts/setup.sh
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Release -- Prepare Content
         if: contains(github.ref, '/tags/v')
         run: |
           echo "{}" > package.json
-      - name: Push Wheel -- Release -- Generate Changelog
+      - name: Build -- Release -- Generate Changelog
         if: contains(github.ref, '/tags/v')
         uses: scottbrenner/generate-changelog-action@1.0.3
         id: Changelog
         env:
           REPO: ${{ github.repository }}
-      - name: Push Wheel -- Release -- Create Github Release
+      - name: Release -- Create Github Release
         if: contains(github.ref, '/tags/v')
         id: create_release
         uses: actions/create-release@v1
@@ -97,15 +151,16 @@ jobs:
             - [ ] Ensure version is correct
           draft: true
           prerelease: false
-      - name: Push Wheel -- Release -- Build Wheel
+      - name: Release -- Build Wheel
         if: contains(github.ref, '/tags/v')
         run: |
-          docker-compose exec -T "${PROJECT_NAME}" dev build-wheel
+          pip install poetry
+          poetry build
           cd dist
             WHEEL_NAME=$(ls *.whl)
           cd ..
           echo "WHEEL_NAME=${WHEEL_NAME}" >> $GITHUB_ENV
-      - name: Push Wheel -- Release -- Upload Release Asset
+      - name: Release -- Upload Release Asset
         if: contains(github.ref, '/tags/v')
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
@@ -117,11 +172,11 @@ jobs:
           asset_name: ${{ env.WHEEL_NAME }}
           asset_content_type: application/zip
 
-      - name: Push Wheel -- Release -- Report Success
+      - name: Release -- Report Success
         if: contains(github.ref, '/tags/v')
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" "automated release (with wheel) has been created: https://github.com/${USERNAME}/${PROJECT_NAME}/releases"
-      - name: Push Wheel -- Release -- Report Failure
+      - name: Release -- Report Failure
         if: failure() && contains(github.ref, '/tags/v')
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" "automated release generation failed!"

@@ -11,75 +11,120 @@ on:
   workflow_dispatch:
 
 jobs:
+
   build:
 
-    runs-on: ubuntu-20.04
-    steps:
+    runs-on: ubuntu-latest
 
-      - name: Generic Push -- Checkout
+    steps:
+      - name: Build -- Checkout
         uses: actions/checkout@v1
 
-      - name: Push -- Setup Environment
+      - name: Build -- Setup Environment
         run: |
           source .github/scripts/setup.sh
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
-      - name: Push -- Create Docker Mounted Content
+      - name: Build -- Create Docker Mounted Content
         run: |
           echo | ssh-keygen
           touch ${HOME}/.gitconfig
           touch ${HOME}/.gitconfig_global
-      - name: Push -- Ensure File System is Writable by the Container
+      - name: Build -- Ensure File System is Writable by the Container
         run: |
           sudo chmod -R o+w .
-      - name: Push -- Build Container
+      - name: Build -- Build Container
         run: |
           docker-compose build
           docker-compose up -d
-      - name: Push -- Run TOML Linter
+      - name: Build -- Run TOML Linter
         run: |
           docker-compose exec -T "${PROJECT_NAME}" tomll /app/pyproject.toml
-      - name: Push -- Run Linter
+      - name: Build -- Run Linter
         run: |
           docker-compose exec -T "${PROJECT_NAME}" dev lint
-      - name: Push -- Run Sec Test
+      - name: Build -- Run Sec Test
         run: |
           docker-compose exec -T "${PROJECT_NAME}" dev sectest
-      - name: Push -- Run Unit Tests
+      - name: Build -- Run Unit Tests
         run: |
           docker-compose exec -T "${PROJECT_NAME}" dev coverage
-      - name: Push -- Run Release Validation
+      - name: Build -- Run Release Validation
         run: |
           docker-compose exec -T "${PROJECT_NAME}" ./scripts/release.sh
 
-      - name: Push -- Documentation Validation
-        uses: gaurav-nelson/github-action-markdown-link-check@1.0.11
-        with:
-          use-quiet-mode: 'no'
-          use-verbose-mode: 'yes'
-          folder-path: '.github'
-          file-path: './README.md'
-
-      - name: Push -- Report Job Status (Success)
+      - name: Build -- Report Job Status (Success)
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" "build was successful!"
-      - name: Push -- Report Job Status (Failure)
+      - name: Build -- Report Job Status (Failure)
         if: failure()
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" "build has failed!"
 
-      - name: Push -- Release -- Prepare Content
+  documentation_test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Documentation Test -- Checkout Repository
+        uses: actions/checkout@v1
+      - name: Documentation Test -- Documentation Validation
+        uses: gaurav-nelson/github-action-markdown-link-check@1.0.11
+        with:
+          use-quiet-mode: 'no'
+          use-verbose-mode: 'yes'
+
+      - name: Documentation Test -- Report Success
+        run: |
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" "documentation test has passed!"
+      - name: Documentation Test -- Report Failure
+        run: |
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" "documentation test has failed!"
+
+  security_test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Security Test -- Checkout Repository
+        uses: actions/checkout@v1
+      - name: Security Test -- Run Gitleaks
+        uses: zricethezav/gitleaks-action@master
+
+      - name: Security Test -- Report Success
+        run: |
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" "security test has passed!"
+      - name: Security Test -- Report Failure
+        run: |
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" "security test has failed!"
+
+  release:
+    needs: [build, documentation_test, security_test]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Release -- Checkout
+        uses: actions/checkout@v1
+
+      - name: Release -- Setup Environment
+        run: |
+          source .github/scripts/setup.sh
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Release -- Prepare Content
         if: contains(github.ref, '/tags/v')
         run: |
           echo "{}" > package.json
-      - name: Push -- Release -- Generate Changelog
+      - name: Release -- Generate Changelog
         if: contains(github.ref, '/tags/v')
         uses: scottbrenner/generate-changelog-action@1.0.3
         id: Changelog
         env:
           REPO: ${{ github.repository }}
-      - name: Push -- Release -- Create Github Release
+      - name: Release -- Create Github Release
         if: contains(github.ref, '/tags/v')
         uses: actions/create-release@v1
         env:
@@ -96,11 +141,11 @@ jobs:
           draft: true
           prerelease: false
 
-      - name: Push -- Release -- Report Success
+      - name: Release -- Report Success
         if: contains(github.ref, '/tags/v')
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" "automated release has been created: https://github.com/${USERNAME}/${PROJECT_NAME}/releases"
-      - name: Push -- Release -- Report Failure
+      - name: Release -- Report Failure
         if: failure() && contains(github.ref, '/tags/v')
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" "automated release generation failed!"

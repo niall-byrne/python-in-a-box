@@ -13,63 +13,11 @@ on:
 
 jobs:
 
-  shellcheck_test:
-
-    runs-on: ubuntu-20.04
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [ 3.7 ]
-
-    steps:
-
-      - name: Shellcheck -- Checkout Repository
-        uses: actions/checkout@v2
-        with:
-          path: 'template'
-
-      - name: Shellcheck -- Setup Environment
-        run: |
-          source ./template/.github/scripts/setup.sh
-          source ./template/.github/scripts/template.sh
-          echo "PROJECT_NAME=mmmm_cookies" >> $GITHUB_ENV
-        env:
-          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-
-      - name: Shellcheck -- Check Template Scripts
-        run: |
-          shellcheck ./template/test.sh
-          shellcheck ./template/.github/scripts/*.sh
-      - name: Shellcheck -- Check Rendered Template Scripts
-        run: |
-          shellcheck ${PROJECT_NAME}/.github/scripts/*.sh
-          shellcheck ${PROJECT_NAME}/${PROJECT_NAME}/container_init.sh
-          shellcheck ${PROJECT_NAME}/scripts/*.sh
-          shellcheck ${PROJECT_NAME}/scripts/hooks/*
-
-      - name: Shellcheck -- Report Job Status on Success
-        run: |
-          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" "shellcheck checks succeeded!"
-      - name: Shellcheck -- Report Job Status on Failure
-        if: failure()
-        run: |
-          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" "shellcheck checks failed!"
-
   documentation_test:
 
-    runs-on: ubuntu-20.04
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [ 3.7 ]
+    runs-on: ubuntu-latest
 
     steps:
-
-      - name: Documentation -- Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
-        with:
-          python-version: ${{ matrix.python-version }}
-
       - name: Documentation -- Checkout Repository
         uses: actions/checkout@v2
         with:
@@ -93,7 +41,7 @@ jobs:
         with:
           use-quiet-mode: 'no'
           use-verbose-mode: 'yes'
-          folder-path: './mmmm_cookies'
+          folder-path: ${{ env.TEMPLATED_NAME }}
           max-depth: -1
 
       - name: Documentation -- Report Job Status on Success
@@ -106,19 +54,9 @@ jobs:
 
   container_cli_test:
 
-    runs-on: ubuntu-20.04
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [3.7]
+    runs-on: ubuntu-latest
 
     steps:
-
-      - name: Container Test -- Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
-        with:
-          python-version: ${{ matrix.python-version }}
-
       - name: Container Test -- Checkout Repository
         uses: actions/checkout@v2
         with:
@@ -135,65 +73,65 @@ jobs:
           sudo chmod -R o+w .
       - name: Container Test -- Build Docker Image, Start Container
         run: |
-          cd mmmm_cookies
+          cd ${TEMPLATED_NAME}
           docker-compose build
           docker-compose up -d
           sleep 1
       - name: Container Test -- Run TOML Linter
         run: |
-          cd mmmm_cookies
-          docker-compose exec -T mmmm_cookies tomll /app/pyproject.toml
+          cd "${TEMPLATED_NAME}"
+          docker-compose exec -T "${TEMPLATED_NAME}" tomll /app/pyproject.toml
       - name: Container Test -- Test Build Documentation
         run: |
-          cd mmmm_cookies
-          docker-compose exec -T mmmm_cookies dev build-docs
+          cd "${TEMPLATED_NAME}"
+          docker-compose exec -T "${TEMPLATED_NAME}" dev build-docs
       - name: Container Test -- Test Build Wheel
         run: |
-          cd mmmm_cookies
-          docker-compose exec -T mmmm_cookies dev build-wheel
+          cd "${TEMPLATED_NAME}"
+          docker-compose exec -T "${TEMPLATED_NAME}" dev build-wheel
       - name: Container Test -- Test the Coverage Command
         run: |
-          cd mmmm_cookies
-          docker-compose exec -T mmmm_cookies dev coverage
+          cd "${TEMPLATED_NAME}"
+          docker-compose exec -T "${TEMPLATED_NAME}" dev coverage
       - name: Container Test -- Test the Fmt Command
         run: |
-          cd mmmm_cookies
-          docker-compose exec -T mmmm_cookies dev fmt
+          cd "${TEMPLATED_NAME}"
+          docker-compose exec -T "${TEMPLATED_NAME}" dev fmt
       - name: Container Test -- Test the Lint Command
         run: |
-          cd mmmm_cookies
-          docker-compose exec -T mmmm_cookies dev lint
+          cd "${TEMPLATED_NAME}"
+          docker-compose exec -T "${TEMPLATED_NAME}" dev lint
       - name: Container Test -- Test the Reinstall Requirements Command
         run: |
-          cd mmmm_cookies
-          docker-compose exec -T mmmm_cookies dev reinstall-requirements
+          cd "${TEMPLATED_NAME}"
+          docker-compose exec -T "${TEMPLATED_NAME}" dev reinstall-requirements
       - name: Container Test -- Test the Sectest Command
         run: |
-          cd mmmm_cookies
-          docker-compose exec -T mmmm_cookies dev sectest
+          cd "${TEMPLATED_NAME}"
+          docker-compose exec -T "${TEMPLATED_NAME}" dev sectest
       - name: Container Test -- Test the Setup Command
         run: |
-          cd mmmm_cookies
-          docker-compose exec -T mmmm_cookies dev setup
+          cd "${TEMPLATED_NAME}"
+          docker-compose exec -T "${TEMPLATED_NAME}" dev setup
       - name: Container Test -- Test the Setup Bash Command
         run: |
-          cd mmmm_cookies
-          docker-compose exec -T mmmm_cookies dev setup-bash
+          cd "${TEMPLATED_NAME}"
+          docker-compose exec -T "${TEMPLATED_NAME}" dev setup-bash
       - name: Container Test -- Test the Test Command
         run: |
-          cd mmmm_cookies
-          docker-compose exec -T mmmm_cookies dev test
+          cd "${TEMPLATED_NAME}"
+          docker-compose exec -T "${TEMPLATED_NAME}" dev test
       - name: Container Test -- Test Priviledge Escalation
         run: |
-          cd mmmm_cookies
-          docker-compose exec -T mmmm_cookies sudo ls -la /root
+          cd "${TEMPLATED_NAME}"
+          docker-compose exec -T "${TEMPLATED_NAME}" sudo ls -la /root
       - name: Container Test -- Test Patch Pep Compliance
         run: |
-          cd mmmm_cookies
-          docker-compose exec -T mmmm_cookies git apply patches/pep.patch
-          docker-compose exec -T mmmm_cookies dev reinstall-requirements
-          docker-compose exec -T mmmm_cookies black --check .
-          docker-compose exec -T mmmm_cookies dev fmt
+          cd "${TEMPLATED_NAME}"
+          docker-compose exec -T "${TEMPLATED_NAME}" git apply patches/pep.patch
+          docker-compose exec -T "${TEMPLATED_NAME}" dev reinstall-requirements
+          docker-compose exec -T "${TEMPLATED_NAME}" black --check .
+          docker-compose exec -T "${TEMPLATED_NAME}" dev fmt
 
       - name: Container Test -- Report Job Status on Success
         run: |
@@ -203,20 +141,74 @@ jobs:
         run: |
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" "container build failed!"
 
+  security_test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Security Test -- Checkout Repository
+        uses: actions/checkout@v1
+      - name: Security Test -- Run Gitleaks
+        uses: zricethezav/gitleaks-action@master
+
+      - name: Security Test -- Report Job Status on Success
+        run: |
+          ./{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" "seecurity checks succeeded!"
+      - name: Security Test -- Report Job Status on Failure
+        if: failure()
+        run: |
+          ./{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" "security checks failed!"
+
+  shellcheck_test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Shellcheck -- Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          path: 'template'
+
+      - name: Shellcheck -- Setup Environment
+        run: |
+          source ./template/.github/scripts/setup.sh
+          source ./template/.github/scripts/template.sh
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Shellcheck -- Check Template Scripts
+        run: |
+          shellcheck ./template/test.sh
+          shellcheck ./template/.github/scripts/*.sh
+      - name: Shellcheck -- Check Rendered Template Scripts
+        run: |
+          shellcheck ${TEMPLATED_NAME}/.github/scripts/*.sh
+          shellcheck ${TEMPLATED_NAME}/${TEMPLATED_NAME}/container_init.sh
+          shellcheck ${TEMPLATED_NAME}/scripts/*.sh
+          shellcheck ${TEMPLATED_NAME}/scripts/hooks/*
+
+      - name: Shellcheck -- Report Job Status on Success
+        run: |
+          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" "shellcheck checks succeeded!"
+      - name: Shellcheck -- Report Job Status on Failure
+        if: failure()
+        run: |
+          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" "shellcheck checks failed!"
+
   hostmachine_cli_test:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
       matrix:
         python-version: [3.7]
 
     steps:
-
       - name: Hostmachine Test -- Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Hostmachine Test -- Checkout Repository
         uses: actions/checkout@v2
         with:
@@ -229,82 +221,87 @@ jobs:
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
+      - name: Hostmachine Test -- Patch Environment
+        run: |
+          echo "PROJECT_NAME=${TEMPLATED_NAME}" >> "$GITHUB_ENV"
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
       - name: Hostmachine Test -- Install Additional Hostmachine Software
         run: |
           sudo apt-get install -y golang-github-pelletier-go-toml
-          sudo curl --fail -sL "https://github.com/zricethezav/gitleaks/releases/download/${GITLEAKSVERSION}/gitleaks-linux-amd64" -o /usr/bin/gitleaks                                                                                         && \
+          sudo curl --fail -sL "https://github.com/zricethezav/gitleaks/releases/download/${GITLEAKSVERSION}/gitleaks-linux-amd64" -o /usr/bin/gitleaks
           sudo chmod +x /usr/bin/gitleaks
         env:
           GITLEAKSVERSION: "v7.2.0"
       - name: Hostmachine Test -- Setup Hostmachine Test
         run: |
-          cd mmmm_cookies
+          cd "${TEMPLATED_NAME}"
           ROOT="$(git rev-parse --show-toplevel)"
           echo "PIB_CONFIG_FILE_LOCATION=${ROOT}/assets/cli.yml" >> $GITHUB_ENV
-          echo "PROJECT_NAME=mmmm_cookies" >> $GITHUB_ENV
 
       - name: Hostmachine Test -- Lint pyproject.toml
         run: |
-          cd mmmm_cookies
+          cd "${TEMPLATED_NAME}"
           tomll pyproject.toml
       - name: Hostmachine Test -- Install Hostmachine Scripts
         run: |
-          cd mmmm_cookies
+          cd "${TEMPLATED_NAME}"
           source ./scripts/extras.sh
           pib_setup_hostmachine
       - name: Hostmachine Test -- Test Build Documentation
         run: |
-          cd mmmm_cookies
+          cd "${TEMPLATED_NAME}"
           source "$(poetry env info --path)/bin/activate"
           dev build-docs
       - name: Hostmachine Test -- Test Build Wheel
         run: |
-          cd mmmm_cookies
+          cd "${TEMPLATED_NAME}"
           source "$(poetry env info --path)/bin/activate"
           dev build-wheel
       - name: Hostmachine Test -- Test the Coverage Command
         run: |
-          cd mmmm_cookies
+          cd "${TEMPLATED_NAME}"
           source "$(poetry env info --path)/bin/activate"
           dev coverage
       - name: Hostmachine Test -- Test the Fmt Command
         run: |
-          cd mmmm_cookies
+          cd "${TEMPLATED_NAME}"
           source "$(poetry env info --path)/bin/activate"
           dev fmt
       - name: Hostmachine Test -- Test the Lint Command
         run: |
-          cd mmmm_cookies
+          cd "${TEMPLATED_NAME}"
           source "$(poetry env info --path)/bin/activate"
           dev lint
       - name: Hostmachine Test -- Test the Reinstall Requirements Command
         run: |
-          cd mmmm_cookies
+          cd "${TEMPLATED_NAME}"
           source "$(poetry env info --path)/bin/activate"
           dev reinstall-requirements
       - name: Hostmachine Test -- Test the Sectest Command
         run: |
-          cd mmmm_cookies
+          cd "${TEMPLATED_NAME}"
           source "$(poetry env info --path)/bin/activate"
           dev sectest
       - name: Hostmachine Test -- Test the Setup Command
         run: |
-          cd mmmm_cookies
+          cd "${TEMPLATED_NAME}"
           source "$(poetry env info --path)/bin/activate"
           dev setup
       - name: Hostmachine Test -- Test the Setup Bash Command
         run: |
-          cd mmmm_cookies
+          cd "${TEMPLATED_NAME}"
           source "$(poetry env info --path)/bin/activate"
           dev setup-bash
       - name: Hostmachine Test -- Test the Test Command
         run: |
-          cd mmmm_cookies
+          cd "${TEMPLATED_NAME}"
           source "$(poetry env info --path)/bin/activate"
           dev test
       - name: Hostmachine Test -- Test Patch Pep Compliance
         run: |
-          cd mmmm_cookies
+          cd "${TEMPLATED_NAME}"
           git apply patches/pep.patch
           source "$(poetry env info --path)/bin/activate"
           dev reinstall-requirements
@@ -319,22 +316,50 @@ jobs:
         run: |
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" "hostmachine build failed!"
 
-  push_repository_test:
-    needs: [container_cli_test, documentation_test, hostmachine_cli_test, shellcheck_test]
+  workflow_lint_test:
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.7]
+        python-version: [ 3.7 ]
 
     steps:
+      - name: Workflow Lint -- Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Push Template -- Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Workflow Lint -- Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          path: 'template'
+      - name: Workflow Lint -- Setup Environment
+        run: |
+          source ./template/.github/scripts/setup.sh
+          pip install yamllint
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
+      - name: Workflow Lint -- Create Template
+        run: |
+          source ./template/.github/scripts/template.sh
+
+      - name: Workflow Lint -- Report Job Status on Success
+        run: |
+          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" "workflow linting has passed!"
+      - name: Workflow Lint -- Report Job Status on Failure
+        if: failure()
+        run: |
+          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" "workflow linting has failed!"
+
+
+  push_repository_test:
+    needs: [container_cli_test, documentation_test, hostmachine_cli_test, security_test, shellcheck_test, workflow_lint_test]
+
+    runs-on: ubuntu-latest
+
+    steps:
     - name: Push Template -- Checkout Repository
       uses: actions/checkout@v2
       with:
@@ -350,7 +375,7 @@ jobs:
 
     - name: Push Template -- Clean Up Tags for Git Push
       run: |
-        cd mmmm_cookies
+        cd "${TEMPLATED_NAME}"
         git checkout master
         git tag --delete v0.0.0  # Don't Repush
         git tag v1.0.0
@@ -360,7 +385,7 @@ jobs:
         github_token: ${{ secrets.REMOTE_TOKEN }}
         branch: master
         tags: false
-        directory: mmmm_cookies
+        directory: ${{ env.TEMPLATED_NAME }}
         repository: ${{ secrets.REMOTE_ORIGIN }}
         force: true
     - name: Push Template -- Push production
@@ -369,7 +394,7 @@ jobs:
         github_token: ${{ secrets.REMOTE_TOKEN }}
         branch: production
         tags: false
-        directory: mmmm_cookies
+        directory: ${{ env.TEMPLATED_NAME }}
         repository: ${{ secrets.REMOTE_ORIGIN }}
         force: true
     - name: Push Template -- Push release tag
@@ -378,7 +403,7 @@ jobs:
         github_token: ${{ secrets.REMOTE_TOKEN }}
         branch: production
         tags: true
-        directory: mmmm_cookies
+        directory: ${{ env.TEMPLATED_NAME }}
         repository: ${{ secrets.REMOTE_ORIGIN }}
         force: true
 
@@ -393,11 +418,7 @@ jobs:
   create_releases:
     needs: [push_repository_test]
 
-    runs-on: ubuntu-20.04
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [ 3.7 ]
+    runs-on: ubuntu-latest
 
     steps:
       - name: Create Release -- Checkout Repository

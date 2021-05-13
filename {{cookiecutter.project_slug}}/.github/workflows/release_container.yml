@@ -12,9 +12,10 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-20.04
-    steps:
 
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Publish Container -- Checkout
         uses: actions/checkout@v2
         with:

@@ -10,6 +10,7 @@ main() {
   echo "PROJECT_NAME=${PROJECT_NAME}" >> "$GITHUB_ENV"
   echo "NOTIFICATION=${PROJECT_NAME} [${BRANCH_OR_TAG}]" >> "$GITHUB_ENV"
   echo "USERNAME=shared-vision-solutions" >> "$GITHUB_ENV"
+  echo "TEMPLATED_NAME=mmmm_cookies" >> "$GITHUB_ENV"
 }
 
 main
