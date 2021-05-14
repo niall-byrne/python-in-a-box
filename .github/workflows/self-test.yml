@@ -178,7 +178,6 @@ jobs:
 
       - name: Shellcheck -- Check Template Scripts
         run: |
-          shellcheck ./template/test.sh
           shellcheck ./template/.github/scripts/*.sh
       - name: Shellcheck -- Check Rendered Template Scripts
         run: |
@@ -454,7 +453,7 @@ jobs:
             ## Deployment Checklist
             - [ ] Ensure correct version of pib_cli is installed
             - [ ] Ensure documentation is accurate
-            - [ ] Ensure self test passes
+            - [ ] Ensure git commits are properly formatted
           draft: true
           prerelease: false
 
