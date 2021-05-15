@@ -47,7 +47,7 @@
       python = ">=3.7.0,<3.8.0"
 
     [tool.poetry.dev-dependencies]
-      pib_cli = "0.0.9"
+      pib_cli = "{{cookiecutter.pib_cli_version}}"
 
     [[tool.poetry.packages]]
       include = "{{cookiecutter.project_slug}}"

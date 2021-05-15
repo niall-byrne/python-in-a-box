@@ -1,1 +1,1 @@
-pib_cli==0.0.9
+pib_cli=={{cookiecutter.pib_cli_version}}

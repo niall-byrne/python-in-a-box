@@ -151,7 +151,7 @@ index dded875..7c5e6ab 100644
 
      [tool.poetry.dev-dependencies]
 +      black = "^20.8b1"
-       pib_cli = "0.0.9"
+       pib_cli = "0.0.10"
 
      [[tool.poetry.packages]]
 @@ -105,7 +106,7 @@
