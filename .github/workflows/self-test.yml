@@ -97,6 +97,10 @@ jobs:
         run: |
           cd "${TEMPLATED_NAME}"
           docker-compose exec -T "${TEMPLATED_NAME}" dev fmt
+      - name: Container Test -- Test the Leaks Command
+        run: |
+          cd "${TEMPLATED_NAME}"
+          docker-compose exec -T "${TEMPLATED_NAME}" dev leaks
       - name: Container Test -- Test the Lint Command
         run: |
           cd "${TEMPLATED_NAME}"
@@ -268,6 +272,11 @@ jobs:
           cd "${TEMPLATED_NAME}"
           source "$(poetry env info --path)/bin/activate"
           dev fmt
+      - name: Hostmachine Test -- Test the Leaks Command
+        run: |
+          cd "${TEMPLATED_NAME}"
+          source "$(poetry env info --path)/bin/activate"
+          dev leaks
       - name: Hostmachine Test -- Test the Lint Command
         run: |
           cd "${TEMPLATED_NAME}"
