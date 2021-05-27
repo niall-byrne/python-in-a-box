@@ -6,7 +6,7 @@ sphinx:
   configuration: documentation/source/conf.py
 formats: []
 python:
-  version: 3.7
+  version: {{cookiecutter.python_version}}
   install:
     - method: pip
       path: .

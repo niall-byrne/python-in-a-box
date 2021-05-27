@@ -1,4 +1,5 @@
-FROM python:3.7-slim AS base
+ARG PYTHON_VERSION={{cookiecutter.python_version}}
+FROM python:$PYTHON_VERSION-slim AS base
 MAINTAINER {{cookiecutter.email}}
 ENV PYTHONUNBUFFERED 1
 ENV PROJECT_NAME "{{cookiecutter.project_slug}}"

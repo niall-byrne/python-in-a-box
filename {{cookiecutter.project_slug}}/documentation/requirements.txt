@@ -1,1 +1,1 @@
-pib_cli=={{cookiecutter.pib_cli_version}}
+pib_cli>={{cookiecutter._pib_cli_version}}

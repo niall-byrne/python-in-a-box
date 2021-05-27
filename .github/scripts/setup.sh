@@ -2,6 +2,8 @@
 
 # shellcheck disable=SC2129
 
+set -o pipefail
+
 main() {
   BRANCH_OR_TAG="$(echo "${GITHUB_REF}" | sed 's/refs\/heads\///g' | sed 's/refs\/tags\///g')"
   PROJECT_NAME="python-in-a-box"
@@ -11,6 +13,7 @@ main() {
   echo "NOTIFICATION=${PROJECT_NAME} [${BRANCH_OR_TAG}]" >> "$GITHUB_ENV"
   echo "USERNAME=shared-vision-solutions" >> "$GITHUB_ENV"
   echo "TEMPLATED_NAME=mmmm_cookies" >> "$GITHUB_ENV"
+  echo "PYTHON_VERSION=${PYTHON_VERSION}" >> "$GITHUB_ENV"
 }
 
-main
+main "$@"

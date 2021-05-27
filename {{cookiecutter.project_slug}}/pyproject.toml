@@ -44,10 +44,10 @@
     version = "0.0.1"
 
     [tool.poetry.dependencies]
-      python = ">=3.7.0,<3.8.0"
+      python = ">={{cookiecutter.python_version}}.0,<4.0.0"
 
     [tool.poetry.dev-dependencies]
-      pib_cli = "{{cookiecutter.pib_cli_version}}"
+      pib_cli = "^{{cookiecutter._pib_cli_version}}"
 
     [[tool.poetry.packages]]
       include = "{{cookiecutter.project_slug}}"

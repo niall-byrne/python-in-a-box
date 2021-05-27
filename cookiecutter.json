@@ -1,12 +1,13 @@
 {
+    "python_version": ["3.7", "3.8", "3.9"],
     "project_name": "Mmmm Cookies",
     "project_slug": "{{ cookiecutter.project_name|slugify|replace('-', '_') }}",
     "description": "Not the evil tracking type.",
     "author": "Niall Byrne",
     "email": "niall@niallbyrne.ca",
     "github_username": "niall-byrne",
-    "pib_cli_version": "0.0.10",
     "include_ssh_keys": "true",
     "include_gitconfig": "false",
-    "include_gitconfig_global": "false"
+    "include_gitconfig_global": "false",
+    "_pib_cli_version": "0.1.1"
 }

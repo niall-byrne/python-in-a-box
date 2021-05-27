@@ -1,6 +1,6 @@
 # Python Development CookieCutter Template
 
-Python 3.7 dockerized development environment.
+Python [3.7/3.8/3.9] dockerized development environment.
 
 (Please see the [cookiecutter documentation](https://cookiecutter.readthedocs.io/) for instructions on how to use this project template.)
 
@@ -52,7 +52,9 @@ Alternatively, modify your [.style.yapf](./{{cookiecutter.project_slug}}/.style.
 
 ## Container
 
-[python:3.7-slim](https://github.com/docker-library/python/blob/master/3.7/buster/slim/Dockerfile)
+- [python:3.7-slim](https://github.com/docker-library/python/blob/master/3.7/buster/slim/Dockerfile)
+- [python:3.8-slim](https://github.com/docker-library/python/blob/master/3.8/buster/slim/Dockerfile)
+- [python:3.9-slim](https://github.com/docker-library/python/blob/master/3.9/buster/slim/Dockerfile)
 
 ## License
 

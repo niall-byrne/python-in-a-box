@@ -1,6 +1,6 @@
 ---
 name: {{cookiecutter.project_slug}}-release-container
-{% raw %}
+
 # Workflow Secrets:
 # SLACK_WEBHOOK              (Required, for slack notifications...)
 # DOCKER_USERNAME            (Optional, required for image pushing...)
@@ -14,7 +14,12 @@ jobs:
   release:
 
     runs-on: ubuntu-latest
-
+    strategy:
+      max-parallel: 4
+      matrix:
+        include:
+          - python-version: {{cookiecutter.python_version}}
+{% raw %}
     steps:
       - name: Publish Container -- Checkout
         uses: actions/checkout@v2
@@ -24,20 +29,21 @@ jobs:
       - name: Publish Container -- Setup Environment
         run: |
           source .github/scripts/setup.sh
-          echo "DOCKER_USERNAME=${DOCKER_USERNAME}" >> $GITHUB_ENV
-          echo "CD_ENABLED=false" >> $GITHUB_ENV
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          PYTHON_VERSION: ${{ matrix.python-version }}
 
       - name: Publish Container -- Create Docker Mounted Content
         run: |
           echo | ssh-keygen
           touch ${HOME}/.gitconfig
           touch ${HOME}/.gitconfig_global
+
       - name: Publish Container -- Ensure File System is Writable by the Container
         run: |
           sudo chmod -R o+w .
+
       - name: Publish Container -- Construct Image Tag
         run: |
           echo "IMAGE_NAME=${DOCKER_USERNAME}/${PROJECT_NAME}:${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
@@ -47,7 +53,7 @@ jobs:
       - name: Publish Container -- Is CD enabled?
         if: env.DOCKER_USERNAME != ''
         run: |
-          [[ -n "${DOCKER_TOKEN}" ]] && echo "CD_ENABLED=true" >> $GITHUB_ENV
+          source .github/scripts/release_docker.sh
         env:
           DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
 
@@ -82,13 +88,15 @@ jobs:
       - name: Publish Container -- Report Success (CD is enabled)
         if: env.CD_ENABLED == 'true'
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" "new docker image has been built and pushed!"
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: new docker image has been built and pushed!"
+
       - name: Publish Container -- Report Success (CD is not enabled)
-        if: env.CD_ENABLED != 'true'
+        if: env.CD_ENABLED == 'false'
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" "new docker image has been built, but CD is disabled for this repository!"
+
       - name: Publish Container -- Report Failure
         if: failure()
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" "automated docker image build has failed!"
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":x: automated docker image build has failed!"
 {% endraw %}
