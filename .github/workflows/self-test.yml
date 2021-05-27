@@ -129,12 +129,12 @@ jobs:
       - name: Create Release -- Report Job Status (Success)
         if: contains(github.ref, '/tags/v')
         run: |
-          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: automated release has been created:\nhttps://github.com/${USERNAME}/${PROJECT_NAME}/releases"
+          ./{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: automated release has been created:\nhttps://github.com/${USERNAME}/${PROJECT_NAME}/releases"
 
       - name: Create Release -- Report Job Status (Failure)
         if: failure() && contains(github.ref, '/tags/v')
         run: |
-          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":x: automated release generation failed!"
+          ./{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":x: automated release generation failed!"
 
   documentation_test:
 
