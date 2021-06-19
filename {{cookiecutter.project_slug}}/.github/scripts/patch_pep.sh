@@ -6,7 +6,7 @@ main() {
 
   git apply patches/pep.patch
   dev reinstall-requirements
-  black --check .
+  poetry run black --check .
   dev fmt
   dev lint
 

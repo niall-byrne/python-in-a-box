@@ -14,10 +14,16 @@ Python [3.7/3.8/3.9] dockerized development environment.
 
 This container provides my preferred CLI tooling and a compartmentalized development environment for working on Python projects.
 
-## Getting Started
+## Project Requirements
 
-- `pip install cookiecutter`
-- `cookiecutter https://github.com/shared-vision-solutions/python-in-a-box.git --checkout v0.1.2`
+ - [Python](https://www.python.org/)  (Specifically, a [version supported by Poetry](https://pypi.org/project/poetry/)).
+ - [Docker](https://www.docker.com/) 
+ - [Docker Compose](https://docs.docker.com/compose/install/)
+
+## Quick Start Guide
+
+- `pip install cookiecutter poetry`
+- `cookiecutter https://github.com/shared-vision-solutions/python-in-a-box.git --checkout v0.1.3`
 
 Give your project a name, and populate the other required template inputs.
 
@@ -92,11 +98,14 @@ The container is using a [Debian](https://www.debian.org/) derived image, so [ap
 | bandit     | Finds common security issues      |
 | commitizen | Standardizes commit messages      |
 | isort      | Sorts imports                     |
+| mypy       | Static type checker               |
 | poetry     | Python Package Manager            |
+| pydocstyle | PEP 257 enforcement               |
 | pylint     | Static Code Analysis              |
 | pytest     | Test suite                        |
 | pytest-cov | Coverage support for pytest       |
 | sphinx     | Generating documentation          |
+| sphinx-autopackagesummary | Template nested module content |
 | safety     | Dependency vulnerability scanning |
 | wheel      | Package distribution tools        |
 | yamllint   | Lint yaml configuration files     |
@@ -194,12 +203,12 @@ Files are created in the project root folder for the following:
   - [LICENSE](./{{cookiecutter.project_slug}}/LICENSE)
 - [Git](https://git-scm.com/)
   - [.gitignore](./{{cookiecutter.project_slug}}/.gitignore)
+- [Hadolint](https://github.com/hadolint/hadolint)
+  - [.hadolint.yml](./{{cookiecutter.project_slug}}/.hadolint.yml)
 - [Read The Docs](https://readthedocs.org/)
   - [.readthedocs.yml](./{{cookiecutter.project_slug}}/.readthedocs.yml)
 - [poetry](https://python-poetry.org/)  
   - [pyproject.toml](./{{cookiecutter.project_slug}}/pyproject.toml)
-- [pytest](https://docs.pytest.org/en/stable/)
-  - [pytest.ini](./{{cookiecutter.project_slug}}/pytest.ini)
 - [yamllint](https://github.com/adrienverge/yamllint)
   - [.yamllint.yml](./{{cookiecutter.project_slug}}/.yamllint.yml)  
 - [yapf](https://readthedocs.org/)
@@ -213,7 +222,7 @@ Files are created in the project root folder for the following:
   - [isort](https://pycqa.github.io/isort/)
   - [poetry](https://python-poetry.org/) ([scripts/extras.sh](./{{cookiecutter.project_slug}}/scripts/extras.sh))
   - [pylint](https://www.pylint.org/)
-  - [pypi.org](https://pypi.org/)
+  - [pytest](https://docs.pytest.org/en/stable/)
 
 More configurations will be moved into this centralized file as the individual tools support this standard.
 

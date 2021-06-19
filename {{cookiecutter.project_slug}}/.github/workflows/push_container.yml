@@ -1,5 +1,5 @@
 ---
-name: {{cookiecutter.project_slug}}-push-generic
+name: {{cookiecutter.project_slug}}-push-container
 
 # Workflow Secrets:
 # SLACK_WEBHOOK              (Required, for slack notifications...)
@@ -104,7 +104,6 @@ jobs:
 
       - name: Create Release -- Create Github Release
         if: contains(github.ref, '/tags/v')
-        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -119,29 +118,6 @@ jobs:
             - [ ] Ensure unnecessary alerts are ignored/disabled
           draft: true
           prerelease: false
-
-      - name: Create Release -- Build Wheel
-        if: contains(github.ref, '/tags/v')
-        run: |
-          pip install poetry
-          poetry install --no-dev
-          poetry build
-          cd dist
-            WHEEL_NAME=$(ls *.whl)
-          cd ..
-          echo "WHEEL_NAME=${WHEEL_NAME}" >> $GITHUB_ENV
-
-      - name: Create Release -- Upload Release Asset
-        if: contains(github.ref, '/tags/v')
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/${{ env.WHEEL_NAME }}
-          asset_name: ${{ env.WHEEL_NAME }}
-          asset_content_type: application/zip
 
       - name: Create Release -- Report Success
         if: contains(github.ref, '/tags/v')
@@ -173,6 +149,23 @@ jobs:
           dockerfile: assets/Dockerfile
           failure-threshold: error
           config: ./.hadolint.yml
+
+      - name: Dockerfile Test -- Build the container image
+        run: docker build . --file assets/Dockerfile --tag test:latest --target development
+
+      - name: Dockerfile Test -- Scan image
+        id: scan
+        uses: {% endraw %}{{ cookiecutter._GITHUB_ANCHORE_SCAN_ACTION }}{% raw %}
+        with:
+          image: "test:latest"
+          fail-build: false
+          acs-report-enable: true
+          severity-cutoff: high
+
+      - name: Dockerfile Test -- Upload Anchore scan SARIF report
+        uses: {% endraw %}{{ cookiecutter._GITHUB_CODEQL_ACTION_UPLOAD_SARIF }}{% raw %}
+        with:
+          sarif_file: ${{ steps.scan.outputs.sarif }}
 
       - name: Dockerfile Test -- Report Success
         run: |

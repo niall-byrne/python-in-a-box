@@ -143,5 +143,5 @@ override.env
 # Macs
 .DS_Store
 
-# LockFile
-poetry.lock
+# Autosummary Documentation
+documentation/source/codebase/{{cookiecutter.project_slug}}/_autosummary/

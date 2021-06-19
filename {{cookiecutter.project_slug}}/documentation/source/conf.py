@@ -31,6 +31,12 @@ extensions = [
     'sphinx.ext.autosummary',
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
+    'sphinx_autopackagesummary',
+]
+
+# Exclude tests from sphinx_autopackagesummary here
+autosummary_mock_imports = [
+    "{{cookiecutter.project_slug}}.tests",
 ]
 
 source_suffix = {

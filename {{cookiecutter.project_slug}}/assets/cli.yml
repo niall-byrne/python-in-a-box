@@ -48,15 +48,14 @@
   path_method: "project_root"
   commands:
     - "poetry lock"
-    - "poetry install"
+    - "poetry install -E docs"
   success: "Reinstall Succeeded!"
   failure: "Reinstall Failed!"
 - name: "sectest"
   path_method: "project_root"
   commands:
     - 'bandit -r "${PROJECT_NAME}" -c .bandit.rc --ini .bandit -x tests'
-    - 'echo "\nPoetry is exporting the lockfile standby..."'
-    - 'poetry export --without-hashes --dev -f requirements.txt | safety check --stdin'
+    - 'safety check'
   success: "Security Test Passed!"
   failure: "Security Test Failed!"
 - name: "test"
@@ -65,3 +64,15 @@
     - 'pytest ${PIB_OVERLOAD_ARGUMENTS}'
   success: "Unittests Passed!"
   failure: "Unittests Failed!"
+{% if cookiecutter.typing_support == 'true' %}- name: "types"
+  path_method: "project_root"
+  commands:
+    - 'mypy ${PROJECT_NAME}'
+  success: "Type Check Passed!"
+  failure: "Type Check Failed!"{%- endif %}
+{% if cookiecutter.typing_support == 'false' %}- name: "types"
+  path_method: "project_root"
+  commands:
+    - 'echo "Typing is disabled for this project."'
+  success: ""
+  failure: ""{%- endif %}

@@ -12,6 +12,9 @@ on:
     - cron: "0 6 * * 1"
   workflow_dispatch:
 
+# For now the action versions are hardcoded in this file.
+# Hopefully we are eventually able to parameterize them.
+
 jobs:
 
   container_cli_test:
@@ -29,6 +32,11 @@ jobs:
             cookie-cutter-selection: 3
 
     steps:
+      - name: Container Test -- Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+
       - name: Container Test -- Checkout Repository
         uses: actions/checkout@v2
         with:
@@ -207,7 +215,6 @@ jobs:
         run: |
           source ./template/.github/scripts/setup.sh
           source ./template/.github/scripts/template.sh "${SELECTION}"
-          pip install poetry
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           SELECTION: ${{ matrix.cookie-cutter-selection }}
@@ -339,8 +346,14 @@ jobs:
       - name: Security Test -- Checkout Repository
         uses: actions/checkout@v1
 
+      - name: Security Test -- Setup Environment
+        run: |
+          source ./.github/scripts/setup.sh
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
       - name: Security Test -- Run Gitleaks
-        uses: zricethezav/gitleaks-action@master
+        uses: zricethezav/gitleaks-action@v1.6.0
 
       - name: Security Test -- Report Job Status on Success
         run: |
@@ -389,17 +402,8 @@ jobs:
   workflow_lint_test:
 
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [3.7]
 
     steps:
-      - name: Workflow Lint -- Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
-        with:
-          python-version: ${{ matrix.python-version }}
-
       - name: Workflow Lint -- Checkout Repository
         uses: actions/checkout@v2
         with:
@@ -408,7 +412,6 @@ jobs:
       - name: Workflow Lint -- Setup Environment
         run: |
           source ./template/.github/scripts/setup.sh
-          pip install yamllint
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
@@ -416,14 +419,19 @@ jobs:
         run: |
           source ./template/.github/scripts/template.sh "1"
 
-      - name: Workflow Lint PIB -- Run Linter
-        run: |
-          yamllint ./template/.github/workflows -c ./template/{{cookiecutter.project_slug}}/.yamllint.yml -f standard
+      - name: Workflow Lint -- Lint Template Workflows
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          format: standard
+          file_or_dir: ./template/.github/workflows
+          config_file: ./template/{{cookiecutter.project_slug}}/.yamllint.yml
 
-      - name: Workflow Lint Template -- Run Linter
-        run: |
-          cd "${TEMPLATED_NAME}"
-          yamllint .github/workflows -c .yamllint.yml -f standard
+      - name: Workflow Lint -- Lint Rendered Workflows
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          format: standard
+          file_or_dir: ./${{ env.TEMPLATED_NAME }}/.github/workflows
+          config_file: ./${{ env.TEMPLATED_NAME }}/.yamllint.yml
 
       - name: Workflow Lint -- Report Job Status on Success
         run: |

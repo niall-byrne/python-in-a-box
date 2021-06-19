@@ -17,6 +17,7 @@ main() {
   dev setup-bash
   dev setup
   dev test
+  dev types
   dev version
 
 }

@@ -33,7 +33,7 @@ index e151af4..cd0594c 100644
    success: "Formatting Finished!"
    failure: "Formatting Error!"
 diff --git a/documentation/source/conf.py b/documentation/source/conf.py
-index d1df78c..b703c17 100644
+index 0018538..77a409f 100644
 --- a/documentation/source/conf.py
 +++ b/documentation/source/conf.py
 @@ -9,17 +9,17 @@
@@ -42,28 +42,28 @@ index d1df78c..b703c17 100644
 
 -if os.path.exists('/app'):
 -  sys.path.insert(0, os.path.abspath('/app'))
--if os.path.exists('../../{{cookiecutter.project_slug}}'):
+-if os.path.exists('../../{{ cookiecutter.project_slug }}'):
 -  sys.path.insert(0, os.path.abspath('../..'))
--  sys.path.insert(0, os.path.abspath('../../{{cookiecutter.project_slug}}'))
+-  sys.path.insert(0, os.path.abspath('../../{{ cookiecutter.project_slug }}'))
 +if os.path.exists("/app"):
 +    sys.path.insert(0, os.path.abspath("/app"))
-+if os.path.exists("../../{{cookiecutter.project_slug}}"):
++if os.path.exists("../../{{ cookiecutter.project_slug }}"):
 +    sys.path.insert(0, os.path.abspath("../.."))
-+    sys.path.insert(0, os.path.abspath("../../{{cookiecutter.project_slug}}"))
++    sys.path.insert(0, os.path.abspath("../../{{ cookiecutter.project_slug }}"))
 
  # -- Project information -----------------------------------------------------
--project = '{{cookiecutter.project_slug}}'
--copyright = '2020, Niall Byrne'
--author = 'Niall Byrne'
+-project = '{{ cookiecutter.project_slug }}'
+-copyright = '2020, {{ cookiecutter.author }}'
+-author = '{{ cookiecutter.author }}'
 -os.environ['PROJECT_NAME'] = project
-+project = "{{cookiecutter.project_slug}}"
-+copyright = "2020, Niall Byrne"
-+author = "Niall Byrne"
++project = "{{ cookiecutter.project_slug }}"
++copyright = "2020, {{ cookiecutter.author }}"
++author = "{{ cookiecutter.author }}"
 +os.environ["PROJECT_NAME"] = project
 
  # -- General configuration ---------------------------------------------------
 
-@@ -27,18 +27,18 @@ os.environ['PROJECT_NAME'] = project
+@@ -27,11 +27,11 @@ os.environ['PROJECT_NAME'] = project
  # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
  # ones.
  extensions = [
@@ -71,10 +71,16 @@ index d1df78c..b703c17 100644
 -    'sphinx.ext.autosummary',
 -    'sphinx.ext.todo',
 -    'sphinx.ext.viewcode',
+-    'sphinx_autopackagesummary',
 +    "sphinx.ext.autodoc",
 +    "sphinx.ext.autosummary",
 +    "sphinx.ext.todo",
 +    "sphinx.ext.viewcode",
++    "sphinx_autopackagesummary",
+ ]
+
+ # Exclude tests from sphinx_autopackagesummary here
+@@ -40,11 +40,11 @@ autosummary_mock_imports = [
  ]
 
  source_suffix = {
@@ -88,7 +94,7 @@ index d1df78c..b703c17 100644
 
  # List of patterns, relative to source directory, that match files and
  # directories to ignore when looking for source files.
-@@ -51,12 +51,10 @@ exclude_patterns = []
+@@ -56,12 +56,10 @@ exclude_patterns = []
  # The theme to use for HTML and HTML Help pages.  See the documentation for
  # a list of builtin themes.
  #
@@ -104,22 +110,22 @@ index d1df78c..b703c17 100644
 -}
 +html_static_path = ["_static"]
 +html_theme_options = {"body_max_width": "100%"}
-diff --git a/{{cookiecutter.project_slug}}/app.py b/{{cookiecutter.project_slug}}/app.py
-index b4ea8c1..d1d00fa 100644
---- a/{{cookiecutter.project_slug}}/app.py
-+++ b/{{cookiecutter.project_slug}}/app.py
+diff --git a/{{ cookiecutter.project_slug }}/app.py b/{{ cookiecutter.project_slug }}/app.py
+index 75341f8..01c7ea3 100644
+--- a/{{ cookiecutter.project_slug }}/app.py
++++ b/{{ cookiecutter.project_slug }}/app.py
 @@ -4,5 +4,5 @@ import sys
 
 
- def main():
+ def main() -> None:
 -  """The main function for this application."""
 -  sys.stdout.write("Hello World!")
 +    """The main function for this application."""
 +    sys.stdout.write("Hello World!")
-diff --git a/{{cookiecutter.project_slug}}/tests/test_app.py b/{{cookiecutter.project_slug}}/tests/test_app.py
+diff --git a/{{ cookiecutter.project_slug }}/tests/test_app.py b/{{ cookiecutter.project_slug }}/tests/test_app.py
 index 2fc921a..462a825 100644
---- a/{{cookiecutter.project_slug}}/tests/test_app.py
-+++ b/{{cookiecutter.project_slug}}/tests/test_app.py
+--- a/{{ cookiecutter.project_slug }}/tests/test_app.py
++++ b/{{ cookiecutter.project_slug }}/tests/test_app.py
 @@ -7,8 +7,7 @@ from ..app import main
 
 
@@ -134,7 +140,7 @@ index 2fc921a..462a825 100644
 +            main()
 +            self.assertEqual(mock_stdout.getvalue(), "Hello World!")
 diff --git a/pyproject.toml b/pyproject.toml
-index dded875..7c5e6ab 100644
+index 8ce3ad0..e701dac 100644
 --- a/pyproject.toml
 +++ b/pyproject.toml
 @@ -21,7 +21,7 @@
@@ -146,15 +152,15 @@ index dded875..7c5e6ab 100644
      length_sort = false
      line_length = 80
      multi_line_output = 3
-@@ -51,6 +51,7 @@
-       python = ">={{cookiecutter.python_version}}.0,<4.0.0"
+@@ -55,6 +55,7 @@
+         version = "{{cookiecutter._pib_cli_version}}"
 
      [tool.poetry.dev-dependencies]
 +      black = "*"
-       pib_cli = "{{cookiecutter._pib_cli_version}}"
 
-     [[tool.poetry.packages]]
-@@ -105,7 +106,7 @@
+     [tool.poetry.extras]
+       docs = ["pib_cli"]
+@@ -108,7 +109,7 @@
 
      [tool.pylint.format]
        ignore-long-lines = "^\\s*(# )?<?https?://\\S+>?$"

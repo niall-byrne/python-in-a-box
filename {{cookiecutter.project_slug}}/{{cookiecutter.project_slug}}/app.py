@@ -3,6 +3,6 @@
 import sys
 
 
-def main():
+def main() -> None:
   """The main function for this application."""
   sys.stdout.write("Hello World!")

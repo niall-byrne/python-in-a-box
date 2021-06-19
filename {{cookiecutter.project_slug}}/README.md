@@ -18,9 +18,16 @@
 - [![{{cookiecutter.project_slug}} Release Container](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-release-container/badge.svg)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
 - [![{{cookiecutter.project_slug}} Release Wheel](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-release-wheel/badge.svg)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
 
-## Getting Started With Python In A Box
+## Quick Start Guide
 
-Refer to the [python-in-a-box documentation](https://github.com/Shared-Vision-Solutions/python-in-a-box) to get oriented, and learn how to manage your development environment.
+Build the development environment container (this takes a few minutes):
+- `docker-compose build`
+
+Start the environment container:
+- `docker-compose up -d`
+
+Spawn a shell inside the container:
+- `./container`
 
 ## Tooling Reference
 The CLI is installed by default inside the container, and is also available on the host machine.
@@ -35,6 +42,8 @@ The local CLI configuration is managed by the [cli.yml](./assets/cli.yml) file.
 You'll need to install:
  - [Docker](https://www.docker.com/) 
  - [Docker Compose](https://docs.docker.com/compose/install/)
+ - [cookiecutter](https://cookiecutter.readthedocs.io/en/latest/)
+ - [poetry](https://python-poetry.org/)
 
 ## Build and Start the Development Environment
 
