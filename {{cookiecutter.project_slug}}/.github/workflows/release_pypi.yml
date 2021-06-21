@@ -9,6 +9,12 @@ name: {{cookiecutter.project_slug}}-release-pypi
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      TEST_BRANCH:
+        description: 'Branch to build and push to the Test PyPi repository'
+        required: true
+        default: ''
 
 jobs:
   release:
@@ -21,22 +27,41 @@ jobs:
           - python-version: {{cookiecutter.python_version}}
 {% raw %}
     steps:
-      - name: Publish to PyPi -- Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
       - name: Publish to PyPi -- Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Publish to PyPi -- Setup Environment
+      - name: Publish to PyPi -- Code Checkout (Dispatch)
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.inputs.TEST_BRANCH  }}
+
+      - name: Publish to PyPi -- Setup Environment (Dispatch)
+        if: github.event_name == 'workflow_dispatch'
         run: |
           source .github/scripts/setup.sh
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           PYTHON_VERSION: ${{ matrix.python-version }}
+          TEST_RELEASE: 1
+
+      - name: Publish to PyPi -- Code Checkout (Automated Release)
+        if: github.event_name != 'workflow_dispatch'
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Publish to PyPi -- Setup Environment (Automated Release)
+        if: github.event_name != 'workflow_dispatch'
+        run: |
+          source .github/scripts/setup.sh
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+          PYTHON_VERSION: ${{ matrix.python-version }}
+          TEST_RELEASE: 0
 
       - name: Publish to PyPi -- Create Docker Mounted Content
         run: |
@@ -54,7 +79,6 @@ jobs:
 
       # START Continuous Deployment -- Customize this Section Depending on your strategy
 
-      # TODO: add a way to toggle production, test on and off
       - name: Publish to PyPi -- Build and Publish a Python Package
         run: |
           source .github/scripts/release_pypi.sh

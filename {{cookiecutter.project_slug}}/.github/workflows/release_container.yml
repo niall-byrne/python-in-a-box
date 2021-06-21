@@ -9,19 +9,29 @@ name: {{cookiecutter.project_slug}}-release-container
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      BRANCH_OR_TAG:
+        description: 'Branch or Tag'
+        required: true
+        default: ''
 
 jobs:
   release:
 
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
-      matrix:
-        include:
-          - python-version: {{cookiecutter.python_version}}
+
 {% raw %}
     steps:
-      - name: Publish Container -- Checkout
+      - name: Publish Container -- Code Checkout (Dispatch)
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.inputs.BRANCH_OR_TAG  }}
+
+      - name: Publish Container -- Checkout (Automated Release)
+        if: github.event_name != 'workflow_dispatch'
         uses: actions/checkout@v2
         with:
           fetch-depth: 1
