@@ -12,7 +12,7 @@ Python [3.7/3.8/3.9] dockerized development environment.
 
 ## About
 
-This container provides my preferred CLI tooling and a compartmentalized development environment for working on Python projects.
+This container provides my preferred CLI tooling, and a compartmentalized development environment for working on Python projects.
 
 ## Project Requirements
 

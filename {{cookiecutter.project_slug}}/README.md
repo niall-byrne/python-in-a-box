@@ -20,6 +20,12 @@
 
 ## Quick Start Guide
 
+You'll need to install:
+ - [Docker](https://www.docker.com/) 
+ - [Docker Compose](https://docs.docker.com/compose/install/)
+ - [cookiecutter](https://cookiecutter.readthedocs.io/en/latest/)
+ - [poetry](https://python-poetry.org/)
+
 Build the development environment container (this takes a few minutes):
 - `docker-compose build`
 
@@ -36,25 +42,6 @@ Run the CLI without arguments to see the complete list of available commands: `d
 [The 'pib_cli' Python Package](https://pypi.org/project/pib-cli/)
 
 The local CLI configuration is managed by the [cli.yml](./assets/cli.yml) file.
-
-## Development Dependencies
-
-You'll need to install:
- - [Docker](https://www.docker.com/) 
- - [Docker Compose](https://docs.docker.com/compose/install/)
- - [cookiecutter](https://cookiecutter.readthedocs.io/en/latest/)
- - [poetry](https://python-poetry.org/)
-
-## Build and Start the Development Environment
-
-Build the development environment container (this takes a few minutes):
-- `docker-compose build`
-
-Start the environment container:
-- `docker-compose up -d`
-
-Spawn a shell inside the container:
-- `./container`
 
 ## Environment
 The [local.env](./assets/local.env) file can be modified to inject environment variable content into the container.
@@ -80,15 +67,12 @@ Use the [scripts/extras.sh](scripts/extras.sh) script to install the hooks:
 - `source scripts/extras.sh`
 - `install_git_hooks`
 
-
 ## Installing a virtual environment, and the CLI on your host machine
 
 The [scripts/extras.sh](scripts/extras.sh) script does this for you.
 
-First install [poetry](https://python-poetry.org/) on your host machine:
+Source this script, and use the `dev` command on your host:
 - `pip install poetry`
-
-Next, source this script, setup the extras, and use the `dev` command on your host:
 - `source scripts/extras.sh`
 - `pib_setup_hostmachine` (to install the poetry dependencies)  
 - `dev --help` (to run the cli outside the container)
@@ -98,4 +82,4 @@ This is most useful for making an IDE like pycharm aware of what's installed in 
 > It is still recommended to work inside the container, as you'll have access to the full managed python environment, 
 > as well as any additional services you are running in containers.  
 
-If you wish to use the cli outside the container for all tasks, [tomll](https://github.com/pelletier/go-toml) and [gitleaks](https://github.com/zricethezav/gitleaks) will also need to be installed, or the [cli.yml](./assets/cli.yml) configuration will need to be customized to remove these commands. (Not recommended.)  
+If you wish to use the cli outside the container for all tasks, [tomll](https://github.com/pelletier/go-toml) and [gitleaks](https://github.com/zricethezav/gitleaks) will also need to be installed, or the [cli.yml](./assets/cli.yml) configuration will need to be customized to remove these commands. (Not recommended.)
