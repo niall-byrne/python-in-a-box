@@ -54,7 +54,8 @@ jobs:
 
       # START Continuous Deployment -- Customize this Section Depending on your strategy
 
-      - name: Publish to PyPi -- Build and Publish a Python Package to Test PyPI
+      # TODO: add a way to toggle production, test on and off
+      - name: Publish to PyPi -- Build and Publish a Python Package
         run: |
           source .github/scripts/release_pypi.sh
         env:
