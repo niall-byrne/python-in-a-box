@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -o pipefail
+set -eo pipefail
 
 SELECTION=${1:-"1"}
 NAME=${2:-"Pro Buddy Dev"}

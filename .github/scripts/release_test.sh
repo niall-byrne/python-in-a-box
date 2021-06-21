@@ -1,6 +1,8 @@
 #!/bin/bash
 
-RELEASE_VERSION="0.0.8"  # Increment for end to end testing
+set -eo pipefail
+
+RELEASE_VERSION="0.0.9"  # Increment for end to end testing
 
 main() {
 

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -eo pipefail
+
 PIB_PROJECT_ROOT="$(git rev-parse --show-toplevel)"
 export PIB_PROJECT_ROOT
 
