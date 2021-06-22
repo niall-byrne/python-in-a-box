@@ -2,7 +2,7 @@
 
 set -eo pipefail
 
-RELEASE_VERSION="0.0.9"  # Increment for end to end testing
+RELEASE_VERSION="0.0.11"  # Increment for end to end testing
 
 main() {
 

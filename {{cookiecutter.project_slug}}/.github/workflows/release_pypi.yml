@@ -3,18 +3,27 @@ name: {{cookiecutter.project_slug}}-release-pypi
 
 # Workflow Secrets:
 # SLACK_WEBHOOK              (Required, for slack notifications...)
-# PYPI_API_TOKEN             (Optional, for publishing wheels to pypi...)
-# TEST_PYPI_API_TOKEN        (Optional, for publishing wheels to test-pypi...)
+# PYPI_API_TOKEN             (Required, for publishing wheels to production pypi...)
+# TEST_PYPI_API_TOKEN        (Required, for publishing wheels to test-pypi...)
 
 on:
   release:
     types: [published]
   workflow_dispatch:
     inputs:
-      TEST_BRANCH:
-        description: 'Branch to build and push to the Test PyPi repository'
+      BRANCH_OR_TAG:
+        description: 'Branch or Tag to build and push'
         required: true
         default: ''
+      SELECTED_PYPI_REPOSITORY:
+        description: 'Set to "test" or "production" to select a PyPi Repository'
+        required: true
+        default: 'test'
+
+env:
+  PROJECT_NAME: "{{ cookiecutter.project_slug }}"
+  SELECTED_PYPI_REPOSITORY: "test"
+  USERNAME: "{{ cookiecutter.github_username }}"
 
 jobs:
   release:
@@ -37,7 +46,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          ref: ${{ github.event.inputs.TEST_BRANCH  }}
+          ref: ${{ github.event.inputs.BRANCH_OR_TAG  }}
 
       - name: Publish to PyPi -- Setup Environment (Dispatch)
         if: github.event_name == 'workflow_dispatch'
@@ -46,7 +55,7 @@ jobs:
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           PYTHON_VERSION: ${{ matrix.python-version }}
-          TEST_RELEASE: 1
+          SELECTED_PYPI_REPOSITORY: ${{ github.event.inputs.SELECTED_PYPI_REPOSITORY }}
 
       - name: Publish to PyPi -- Code Checkout (Automated Release)
         if: github.event_name != 'workflow_dispatch'
@@ -61,7 +70,6 @@ jobs:
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           PYTHON_VERSION: ${{ matrix.python-version }}
-          TEST_RELEASE: 0
 
       - name: Publish to PyPi -- Create Docker Mounted Content
         run: |
@@ -89,17 +97,17 @@ jobs:
       # END Continuous Deployment -- Customize this Section Depending on your strategy
 
       - name: Publish to PyPi -- Report Success (CD is enabled) (Test PyPi)
-        if: env.CD_TEST == 'true'
+        if: env.CD_USE_TEST == 'true'
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: new release has been pushed to Test PyPi!"
 
       - name: Publish to PyPi -- Report Success (CD is enabled)
-        if: env.CD_ENABLED == 'true'
+        if: env.CD_USE_PRODUCTION == 'true'
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: new release has been pushed to PyPi!"
 
       - name: Publish to PyPi -- Report Success (CD is not enabled)
-        if: env.CD_ENABLED == 'false' && env.CD_TEST == 'false'
+        if: env.CD_USE_PRODUCTION != 'true' && env.CD_USE_TEST != 'true'
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" "new release wheel has been built, but CD is disabled for this repository!"
 

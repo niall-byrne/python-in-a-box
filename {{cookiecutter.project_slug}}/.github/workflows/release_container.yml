@@ -16,6 +16,10 @@ on:
         required: true
         default: ''
 
+env:
+  PROJECT_NAME: "{{ cookiecutter.project_slug }}"
+  USERNAME: "{{ cookiecutter.github_username }}"
+
 jobs:
   release:
 
@@ -42,7 +46,6 @@ jobs:
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          PYTHON_VERSION: ${{ matrix.python-version }}
 
       - name: Publish Container -- Create Docker Mounted Content
         run: |
@@ -56,7 +59,7 @@ jobs:
 
       - name: Publish Container -- Construct Image Tag
         run: |
-          echo "IMAGE_NAME=${DOCKER_USERNAME}/${PROJECT_NAME}:${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          echo "IMAGE_NAME=${DOCKER_USERNAME}/${PROJECT_NAME}:${BRANCH_OR_TAG}" >> $GITHUB_ENV
 
       # START Continuous Deployment -- Customize this Section Depending on your strategy
 
@@ -73,7 +76,7 @@ jobs:
       # Note: This is configured for dockerhub, but this action is highly customizable
       # https://github.com/docker/login-action
       - name: Publish Container -- Login to DockerHub
-        if: env.CD_ENABLED == 'true'
+        if: env.CD_DOCKER_REPO_ENABLED == 'true'
         uses: {% endraw %}{{ cookiecutter._GITHUB_DOCKER_LOGIN_ACTION }}{% raw %}
         with:
           username: ${{ env.DOCKER_USERNAME }}
@@ -82,7 +85,7 @@ jobs:
       # Note: This is configured for dockerhub, but this action is highly customizable
       # https://github.com/marketplace/actions/build-and-push-docker-images
       - name: Publish Container -- Build and Push
-        if: env.CD_ENABLED == 'true'
+        if: env.CD_DOCKER_REPO_ENABLED == 'true'
         id: docker_build
         uses: {% endraw %}{{ cookiecutter._GITHUB_DOCKER_BUILD_PUSH_ACTION }}{% raw %}
         with:
@@ -96,12 +99,12 @@ jobs:
       # END Continuous Deployment -- Customize this Section Depending on your strategy
 
       - name: Publish Container -- Report Success (CD is enabled)
-        if: env.CD_ENABLED == 'true'
+        if: env.CD_DOCKER_REPO_ENABLED == 'true'
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: new docker image has been built and pushed!"
 
       - name: Publish Container -- Report Success (CD is not enabled)
-        if: env.CD_ENABLED == 'false'
+        if: env.CD_DOCKER_REPO_ENABLED == 'false'
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" "new docker image has been built, but CD is disabled for this repository!"
 

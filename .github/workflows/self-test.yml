@@ -15,6 +15,11 @@ on:
 # For now the action versions are hardcoded in this file.
 # Hopefully we are eventually able to parameterize them.
 
+env:
+  PROJECT_NAME: "python-in-a-box"
+  TEMPLATED_NAME: "mmmm_cookies"
+  USERNAME: "shared-vision-solutions"
+
 jobs:
 
   container_cli_test:
@@ -96,6 +101,7 @@ jobs:
 
     steps:
       - name: Create Release -- Checkout Repository
+        if: contains(github.ref, '/tags/v')
         uses: actions/checkout@v1
 
       - name: Create Release -- Setup Environment
