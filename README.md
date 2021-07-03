@@ -5,10 +5,10 @@ Python [3.7/3.8/3.9] dockerized development environment.
 (Please see the [cookiecutter documentation](https://cookiecutter.readthedocs.io/) for instructions on how to use this project template.)
 
 ##### Master Branch:
-[![Python In A Box Self Test](https://github.com/shared-vision-solutions/python-in-a-box/workflows/Python%20In%20A%20Box%20Self%20Test/badge.svg?branch=master)](https://github.com/shared-vision-solutions/python-in-a-box/actions)
+[![Python In A Box Self Test](https://github.com/niall-byrne/python-in-a-box/workflows/Python%20In%20A%20Box%20Self%20Test/badge.svg?branch=master)](https://github.com/niall-byrne/python-in-a-box/actions)
 
 ##### Production Branch:
-[![Python In A Box Self Test](https://github.com/shared-vision-solutions/python-in-a-box/workflows/Python%20In%20A%20Box%20Self%20Test/badge.svg?branch=production)](https://github.com/shared-vision-solutions/python-in-a-box/actions)
+[![Python In A Box Self Test](https://github.com/niall-byrne/python-in-a-box/workflows/Python%20In%20A%20Box%20Self%20Test/badge.svg?branch=production)](https://github.com/niall-byrne/python-in-a-box/actions)
 
 ## About
 
@@ -23,7 +23,7 @@ This container provides my preferred CLI tooling, and a compartmentalized develo
 ## Quick Start Guide
 
 - `pip install cookiecutter poetry`
-- `cookiecutter https://github.com/shared-vision-solutions/python-in-a-box.git --checkout v0.1.3`
+- `cookiecutter https://github.com/niall-byrne/python-in-a-box.git --checkout v0.1.3`
 
 Give your project a name, and populate the other required template inputs.
 

@@ -18,7 +18,7 @@ on:
 env:
   PROJECT_NAME: "python-in-a-box"
   TEMPLATED_NAME: "mmmm_cookies"
-  USERNAME: "shared-vision-solutions"
+  USERNAME: "niall-byrne"
 
 jobs:
 

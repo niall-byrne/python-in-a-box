@@ -21,7 +21,7 @@ main() {
       -c .cookiecutter/cookiecutter.json                                  \
       -b "update-template"                                                \
       -u "$2"                                                             \
-      -f https://github.com/shared-vision-solutions/python-in-a-box.git   \
+      -f https://github.com/niall-byrne/python-in-a-box.git   \
       -e "assets"                                                         \
       -e "documentation"                                                  \
       -e "$1"                                                             \
