@@ -55,7 +55,8 @@
   path_method: "project_root"
   commands:
     - 'bandit -r "${PROJECT_NAME}" -c .bandit.rc --ini .bandit -x tests'
-    - 'safety check'
+    - 'echo "\nPoetry is exporting the lockfile standby..."'
+    - 'poetry export --without-hashes -f requirements.txt | safety check --stdin'
   success: "Security Test Passed!"
   failure: "Security Test Failed!"
 - name: "test"
