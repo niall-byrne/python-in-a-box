@@ -30,7 +30,7 @@
     skip_glob = "*_pb2.py"
 
   [tool.mypy]
-    ignore_missing_imports = true
+    ignore_missing_imports = false
 
   [tool.poetry]
     authors = ["{{cookiecutter.author}} <{{cookiecutter.email}}>"]
