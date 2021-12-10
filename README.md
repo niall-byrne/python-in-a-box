@@ -23,7 +23,7 @@ This container provides my preferred CLI tooling, and a compartmentalized develo
 ## Quick Start Guide
 
 - `pip install cookiecutter poetry`
-- `cookiecutter https://github.com/niall-byrne/python-in-a-box.git --checkout v0.1.3`
+- `cookiecutter https://github.com/niall-byrne/python-in-a-box.git --checkout v0.1.4`
 
 Give your project a name, and populate the other required template inputs.
 
@@ -31,7 +31,7 @@ Give your project a name, and populate the other required template inputs.
 > I've found this approach preferable to bouncing back and forth between the container and the host machine.
 
 Once the templating is finished:
-- `cd <your new project director>`
+- `cd <your new project directory>`
 - `docker-compose build`  (Build the docker environment, this will take a couple of minutes)
 - `docker-compose up` (Start the environment, if you are running an app like [Flask](https://flask.palletsprojects.com/) or [Django](https://www.djangoproject.com/) or other containers are in your environment, logs will be produced here.)
 - Open a new shell in your terminal, and go to the same new project folder
