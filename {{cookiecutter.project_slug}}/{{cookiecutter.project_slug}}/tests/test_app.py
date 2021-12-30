@@ -8,7 +8,7 @@ from ..app import main
 
 class AppTest(TestCase):
 
-  def test_app_stdout(self):
+  def test_app_stdout(self) -> None:
     with mock.patch('sys.stdout', new=StringIO()) as mock_stdout:
       main()
       self.assertEqual(mock_stdout.getvalue(), "Hello World!")

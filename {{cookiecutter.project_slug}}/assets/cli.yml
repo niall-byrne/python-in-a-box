@@ -68,7 +68,7 @@
 {% if cookiecutter.typing_support == 'true' %}- name: "types"
   path_method: "project_root"
   commands:
-    - 'mypy ${PROJECT_NAME}'
+    - 'mypy --strict ${PROJECT_NAME}'
   success: "Type Check Passed!"
   failure: "Type Check Failed!"{%- endif %}
 {% if cookiecutter.typing_support == 'false' %}- name: "types"

@@ -131,11 +131,11 @@ index 2fc921a..462a825 100644
 
  class AppTest(TestCase):
 -
--  def test_app_stdout(self):
+-  def test_app_stdout(self) -> None:
 -    with mock.patch('sys.stdout', new=StringIO()) as mock_stdout:
 -      main()
 -      self.assertEqual(mock_stdout.getvalue(), "Hello World!")
-+    def test_app_stdout(self):
++    def test_app_stdout(self) -> None:
 +        with mock.patch("sys.stdout", new=StringIO()) as mock_stdout:
 +            main()
 +            self.assertEqual(mock_stdout.getvalue(), "Hello World!")
