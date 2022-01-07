@@ -1,11 +1,12 @@
 #!/bin/bash
 
 set -eo pipefail
+COMPOSE_FILE=${1-docker-compose.yml}
 
 main() {
 
-  docker-compose build --build-arg PYTHON_VERSION="${PYTHON_VERSION}"
-  docker-compose up -d
+  docker-compose -f "${COMPOSE_FILE}" build --build-arg PYTHON_VERSION="${PYTHON_VERSION}"
+  docker-compose -f "${COMPOSE_FILE}" up -d
 
 }
 

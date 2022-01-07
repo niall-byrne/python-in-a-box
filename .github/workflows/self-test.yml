@@ -30,69 +30,143 @@ jobs:
       matrix:
         include:
           - python-version: 3.7
-            cookie-cutter-selection: 1
+            cookie-cutter-lockfile-selection: 1
+            cookie-cutter-python-selection: 1
           - python-version: 3.8
-            cookie-cutter-selection: 2
+            cookie-cutter-lockfile-selection: 1
+            cookie-cutter-python-selection: 2
           - python-version: 3.9
-            cookie-cutter-selection: 3
+            cookie-cutter-lockfile-selection: 1
+            cookie-cutter-python-selection: 3
 
     steps:
-      - name: Container Test -- Set up Python ${{ matrix.python-version }}
+      - name: Container Build Test -- Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Container Test -- Checkout Repository
+      - name: Container Build Test -- Checkout Repository
         uses: actions/checkout@v2
         with:
           path: 'template'
 
-      - name: Container Test -- Setup Environment
+      - name: Container Build Test -- Setup Environment
         run: |
           source ./template/.github/scripts/setup.sh
           source ./template/.github/scripts/template.sh "${SELECTION}"
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-          SELECTION: ${{ matrix.cookie-cutter-selection }}
+          SELECTION_LOCKFILE: ${{ matrix.cookie-cutter-lockfile-selection }}
+          SELECTION_PYTHON: ${{ matrix.cookie-cutter-python-selection }}
           PYTHON_VERSION: ${{ matrix.python-version }}
 
-      - name: Container Test -- Ensure File System is Writable by the Container
+      - name: Container Build Test -- Ensure File System is Writable by the Container
         run: |
           sudo chmod -R o+w .
 
-      - name: Container Test -- Build Docker Image, Start Container
+      - name: Container Build Test -- Build Docker Image, Start Container
         run: |
           cd "${TEMPLATED_NAME}"
           bash -c 'source .github/scripts/build_container.sh'
 
-      - name: Container Test -- Run TOML Linter
+      - name: Container Build Test -- Run TOML Linter
         run: |
           cd "${TEMPLATED_NAME}"
           docker-compose exec -T "${TEMPLATED_NAME}" tomll /app/pyproject.toml
 
-      - name: Container Test -- Standardized CLI Test
+      - name: Container Build Test -- Standardized CLI Test
         run: |
           cd "${TEMPLATED_NAME}"
           docker-compose exec -T "${TEMPLATED_NAME}" bash -c 'source /app/.github/scripts/cli_test.sh'
 
-      - name: Container Test -- Test Priviledge Escalation
+      - name: Container Build Test -- Test Priviledge Escalation
         run: |
           cd "${TEMPLATED_NAME}"
           docker-compose exec -T "${TEMPLATED_NAME}" sudo ls -la /root
 
-      - name: Container Test -- Test Patch Pep Compliance
+      - name: Container Build Test -- Test Patch Pep Compliance
         run: |
           cd "${TEMPLATED_NAME}"
           docker-compose exec -T "${TEMPLATED_NAME}" bash -c 'source /app/.github/scripts/patch_pep.sh'
 
-      - name: Container Test -- Report Job Status on Success
+      - name: Container Build Test -- Report Job Status on Success
         run: |
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: container build for Python ${PYTHON_VERSION} was successful"
 
-      - name: Container Test -- Report Job Status on Failure
+      - name: Container Build Test -- Report Job Status on Failure
         if: failure()
         run: |
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":x: container build for Python ${PYTHON_VERSION} failed!"
+
+  container_production_build_test:
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 6
+      matrix:
+        include:
+          - python-version: 3.7
+            cookie-cutter-lockfile-selection: 1
+            cookie-cutter-python-selection: 1
+          - python-version: 3.8
+            cookie-cutter-lockfile-selection: 1
+            cookie-cutter-python-selection: 2
+          - python-version: 3.9
+            cookie-cutter-lockfile-selection: 1
+            cookie-cutter-python-selection: 3
+          - python-version: 3.7
+            cookie-cutter-lockfile-selection: 2
+            cookie-cutter-python-selection: 1
+          - python-version: 3.8
+            cookie-cutter-lockfile-selection: 2
+            cookie-cutter-python-selection: 2
+          - python-version: 3.9
+            cookie-cutter-lockfile-selection: 2
+            cookie-cutter-python-selection: 3
+
+    steps:
+      - name: Container Production Build Test -- Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Container Production Build Test -- Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          path: 'template'
+
+      - name: Container Production Build Test -- Setup Environment
+        run: |
+          source ./template/.github/scripts/setup.sh
+          source ./template/.github/scripts/template.sh "${SELECTION}"
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+          SELECTION_LOCKFILE: ${{ matrix.cookie-cutter-lockfile-selection }}
+          SELECTION_PYTHON: ${{ matrix.cookie-cutter-python-selection }}
+          PYTHON_VERSION: ${{ matrix.python-version }}
+
+      - name: Container Production Build Test -- Ensure File System is Writable by the Container
+        run: |
+          sudo chmod -R o+w .
+
+      - name: Container Production Build Test -- Create Mock Production Environment
+        run: |
+          cd "${TEMPLATED_NAME}"
+          cp assets/local.env assets/production.env
+
+      - name: Container Production Build Test -- Build Docker Image, Start Container
+        run: |
+          cd "${TEMPLATED_NAME}"
+          bash -c 'source .github/scripts/build_container.sh docker-compose.production.yml'
+
+      - name: Container Production Build Test -- Report Job Status on Success
+        run: |
+          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: Production container build for Python ${PYTHON_VERSION} was successful"
+
+      - name: Container Production Build Test -- Report Job Status on Failure
+        if: failure()
+        run: |
+          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":x: Production container build for Python ${PYTHON_VERSION} failed!"
 
   create_releases:
     needs: [push_repository_test]
@@ -200,11 +274,14 @@ jobs:
       matrix:
         include:
           - python-version: 3.7
-            cookie-cutter-selection: 1
+            cookie-cutter-lockfile-selection: 1
+            cookie-cutter-python-selection: 1
           - python-version: 3.8
-            cookie-cutter-selection: 2
+            cookie-cutter-lockfile-selection: 1
+            cookie-cutter-python-selection: 2
           - python-version: 3.9
-            cookie-cutter-selection: 3
+            cookie-cutter-lockfile-selection: 1
+            cookie-cutter-python-selection: 3
 
     steps:
       - name: Hostmachine Test -- Set up Python ${{ matrix.python-version }}
@@ -223,7 +300,8 @@ jobs:
           source ./template/.github/scripts/template.sh "${SELECTION}"
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-          SELECTION: ${{ matrix.cookie-cutter-selection }}
+          SELECTION_LOCKFILE: ${{ matrix.cookie-cutter-lockfile-selection }}
+          SELECTION_PYTHON: ${{ matrix.cookie-cutter-python-selection }}
           PYTHON_VERSION: ${{ matrix.python-version }}
 
       - name: Hostmachine Test -- Patch Environment

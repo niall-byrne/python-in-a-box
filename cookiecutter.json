@@ -7,6 +7,7 @@
     "author": "Niall Byrne",
     "email": "niall@niallbyrne.ca",
     "github_username": "niall-byrne",
+    "include_lock_file": ["true", "false"],
     "include_ssh_keys": ["true", "false"],
     "include_gitconfig": ["true", "false"],
     "include_gitconfig_global": ["true", "false"],

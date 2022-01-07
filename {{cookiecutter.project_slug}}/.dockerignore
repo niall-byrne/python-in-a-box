@@ -1,0 +1,4 @@
+./assets/*.env
+!./assets/local.env
+{%- if cookiecutter.include_lock_file|lower == "false" %}
+poetry.lock{% endif %}

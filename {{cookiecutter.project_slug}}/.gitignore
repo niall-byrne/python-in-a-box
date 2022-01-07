@@ -142,6 +142,10 @@ override.env
 
 # Macs
 .DS_Store
+{%- if cookiecutter.include_lock_file|lower == "false" %}
+
+# Poetry
+poetry.lock{% endif %}
 
 # Autosummary Documentation
 documentation/source/codebase/{{cookiecutter.project_slug}}/_autosummary/

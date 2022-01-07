@@ -76,13 +76,14 @@ RUN echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 USER user
 
 # Copy the poetry configuration
-COPY pyproject.toml poetry.lock /app/
+COPY pyproject.toml *.lock /app/
 
 # Cache Dependencies
 RUN poetry install --no-root -E docs
 
 # Copy the Codebase
 COPY . /app
+RUN poetry install
 
 # Create A Symlink For the Bash Customizations
 RUN ln -sf /app/assets/.bash_customize /home/user/.bash_customize
@@ -105,9 +106,11 @@ ENV ENVIRONMENT "PRE_PRODUCTION"
 USER user
 
 # Copy the poetry configuration
-COPY pyproject.toml poetry.lock /app/
+COPY pyproject.toml *.lock /app/
 
 # Export the lock file
+{%- if cookiecutter.include_lock_file|lower == "false" %}
+RUN poetry lock{% endif %}
 RUN poetry export --without-hashes -f requirements.txt -o /app/requirements.txt
 
 # Copy the codebase
