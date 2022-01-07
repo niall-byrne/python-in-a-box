@@ -167,5 +167,5 @@ index 8ce3ad0..e701dac 100644
 -      indent-string = "  "
 +      indent-string = "    "
        max-line-length = 80
-       max-module-lines = 1000
+       max-module-lines = 2000
        no-space-check = "trailing-comma,dict-separator"
