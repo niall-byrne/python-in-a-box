@@ -168,7 +168,7 @@ jobs:
           image: "test:latest"
           fail-build: false
           acs-report-enable: true
-          severity-cutoff: high
+          severity-cutoff: critical
 
       - name: Dockerfile Test -- Upload Anchore scan SARIF report
         uses: {% endraw %}{{ cookiecutter._GITHUB_CODEQL_ACTION_UPLOAD_SARIF }}{% raw %}
