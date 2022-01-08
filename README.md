@@ -23,7 +23,7 @@ This container provides my preferred CLI tooling, and a compartmentalized develo
 ## Quick Start Guide
 
 - `pip install cookiecutter poetry`
-- `cookiecutter https://github.com/niall-byrne/python-in-a-box.git --checkout v0.1.4`
+- `cookiecutter https://github.com/niall-byrne/python-in-a-box.git --checkout v0.1.5`
 
 Give your project a name, and populate the other required template inputs.
 
