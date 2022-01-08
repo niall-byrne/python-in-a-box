@@ -1,35 +1,39 @@
 ARG PYTHON_VERSION={{cookiecutter.python_version}}
 FROM python:$PYTHON_VERSION-slim AS base
 
-LABEL maintainer "{{cookiecutter.email}}"
-LABEL project "{{cookiecutter.project_slug}}"
-LABEL environment ""
+LABEL maintainer="{{cookiecutter.email}}"
+LABEL project="{{cookiecutter.project_slug}}"
+LABEL environment=""
 
 ENV PYTHONUNBUFFERED 1
 ENV PROJECT_NAME "{{cookiecutter.project_slug}}"
 ENV PIB_CONFIG_FILE_LOCATION "/app/assets/cli.yml"
-ENV GITLEAKSVERSION "v7.2.0"
+
+ENV VERSION_GITLEAKS "v7.2.0"
+ENV VERSION_POETRY "poetry>=1.1.12,<1.2.0"
 
 # Mark Container
 RUN echo "{{cookiecutter.project_slug}}" > /etc/container_release
 
 # Install Base Dependencies
-RUN apt-get update      && \
-    apt-get upgrade -y  && \
-    apt-get install -y     \
-    bash                   \
-    build-essential
+RUN apt-get update               && \
+    apt-get upgrade -y           && \
+    apt-get install -y              \
+    --no-install-recommends         \
+    bash=5.*                        \
+    build-essential=12.*         && \
+    rm -rf /var/lib/apt/lists/*
 
 # Setup directories
 RUN mkdir -p /home/user /app
 WORKDIR /app
 
 # Create the runtime user, and enforce permissions
-RUN useradd user -d /home/user        \
-                 -s /bin/bash         \
-                 -M                   \
- && chown -R user:user /home/user     \
- && chown -R user:user /app
+RUN useradd user -d /home/user           \
+                 -s /bin/bash            \
+                 -M                   && \
+ chown -R user:user /home/user        && \
+ chown -R user:user /app
 
 # Include the local binary folder in PATH
 ENV PATH "/home/user/.local/bin/:${PATH}"
@@ -39,34 +43,35 @@ ENV PATH "/home/user/.local/bin/:${PATH}"
 # Poetry Intermediary
 FROM base AS poetry
 
-LABEL environment ""
+LABEL environment=""
 
-# Install Latest Poetry
-RUN pip install --no-cache-dir poetry
+# Install Poetry
+RUN pip install --no-cache-dir "${VERSION_POETRY}"
 
 # ======================================================
 
 # Development Environment
 FROM poetry AS development
-LABEL environment DEVELOPMENT
+LABEL environment="DEVELOPMENT"
 ENV ENVIRONMENT DEVELOPMENT
 
 # Install Dev Dependencies
-RUN apt-get install -y              \
-    --no-install-recommends         \
-    curl                            \
-    fish                            \
-    golang-github-pelletier-go-toml \
-    jq                              \
-    openssh-client                  \
-    shellcheck                      \
-    sudo                            \
-    tig                             \
-    vim
+RUN apt-get update                      && \
+    apt-get install -y                     \
+    --no-install-recommends                \
+    curl=7.74.*                            \
+    fish=3.1.*                             \
+    golang-github-pelletier-go-toml=1.8.*  \
+    jq=1.6*                                \
+    openssh-client=1:8.*                   \
+    shellcheck=0.7.*                       \
+    sudo=1.9.*                             \
+    tig=2.5.*                              \
+    vim=2:8.*
 
 # Install Git Leaks
-RUN curl --fail -sL "https://github.com/zricethezav/gitleaks/releases/download/${GITLEAKSVERSION}/gitleaks-linux-amd64"    \
-    -o /usr/bin/gitleaks                                                                                                && \
+RUN curl --fail -sL "https://github.com/zricethezav/gitleaks/releases/download/${VERSION_GITLEAKS}/gitleaks-linux-amd64"    \
+    -o /usr/bin/gitleaks                                                                                                 && \
     chmod +x /usr/bin/gitleaks
 
 # Add user to sudoers, and make the default user
@@ -83,6 +88,8 @@ RUN poetry install --no-root -E docs
 
 # Copy the Codebase
 COPY . /app
+
+# Install the Application
 RUN poetry install
 
 # Create A Symlink For the Bash Customizations
@@ -98,7 +105,7 @@ CMD ["./{{cookiecutter.project_slug}}/container_init.sh"]
 # Pre Production Environment
 FROM poetry as pre_production
 
-LABEL environment "PRE_PRODUCTION"
+LABEL environment="PRE_PRODUCTION"
 
 ENV ENVIRONMENT "PRE_PRODUCTION"
 
@@ -121,7 +128,7 @@ COPY . /app
 # Production Environment
 FROM base as production
 
-LABEL environment "PRODUCTION"
+LABEL environment="PRODUCTION"
 
 ENV ENVIRONMENT "PRODUCTION"
 
