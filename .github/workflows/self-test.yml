@@ -19,6 +19,7 @@ env:
   PROJECT_NAME: "python-in-a-box"
   TEMPLATED_NAME: "mmmm_cookies"
   USERNAME: "niall-byrne"
+  VERBOSE_NOTIFICATIONS: 0
 
 jobs:
 
@@ -90,6 +91,7 @@ jobs:
           docker-compose exec -T "${TEMPLATED_NAME}" bash -c 'source /app/.github/scripts/patch_pep.sh'
 
       - name: Container Build Test -- Report Job Status on Success
+        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
         run: |
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: container build for Python ${PYTHON_VERSION} was successful"
 
@@ -160,6 +162,7 @@ jobs:
           bash -c 'source .github/scripts/build_container.sh docker-compose.production.yml'
 
       - name: Container Production Build Test -- Report Job Status on Success
+        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
         run: |
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: Production container build for Python ${PYTHON_VERSION} was successful"
 
@@ -168,7 +171,7 @@ jobs:
         run: |
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":x: Production container build for Python ${PYTHON_VERSION} failed!"
 
-  create_releases:
+  create_release:
     needs: [push_repository_test]
 
     runs-on: ubuntu-latest
@@ -176,7 +179,7 @@ jobs:
     steps:
       - name: Create Release -- Checkout Repository
         if: contains(github.ref, '/tags/v')
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Create Release -- Setup Environment
         if: contains(github.ref, '/tags/v')
@@ -258,6 +261,7 @@ jobs:
           max-depth: -1
 
       - name: Documentation -- Report Job Status on Success
+        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
         run: |
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: documentation checks were successful!"
 
@@ -348,6 +352,7 @@ jobs:
           source .github/scripts/patch_pep.sh
 
       - name: Hostmachine Test -- Report Job Status on Success
+        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
         run: |
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: hostmachine for Python ${PYTHON_VERSION} build was successful!"
 
@@ -357,7 +362,7 @@ jobs:
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":x: hostmachine for Python ${PYTHON_VERSION} build failed!"
 
   push_repository_test:
-    needs: [container_cli_test, documentation_test, hostmachine_cli_test, security_test, shellcheck_test, workflow_lint_test]
+    needs: [container_cli_test, container_production_build_test, documentation_test, hostmachine_cli_test, security_test, shellcheck_test, start_notification, workflow_lint_test]
 
     runs-on: ubuntu-latest
 
@@ -414,6 +419,7 @@ jobs:
           force: true
 
       - name: Push Template -- Report Job Status on Success
+        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
         run: |
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: push has been triggered!"
 
@@ -428,7 +434,7 @@ jobs:
 
     steps:
       - name: Security Test -- Checkout Repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Security Test -- Setup Environment
         run: |
@@ -440,6 +446,7 @@ jobs:
         uses: zricethezav/gitleaks-action@v1.6.0
 
       - name: Security Test -- Report Job Status on Success
+        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
         run: |
           ./{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: security checks were successful!"
 
@@ -475,6 +482,7 @@ jobs:
           source .github/scripts/shellcheck.sh
 
       - name: Shellcheck -- Report Job Status on Success
+        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
         run: |
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: shellcheck checks were successful!"
 
@@ -482,6 +490,56 @@ jobs:
         if: failure()
         run: |
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":x: shellcheck checks failed!"
+
+  start_notification:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Start -- Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          path: 'template'
+
+      - name: Start -- Setup Environment
+        run: |
+          source ./template/.github/scripts/setup.sh
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Start -- Report Job Status on Success
+        run: |
+          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: workflow has started!"
+
+      - name: Start -- Report Job Status on Failure
+        if: failure()
+        run: |
+          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":x: error reporting job status!"
+
+  success_notification:
+    needs: [create_release]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Success -- Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          path: 'template'
+
+      - name: Success -- Setup Environment
+        run: |
+          source ./template/.github/scripts/setup.sh
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Success -- Report Job Status on Success
+        run: |
+          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: all checks were successful!"
+
+      - name: Success -- Report Job Status on Failure
+        if: failure()
+        run: |
+          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":x: error reporting job status!"
 
   workflow_lint_test:
 
@@ -518,6 +576,7 @@ jobs:
           config_file: ./${{ env.TEMPLATED_NAME }}/.yamllint.yml
 
       - name: Workflow Lint -- Report Job Status on Success
+        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
         run: |
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: workflow linting was successful!"
 
