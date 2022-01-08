@@ -28,7 +28,7 @@ jobs:
 {% raw %}
     steps:
       - name: Build -- Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Build -- Setup Environment
         run: |
@@ -89,7 +89,9 @@ jobs:
     steps:
       - name: Create Release -- Checkout
         if: contains(github.ref, '/tags/v')
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Create Release -- Setup Environment
         if: contains(github.ref, '/tags/v')
@@ -143,7 +145,7 @@ jobs:
 
     steps:
       - name: Dockerfile Test -- Checkout Repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Dockerfile Test -- Setup Environment
         run: |
@@ -174,7 +176,7 @@ jobs:
 
     steps:
       - name: Documentation Test -- Checkout Repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Documentation Test -- Setup Environment
         run: |
@@ -205,7 +207,9 @@ jobs:
     steps:
 
       - name: Security Test -- Checkout Repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Documentation Test -- Setup Environment
         run: |
@@ -232,7 +236,7 @@ jobs:
 
     steps:
       - name: Shellcheck -- Checkout Repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Shellcheck -- Setup Environment
         run: |
@@ -259,7 +263,7 @@ jobs:
 
     steps:
       - name: Start -- Checkout Repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Start -- Setup Environment
         run: |
@@ -283,7 +287,7 @@ jobs:
 
     steps:
       - name: Success -- Checkout Repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Success -- Setup Environment
         run: |
@@ -306,7 +310,7 @@ jobs:
 
     steps:
       - name: Workflow Lint -- Checkout Repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Workflow Lint -- Setup Environment
         run: |

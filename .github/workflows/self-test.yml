@@ -180,6 +180,8 @@ jobs:
       - name: Create Release -- Checkout Repository
         if: contains(github.ref, '/tags/v')
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Create Release -- Setup Environment
         if: contains(github.ref, '/tags/v')
@@ -435,6 +437,8 @@ jobs:
     steps:
       - name: Security Test -- Checkout Repository
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Security Test -- Setup Environment
         run: |
