@@ -84,6 +84,8 @@ Poetry is installed inside the container, so you can leverage this tool:
 - [Adding Python Packages with Poetry](https://python-poetry.org/docs/cli/#add)
 - [Removing Python Packages With Poetry](https://python-poetry.org/docs/cli/#remove)
 
+The Poetry lock file itself is an OPTIONAL component for your dev environment, and depending on your project you may wish to exclude it from the codebase and your Docker container.  You are given the option to do so during the templating process.
+
 #### OS Level Dependencies:
 
 Modify the [Dockerfile](./{{cookiecutter.project_slug}}/assets/Dockerfile) to accomplish to this.
@@ -238,3 +240,12 @@ Integrations with the following third party services are configured during templ
   - [pyproject.toml](./{{cookiecutter.project_slug}}/pyproject.toml)
 - [Read The Docs](https://readthedocs.org/)
   - [.readthedocs.yml](./{{cookiecutter.project_slug}}/.readthedocs.yml)
+
+## Production Containers
+
+There is an additional [docker-compose.yml](./{{cookiecutter.project_slug}}/docker-compose.production.yml) file for testing/interacting with production containers.
+This gives you the opportunity to incorporate further testing in the CI/CD pipeline, and make local modifications.
+
+This container is built without any of the dev dependencies, but does contain compilation tools for installing pip packages.
+
+You'll need to create an `assets/production.env` file that resembles your [assets/local.env](./{{cookiecutter.project_slug}}/assets/local.env) file.
