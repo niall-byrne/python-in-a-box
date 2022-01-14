@@ -100,7 +100,6 @@ The container is using a [Debian](https://www.debian.org/) derived image, so [ap
 | bandit     | Finds common security issues      |
 | commitizen | Standardizes commit messages      |
 | isort      | Sorts imports                     |
-| mypy       | Static type checker               |
 | poetry     | Python Package Manager            |
 | pydocstyle | PEP 257 enforcement               |
 | pylint     | Static Code Analysis              |
@@ -112,6 +111,11 @@ The container is using a [Debian](https://www.debian.org/) derived image, so [ap
 | wheel      | Package distribution tools        |
 | yamllint   | Lint yaml configuration files     |
 | yapf       | Customizable Code Formatting      |
+
+## Optional Types Python Packages:
+| package    | Description                       |
+| ---------- | --------------------------------- |
+| mypy       | Static type checker               |
 
 ## Default Installed Container OS Packages
 | package         | Description                                                 |
