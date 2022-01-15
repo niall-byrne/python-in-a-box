@@ -84,7 +84,7 @@ USER user
 COPY pyproject.toml *.lock /app/
 
 # Cache Dependencies
-RUN poetry install --no-root -E docs
+RUN poetry install --no-root -E dev
 
 # Copy the Codebase
 COPY . /app

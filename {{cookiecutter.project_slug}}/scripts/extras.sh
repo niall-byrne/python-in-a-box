@@ -15,7 +15,7 @@ install_git_hooks() {
 }
 
 pib_setup_hostmachine() {
-  poetry install -E docs
+  poetry install -E dev
 
   # shellcheck disable=SC2139
   alias dev="PROJECT_NAME=\"{{cookiecutter.project_slug}}\" PIB_CONFIG_FILE_LOCATION=\"${PIB_PROJECT_ROOT}/assets/cli.yml\" poetry run dev"

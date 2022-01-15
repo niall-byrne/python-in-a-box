@@ -50,13 +50,14 @@
       python = ">={{cookiecutter.python_version}}.0,<4.0.0"
 
       [tool.poetry.dependencies.pib_cli]
-        extras = ["docs"{% if cookiecutter.typing_support == 'true' %}, "types"{% endif %}]
+        extras = ["docs"{% if cookiecutter.lint_docstrings == 'true' %}, "docstrings"{% endif %}{% if cookiecutter.typing_support == 'true' %}, "types"{% endif %}]
         optional = true
         version = "{{cookiecutter._pib_cli_version}}"
 
     [tool.poetry.dev-dependencies]
 
     [tool.poetry.extras]
+      dev = ["pib_cli"]
       docs = ["pib_cli"]
 
     [[tool.poetry.packages]]

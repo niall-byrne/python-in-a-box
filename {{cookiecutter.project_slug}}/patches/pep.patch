@@ -118,23 +118,26 @@ index 75341f8..01c7ea3 100644
 
 
  def main() -> None:
--  """The main function for this application."""
+-  """Greets the user."""
 -  sys.stdout.write("Hello World!")
-+    """The main function for this application."""
++    """Greets the user."""
 +    sys.stdout.write("Hello World!")
 diff --git a/{{ cookiecutter.project_slug }}/tests/test_app.py b/{{ cookiecutter.project_slug }}/tests/test_app.py
 index 2fc921a..462a825 100644
 --- a/{{ cookiecutter.project_slug }}/tests/test_app.py
 +++ b/{{ cookiecutter.project_slug }}/tests/test_app.py
-@@ -7,8 +7,7 @@ from ..app import main
+@@ -8,9 +9,9 @@ from ..app import main
 
 
  class AppTest(TestCase):
+-  """Test the default python-in-a-box app."""
 -
 -  def test_app_stdout(self) -> None:
 -    with mock.patch('sys.stdout', new=StringIO()) as mock_stdout:
 -      main()
 -      self.assertEqual(mock_stdout.getvalue(), "Hello World!")
++    """Test the default python-in-a-box app."""
++
 +    def test_app_stdout(self) -> None:
 +        with mock.patch("sys.stdout", new=StringIO()) as mock_stdout:
 +            main()
@@ -152,13 +155,14 @@ index 8ce3ad0..e701dac 100644
      length_sort = false
      line_length = 80
      multi_line_output = 3
-@@ -55,6 +55,7 @@
+@@ -55,7 +55,8 @@
          version = "{{cookiecutter._pib_cli_version}}"
 
      [tool.poetry.dev-dependencies]
 +      black = "*"
 
      [tool.poetry.extras]
+       dev = ["pib_cli"]
        docs = ["pib_cli"]
 @@ -108,7 +109,7 @@
 

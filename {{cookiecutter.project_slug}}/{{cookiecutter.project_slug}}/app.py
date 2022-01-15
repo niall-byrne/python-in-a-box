@@ -1,8 +1,8 @@
-"""The Default App"""
+"""The default python-in-a-box app."""
 
 import sys
 
 
 def main() -> None:
-  """The main function for this application."""
+  """Greets the user."""
   sys.stdout.write("Hello World!")

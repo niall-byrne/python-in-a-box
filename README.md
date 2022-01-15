@@ -101,7 +101,6 @@ The container is using a [Debian](https://www.debian.org/) derived image, so [ap
 | commitizen | Standardizes commit messages      |
 | isort      | Sorts imports                     |
 | poetry     | Python Package Manager            |
-| pydocstyle | PEP 257 enforcement               |
 | pylint     | Static Code Analysis              |
 | pytest     | Test suite                        |
 | pytest-cov | Coverage support for pytest       |
@@ -112,7 +111,14 @@ The container is using a [Debian](https://www.debian.org/) derived image, so [ap
 | yamllint   | Lint yaml configuration files     |
 | yapf       | Customizable Code Formatting      |
 
-## Optional Types Python Packages:
+(The pib_cli 'docs' extras are installed by default.)
+
+### pib_cli 'docstrings' extras:
+| package    | Description                       |
+| ---------- | --------------------------------- |
+| pydocstyle | PEP 257 enforcement               |
+
+### pib_cli 'types' extras:
 | package    | Description                       |
 | ---------- | --------------------------------- |
 | mypy       | Static type checker               |
@@ -215,6 +221,9 @@ Files are created in the project root folder for the following:
   - [.readthedocs.yml](./{{cookiecutter.project_slug}}/.readthedocs.yml)
 - [poetry](https://python-poetry.org/)  
   - [pyproject.toml](./{{cookiecutter.project_slug}}/pyproject.toml)
+- [pydocstyle](https://python-poetry.org/)  
+  - .pydocstyle - Optionally rendered config for PEP 257
+  - .pydocstyle.tests - Optionally rendered config for PEP 257
 - [yamllint](https://github.com/adrienverge/yamllint)
   - [.yamllint.yml](./{{cookiecutter.project_slug}}/.yamllint.yml)  
 - [yapf](https://readthedocs.org/)
