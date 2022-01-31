@@ -58,9 +58,9 @@ Alternatively, modify your [.style.yapf](./{{cookiecutter.project_slug}}/.style.
 
 ## Container
 
-- [python:3.7-slim](https://github.com/docker-library/python/blob/master/3.7/buster/slim/Dockerfile)
-- [python:3.8-slim](https://github.com/docker-library/python/blob/master/3.8/buster/slim/Dockerfile)
-- [python:3.9-slim](https://github.com/docker-library/python/blob/master/3.9/buster/slim/Dockerfile)
+- [python:3.7-slim](https://github.com/docker-library/repo-info/blob/master/repos/python/remote/3.7-slim.md)
+- [python:3.8-slim](https://github.com/docker-library/repo-info/blob/master/repos/python/remote/3.8-slim.md)
+- [python:3.9-slim](https://github.com/docker-library/repo-info/blob/master/repos/python/remote/3.9-slim.md)
 
 ## License
 
