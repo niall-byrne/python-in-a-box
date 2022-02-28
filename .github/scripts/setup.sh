@@ -2,6 +2,11 @@
 
 # shellcheck disable=SC2129
 
+# .github/scripts/setup.sh
+# Configures environment variables for Github Actions.
+
+# CI only script.
+
 set -eo pipefail
 
 main() {

@@ -3,6 +3,10 @@
 # .github/scripts/cli_test.sh
 # Validate the installed pib_cli version and default configuration.
 
+# PIB_CONFIG_FILE_LOCATION:   The location of the CLI configuration file.
+# TEMPLATE_SELECTION_SPHINX:  The template selection for including documentation support.
+# TEMPLATE_SELECTION_TYPING:  The template selection for including typing support.
+
 # CI only script.
 
 set -eo pipefail
