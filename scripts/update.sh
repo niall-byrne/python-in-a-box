@@ -1,10 +1,13 @@
 #!/bin/bash
 
-# This script helps automate the process of updating a project that has already been created.
+# scripts/update.sh
+# This script helps automate the process of updating a project that has already been templated.
 # A branch "update-template" is created, with the changes required to update the workflow.
-# Use git cherry-pick (or create a patch from this change set) to update your ansible role.
+# Use git cherry-pick (or create a patch from this change set) to update your project.
 
 # Requires: https://pypi.org/project/cookiecutter-project-upgrader/
+
+# Host machine only.  Please do not use this script inside a PIB container.
 
 error() {
   echo "USAGE: ./update.sh [PROJECT FOLDER] [TEMPLATE TAG or BRANCH]"

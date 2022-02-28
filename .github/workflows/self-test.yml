@@ -54,12 +54,12 @@ jobs:
       - name: Container Build Test -- Setup Environment
         run: |
           source ./template/.github/scripts/setup.sh
-          source ./template/.github/scripts/template.sh "${SELECTION}"
+          source ./template/.github/scripts/template.sh "${SELECTION_PYTHON}" "${SELECTION_LOCKFILE}"
         env:
-          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+          PYTHON_VERSION: ${{ matrix.python-version }}
           SELECTION_LOCKFILE: ${{ matrix.cookie-cutter-lockfile-selection }}
           SELECTION_PYTHON: ${{ matrix.cookie-cutter-python-selection }}
-          PYTHON_VERSION: ${{ matrix.python-version }}
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
       - name: Container Build Test -- Ensure File System is Writable by the Container
         run: |
@@ -141,12 +141,12 @@ jobs:
       - name: Container Production Build Test -- Setup Environment
         run: |
           source ./template/.github/scripts/setup.sh
-          source ./template/.github/scripts/template.sh "${SELECTION}"
+          source ./template/.github/scripts/template.sh "${SELECTION_PYTHON}" "${SELECTION_LOCKFILE}"
         env:
-          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+          PYTHON_VERSION: ${{ matrix.python-version }}
           SELECTION_LOCKFILE: ${{ matrix.cookie-cutter-lockfile-selection }}
           SELECTION_PYTHON: ${{ matrix.cookie-cutter-python-selection }}
-          PYTHON_VERSION: ${{ matrix.python-version }}
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
       - name: Container Production Build Test -- Ensure File System is Writable by the Container
         run: |
@@ -243,7 +243,7 @@ jobs:
       - name: Documentation -- Setup Environment
         run: |
           source ./template/.github/scripts/setup.sh
-          source ./template/.github/scripts/template.sh "1"
+          source ./template/.github/scripts/template.sh
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
@@ -304,12 +304,12 @@ jobs:
       - name: Hostmachine Test -- Setup Environment
         run: |
           source ./template/.github/scripts/setup.sh
-          source ./template/.github/scripts/template.sh "${SELECTION}"
+          source ./template/.github/scripts/template.sh "${SELECTION_PYTHON}" "${SELECTION_LOCKFILE}"
         env:
-          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+          PYTHON_VERSION: ${{ matrix.python-version }}
           SELECTION_LOCKFILE: ${{ matrix.cookie-cutter-lockfile-selection }}
           SELECTION_PYTHON: ${{ matrix.cookie-cutter-python-selection }}
-          PYTHON_VERSION: ${{ matrix.python-version }}
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
       - name: Hostmachine Test -- Patch Environment
         run: |
@@ -381,7 +381,7 @@ jobs:
         run: |
           source ./template/.github/scripts/setup.sh
           source ./template/.github/scripts/release_test.sh
-          source ./template/.github/scripts/template.sh "1" "GitHub Action" "action@github.com"
+          source ./template/.github/scripts/template.sh "1" "1" "GitHub Action" "action@github.com"
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
@@ -474,13 +474,13 @@ jobs:
       - name: Shellcheck -- Setup Environment
         run: |
           source ./template/.github/scripts/setup.sh
-          source ./template/.github/scripts/template.sh "1"
+          source ./template/.github/scripts/template.sh
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
       - name: Shellcheck -- Check Template Scripts
         run: |
-          source ./template/.github/scripts/shellcheck.sh
+          source ./template/scripts/shellcheck.sh
 
       - name: Shellcheck -- Check Rendered Template Scripts
         run: |
@@ -565,7 +565,7 @@ jobs:
 
       - name: Workflow Lint -- Create Template
         run: |
-          source ./template/.github/scripts/template.sh "1"
+          source ./template/.github/scripts/template.sh
 
       - name: Workflow Lint -- Lint Template Workflows
         uses: ibiqlik/action-yamllint@v3
