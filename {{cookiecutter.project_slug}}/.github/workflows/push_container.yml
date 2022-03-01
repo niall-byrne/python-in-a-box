@@ -263,7 +263,7 @@ jobs:
 
       - name: Shellcheck -- Check Scripts
         run: |
-          source .github/scripts/shellcheck.sh
+          source ./.github/scripts/lint_shellcheck.sh
 
       - name: Shellcheck -- Report Job Status on Success
         if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}

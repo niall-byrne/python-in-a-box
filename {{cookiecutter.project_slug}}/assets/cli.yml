@@ -29,6 +29,12 @@
   container_only: true
   path: "git_root"
   commands:
+    - |
+      _WORD_COUNT="$(expr $(wc -l .aspell.pws | cut -d"." -f1) - 2)"
+      _WORD_LIST="$(sed "1,1d" .aspell.pws | sort --unique)"
+      _LANGUAGE="$(echo "${GIT_HOOKS_ASPELL_LANG}" | cut -d"_" -f1)"
+      _HEADER="$(echo "personal_ws-1.1 "${_LANGUAGE}" ${_WORD_COUNT}")"
+      printf "%s\n%s\n" "${_HEADER}" "${_WORD_LIST}" > .aspell.pws
     - 'tomll pyproject.toml'
     - 'yapf -i --recursive .'
     - 'isort "${PROJECT_NAME}"'

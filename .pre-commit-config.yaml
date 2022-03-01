@@ -1,0 +1,48 @@
+---
+repos:
+  - repo: local
+    hooks:
+      - id: check_spelling
+        name: check commit spelling
+        description: "Check spelling on commit messages."
+        entry: env GIT_HOOKS_ASPELL_ENCODING="utf-8" GIT_HOOKS_ASPELL_LANG="en_US" USER_DICTIONARY=./{{cookiecutter.project_slug}}/.aspell.pws ./{{cookiecutter.project_slug}}/scripts/hooks/check_spelling.sh
+        language: system
+        stages: [commit-msg]
+        minimum_pre_commit_version: "0.15.4"
+        require_serial: true
+        always_run: true
+      - id: commitizen
+        name: commitizen check
+        description: "Check whether the commit message follows committing rules."
+        entry: cz check --commit-msg-file
+        language: python
+        language_version: python3
+        stages: [commit-msg]
+        minimum_pre_commit_version: "0.15.4"
+        require_serial: true
+        always_run: true
+      - id: pyproject.toml
+        name: pyproject.toml lint
+        description: "Lint the pyproject.toml file."
+        entry: bash -c 'tomll pyproject.toml; git diff --exit-code'
+        language: system
+        stages: [commit]
+        pass_filenames: false
+        always_run: true
+      - id: shellcheck
+        name: shellcheck scripts
+        description: "Run shellcheck on select shell scripts."
+        entry: bash -c 'find . -name "*.sh" -not -path "./{{cookiecutter.project_slug}}/*"  | xargs shellcheck'
+        language: system
+        stages: [commit]
+        pass_filenames: false
+        require_serial: true
+        always_run: true
+      - id: yamllint
+        name: lint yaml files
+        description: "Run yamllint on select YAML files."
+        entry: yamllint .pre-commit-config.yaml .github  -c ./{{cookiecutter.project_slug}}/.yamllint.yml
+        language: system
+        stages: [commit]
+        pass_filenames: false
+        always_run: true

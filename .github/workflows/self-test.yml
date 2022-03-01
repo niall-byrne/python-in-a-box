@@ -480,12 +480,12 @@ jobs:
 
       - name: Shellcheck -- Check Template Scripts
         run: |
-          source ./template/scripts/shellcheck.sh
+          find template -name "*.sh" -not -path "template/{{cookiecutter.project_slug}}/*"  | xargs shellcheck
 
       - name: Shellcheck -- Check Rendered Template Scripts
         run: |
           cd ${TEMPLATED_NAME}
-          source .github/scripts/shellcheck.sh
+          source ./.github/scripts/lint_shellcheck.sh
 
       - name: Shellcheck -- Report Job Status on Success
         if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}

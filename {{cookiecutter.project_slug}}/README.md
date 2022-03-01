@@ -51,18 +51,22 @@ You can override the values set in this file by setting shell ENV variables prio
 - `./container`
 
 ## Git Hooks
-Git hooks are installed that will enforce linting and unit-testing on the specified branches.
+The python library [pre-commit](https://pre-commit.com/) comes installed with a host of useful initial hooks:
 
-The following environment variables in the  [local.env](./assets/local.env) file can be used to customize this behavior:
-- `GIT_HOOKS` (Set this value to 1 to enable the pre-commit hook)
-- `GIT_HOOKS_PROTECTED_BRANCHES` (Customize this regex to specify the branches that should enforce the Git Hook on commit.)
+## Default Installed Pre-Commit Hooks:
+| Hook Name          | Description                                                                                                  |
+| ------------------ | ------------------------------------------------------------------------------------------------------------ |
+| check_container    | Encourages you to make commits inside the [PIB](https://github.com/niall-byrne/python-in-a-box) environment. |
+| check_spelling     | Runs [aspell](http://aspell.net/) on your commit messages to prevent typos.                                  |
+| commitizen         | Runs commitizen on your commit message to validate it.                                                       |
+| gitleaks           | Runs [gitleaks](https://github.com/zricethezav/gitleaks) to scan for credential leaks.                       |
+| protected_branches | Runs additional tests for branches marked as important.                                                      |
+| shellcheck         | Runs [shellcheck](https://www.shellcheck.net/) on your shell scripts.                                        |
+| pyproject.toml     | Runs [tomll](https://github.com/Ainiroad/go-toml) on your TOML configuration file.                           |
+| yamllint           | Runs [yamllint](https://github.com/adrienverge/yamllint) on your YAML configuration files.                   |
 
-Once installed, the hooks required the presence of `pib_cli`, so either inside the container, or with the help of the `pib_setup_hostmachine` command (documented below). 
-
-Use the [scripts/extras.sh](scripts/extras.sh) script to install the hooks:
-
-- `source scripts/extras.sh`
-- `install_git_hooks`
+Most of these hooks use values from [local.env](./assets/local.env) file that can be customized.
+Furthermore, the spell check script manages its own [word dictionary](.aspell.pws) that you can customize. 
 
 ## Installing a virtual environment, and the CLI on your host machine
 
@@ -80,4 +84,3 @@ This is most useful for making an IDE like pycharm aware of what's installed in 
 > as well as any additional services you are running in containers.  
 
 The dev CLI sometimes makes calls to binaries that are installed inside the container, as such it's not always practical to use it on your host machine.
-
