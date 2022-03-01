@@ -1,0 +1,26 @@
+
+[build-system]
+  build-backend = "poetry.core.masonry.api"
+  requires = ["poetry-core>=1.0.0"]
+
+[tool]
+
+  [tool.commitizen]
+    name = "cz_conventional_commits"
+    tag_format = "v$version"
+    version = "0.1.6"
+
+  [tool.poetry]
+    authors = ["Niall Byrne <niall@niallbyrne.ca>"]
+    description = "A containerized development environment for Python projects."
+    license = "MPL-2.0"
+    name = "python-in-a-box"
+    version = "0.1.6"
+
+    [tool.poetry.dependencies]
+      python = ">=3.7.0,<3.10.0"
+
+    [tool.poetry.dev-dependencies]
+      commitizen = "^2.21.2"
+      pre-commit = "^2.17.0"
+      yamllint = "^1.26.3"

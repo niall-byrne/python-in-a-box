@@ -1,0 +1,71 @@
+---
+repos:
+  - repo: local
+    hooks:
+      - id: check_container
+        name: check container
+        description: "Check for a valid PIB container."
+        entry: ./scripts/hooks/check_container.sh
+        language: system
+        stages: [commit]
+        pass_filenames: false
+        require_serial: true
+        always_run: true
+      - id: check_spelling
+        name: check commit spelling
+        description: "Check spelling on commit messages."
+        entry: ./scripts/hooks/check_spelling.sh
+        language: system
+        stages: [commit-msg]
+        minimum_pre_commit_version: "0.15.4"
+        require_serial: true
+        always_run: true
+      - id: commitizen
+        name: commitizen check
+        description: "Check whether the commit message follows committing rules."
+        entry: cz check --commit-msg-file
+        language: python
+        language_version: python3
+        stages: [commit-msg]
+        minimum_pre_commit_version: "0.15.4"
+        require_serial: true
+        always_run: true
+      - id: gitleaks
+        name: check for credentials
+        description: "Scan the commit for leaked credentials."
+        entry: gitleaks protect --verbose --redact --staged
+        language: system
+        stages: [commit]
+        pass_filenames: false
+        require_serial: true
+        always_run: true
+      - id: protected_branches
+        name: protected branches
+        description: "Run additional checks on branches marked as protected."
+        entry: ./scripts/hooks/protected_branches.sh
+        language: system
+        stages: [commit]
+        pass_filenames: false
+        require_serial: true
+        always_run: true
+      - id: pyproject.toml
+        name: pyproject.toml lint
+        description: "Lint the pyproject.toml file."
+        entry: bash -c 'tomll pyproject.toml; git diff --exit-code'
+        language: system
+        stages: [commit]
+        files: ^pyproject.toml$
+      - id: shellcheck
+        name: shellcheck scripts
+        description: "Lint shell script files."
+        entry: shellcheck
+        language: system
+        stages: [commit]
+        types: [file, shell]
+      - id: yamllint
+        name: yamllint
+        description: "Lint YAML files."
+        entry: yamllint
+        language: python
+        stages: [commit]
+        types: [file, yaml]
