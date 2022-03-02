@@ -30,15 +30,18 @@ jobs:
       max-parallel: 4
       matrix:
         include:
-          - python-version: 3.7
+          - python-version: "3.7"
             cookie-cutter-lockfile-selection: 1
             cookie-cutter-python-selection: 1
-          - python-version: 3.8
+          - python-version: "3.8"
             cookie-cutter-lockfile-selection: 1
             cookie-cutter-python-selection: 2
-          - python-version: 3.9
+          - python-version: "3.9"
             cookie-cutter-lockfile-selection: 1
             cookie-cutter-python-selection: 3
+          - python-version: "3.10"
+            cookie-cutter-lockfile-selection: 1
+            cookie-cutter-python-selection: 4
 
     steps:
       - name: Container Build Test -- Set up Python ${{ matrix.python-version }}
@@ -105,27 +108,33 @@ jobs:
 
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 6
+      max-parallel: 8
       matrix:
         include:
-          - python-version: 3.7
+          - python-version: "3.7"
             cookie-cutter-lockfile-selection: 1
             cookie-cutter-python-selection: 1
-          - python-version: 3.8
+          - python-version: "3.8"
             cookie-cutter-lockfile-selection: 1
             cookie-cutter-python-selection: 2
-          - python-version: 3.9
+          - python-version: "3.9"
             cookie-cutter-lockfile-selection: 1
             cookie-cutter-python-selection: 3
-          - python-version: 3.7
+          - python-version: "3.10"
+            cookie-cutter-lockfile-selection: 1
+            cookie-cutter-python-selection: 4
+          - python-version: "3.7"
             cookie-cutter-lockfile-selection: 2
             cookie-cutter-python-selection: 1
-          - python-version: 3.8
+          - python-version: "3.8"
             cookie-cutter-lockfile-selection: 2
             cookie-cutter-python-selection: 2
-          - python-version: 3.9
+          - python-version: "3.9"
             cookie-cutter-lockfile-selection: 2
             cookie-cutter-python-selection: 3
+          - python-version: "3.10"
+            cookie-cutter-lockfile-selection: 2
+            cookie-cutter-python-selection: 4
 
     steps:
       - name: Container Production Build Test -- Set up Python ${{ matrix.python-version }}
@@ -280,15 +289,18 @@ jobs:
       max-parallel: 4
       matrix:
         include:
-          - python-version: 3.7
+          - python-version: "3.7"
             cookie-cutter-lockfile-selection: 1
             cookie-cutter-python-selection: 1
-          - python-version: 3.8
+          - python-version: "3.8"
             cookie-cutter-lockfile-selection: 1
             cookie-cutter-python-selection: 2
-          - python-version: 3.9
+          - python-version: "3.9"
             cookie-cutter-lockfile-selection: 1
             cookie-cutter-python-selection: 3
+          - python-version: "3.10"
+            cookie-cutter-lockfile-selection: 1
+            cookie-cutter-python-selection: 4
 
     steps:
       - name: Hostmachine Test -- Set up Python ${{ matrix.python-version }}
