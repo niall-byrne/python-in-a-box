@@ -12,11 +12,13 @@ The following configuration files are created in the project root folder:
 - [Hadolint](https://github.com/hadolint/hadolint)
   - [.hadolint.yml](../{{cookiecutter.project_slug}}/.hadolint.yml)
 - [Read The Docs](https://readthedocs.org/)
+  - Only if you opt in for [Sphinx](https://www.sphinx-doc.org/en/master/) support. 
   - [.readthedocs.yml](../{{cookiecutter.project_slug}}/.readthedocs.yml)
 - [poetry](https://python-poetry.org/)  
   - [pyproject.toml](../{{cookiecutter.project_slug}}/pyproject.toml)
 - [pydocstyle](https://python-poetry.org/)  
-  - .pydocstyle - Optionally rendered config for PEP 257
-  - .pydocstyle.tests - Optionally rendered config for PEP 257
+  - Only if you opt in for docstring linting. 
+  - [.pydocstyle](../{{cookiecutter.project_slug}}/.pydocstyle)
+  - [.pydocstyle.tests](../{{cookiecutter.project_slug}}/.pydocstyle)
 - [yamllint](https://github.com/adrienverge/yamllint)
   - [.yamllint.yml](../{{cookiecutter.project_slug}}/.yamllint.yml)  

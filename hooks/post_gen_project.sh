@@ -2,14 +2,17 @@
 
 # /hooks/post_gen_project.sh
 # Initialize Git and Poetry after templating with cookiecutter.
+# Filter Sphinx or Docstring linting configuration as needed.
 
 # Host machine only.  This script is part of the template process.
 
 # PIB_SKIP_GIT_INIT:        set to a value to skip the repository initialization
-# PIB_SKIP_FMT_INIT: set to a value to skip initial formatting
+# PIB_SKIP_FMT_INIT:        set to a value to skip initial formatting
 # PIB_SKIP_POETRY_INIT:     set to a value to skip poetry installation
 
 FORMATTING_TYPE="{{ cookiecutter.formatting }}"
+OPTION_DOCSTRINGS="{{ cookiecutter.optional_docstring_linting }}"
+OPTION_SPHINX="{{ cookiecutter.optional_sphinx_support }}"
 
 initialize_fmt() {
 
@@ -46,7 +49,22 @@ initialize_poetry() {
 
 }
 
+template_filter() {
+
+  if [[ "${OPTION_DOCSTRINGS}" == "false" ]]; then
+    rm .pydocstyle .pydocstyle.tests
+  fi
+
+  if [[ "${OPTION_SPHINX}" == "false" ]]; then
+    rm .readthedocs.yml
+    rm -rf documentation
+  fi
+
+}
+
 main() {
+
+  template_filter
 
   if [[ -z "${PIB_SKIP_POETRY_INIT}" ]]; then
     initialize_poetry

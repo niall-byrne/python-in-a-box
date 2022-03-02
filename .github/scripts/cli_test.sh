@@ -13,7 +13,8 @@ set -eo pipefail
 
 main() {
 
-  dev build-docs
+  [[ "${TEMPLATE_SELECTION_SPHINX}" == "1" ]] && dev build-docs
+
   dev build-wheel
   dev coverage
   dev fmt

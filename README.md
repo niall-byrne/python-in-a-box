@@ -135,6 +135,7 @@ Integrations with the following third party services are configured during templ
 - [pypi.org](https://pypi.org/)
   - [pyproject.toml](./{{cookiecutter.project_slug}}/pyproject.toml)
 - [Read The Docs](https://readthedocs.org/) 
+  - Only if you opt in for [Sphinx](https://www.sphinx-doc.org/en/master/) support. 
   - [.readthedocs.yml](./{{cookiecutter.project_slug}}/.readthedocs.yml)
 
 ## Production Containers

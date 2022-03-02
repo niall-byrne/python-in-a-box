@@ -1,6 +1,8 @@
 {
     "python_version": ["3.7", "3.8", "3.9", "3.10"],
-    "typing_support": ["true", "false"],
+    "optional_docstring_linting": ["true", "false"],
+    "optional_sphinx_support": ["true", "false"],
+    "optional_typing_support": ["true", "false"],
     "project_name": "Mmmm Cookies",
     "project_slug": "{{ cookiecutter.project_name|slugify|replace('-', '_') }}",
     "formatting": ["PEP8", "Niall's 2-Space Preference"],
@@ -8,7 +10,6 @@
     "author": "Niall Byrne",
     "email": "niall@niallbyrne.ca",
     "github_username": "niall-byrne",
-    "lint_docstrings": ["true", "false"],
     "include_lock_file": ["true", "false"],
     "include_ssh_keys": ["true", "false"],
     "include_gitconfig": ["true", "false"],
