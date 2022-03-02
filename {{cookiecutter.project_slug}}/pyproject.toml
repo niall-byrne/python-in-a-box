@@ -47,7 +47,7 @@
     version = "0.0.1"
 
     [tool.poetry.dependencies]
-      python = ">={{cookiecutter.python_version}}.0,<3.10.0"
+      python = ">={{cookiecutter.python_version}}.0,<3.11.0"
 
       [tool.poetry.dependencies.pib_cli]
         extras = ["docs"{% if cookiecutter.lint_docstrings == 'true' %}, "docstrings"{% endif %}{% if cookiecutter.typing_support == 'true' %}, "types"{% endif %}]

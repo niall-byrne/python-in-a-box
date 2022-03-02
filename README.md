@@ -1,6 +1,6 @@
 # Python Development CookieCutter Template
 
-A [cookiecutter](https://cookiecutter.readthedocs.io/) based Python [3.7/3.8/3.9] dockerized development environment.
+A [cookiecutter](https://cookiecutter.readthedocs.io/) based Python [3.7/3.8/3.9/3.10] dockerized development environment.
 
 ##### Master Branch:
 [![Python In A Box Self Test](https://github.com/niall-byrne/python-in-a-box/workflows/Python%20In%20A%20Box%20Self%20Test/badge.svg?branch=master)](https://github.com/niall-byrne/python-in-a-box/actions)
@@ -34,7 +34,7 @@ Batteries are included:
 ## Project Requirements
 
  - [Linux](https://en.wikipedia.org/wiki/Linux) or [OSX](https://en.wikipedia.org/wiki/MacOS) based host machine (Unfortunately not [Windows](https://en.wikipedia.org/wiki/Microsoft_Windows) compatible at this time.)
- - [Python](https://www.python.org/)  (3.7, 3.8, or 3.9)
+ - [Python](https://www.python.org/)  (3.7, 3.8, 3.9 or 3.10)
  - [Docker](https://www.docker.com/) 
  - [Docker Compose](https://docs.docker.com/compose/install/)
  - [Cookiecutter](https://cookiecutter.readthedocs.io/)
@@ -89,6 +89,7 @@ Alternatively, modify your [.style.yapf](./{{cookiecutter.project_slug}}/.style.
 - [python:3.7-slim](https://github.com/docker-library/repo-info/blob/master/repos/python/remote/3.7-slim.md)
 - [python:3.8-slim](https://github.com/docker-library/repo-info/blob/master/repos/python/remote/3.8-slim.md)
 - [python:3.9-slim](https://github.com/docker-library/repo-info/blob/master/repos/python/remote/3.9-slim.md)
+- [python:3.10-slim](https://github.com/docker-library/repo-info/blob/master/repos/python/remote/3.10-slim.md)
 
 ## Template License
 

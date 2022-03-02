@@ -1,5 +1,5 @@
 {
-    "python_version": ["3.7", "3.8", "3.9"],
+    "python_version": ["3.7", "3.8", "3.9", "3.10"],
     "typing_support": ["true", "false"],
     "project_name": "Mmmm Cookies",
     "project_slug": "{{ cookiecutter.project_name|slugify|replace('-', '_') }}",
