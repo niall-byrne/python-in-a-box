@@ -29,6 +29,8 @@ Batteries are included:
 - a customizable `dev` command to orchestrate everything
 - a lot more (too much to list here, just try it out...)
 
+![Demo Image](https://i.ibb.co/sqddjYb/render1646245029095.gif)
+
 ## Project Requirements
 
  - [Linux](https://en.wikipedia.org/wiki/Linux) or [OSX](https://en.wikipedia.org/wiki/MacOS) based host machine (Unfortunately not [Windows](https://en.wikipedia.org/wiki/Microsoft_Windows) compatible at this time.)
