@@ -7,6 +7,7 @@
 # -- Path setup --------------------------------------------------------------
 
 import os
+import pathlib
 import sys
 
 if os.path.exists('/app'):
@@ -34,10 +35,22 @@ extensions = [
     'sphinx_autopackagesummary',
 ]
 
-# Exclude tests from sphinx_autopackagesummary here
-autosummary_mock_imports = [
-    "{{cookiecutter.project_slug}}.tests",
-]
+
+def detect_tests():
+    """Create a list of import paths with tests."""
+
+    test_paths = []
+    for root, dirs, _ in os.walk('../../{{cookiecutter.project_slug}}'):
+        for name in dirs:
+            if name == 'tests':
+                directory = pathlib.Path(
+                    os.path.join(root, name).replace('../../', ''))
+                test_paths.append('.'.join(directory.with_suffix('').parts))
+    return test_paths
+
+
+# Exclude tests from sphinx_autopackagesummary heres
+autosummary_mock_imports = detect_tests()
 
 source_suffix = {
     '.rst': 'restructuredtext',

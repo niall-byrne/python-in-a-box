@@ -1,5 +1,6 @@
 # Development Environment CLI Configuration
 ---
+{%- if cookiecutter.optional_sphinx_support == 'true' %}
 - name: "build-docs"
   description: "Build the project's documentation."
   path: "documentation_root"
@@ -8,6 +9,7 @@
     - "make html"
   success: "Documentation Built"
   failure: "Error Building Documentation"
+{%- endif %}
 - name: "build-wheel"
   description: "Build a distribution wheel."
   path: "git_root"
@@ -51,7 +53,7 @@
   path: "git_root"
   commands:
     - 'shellcheck ${PROJECT_NAME}/container_init.sh'
-{%- if cookiecutter.lint_docstrings == 'true' %}
+{%- if cookiecutter.optional_docstring_linting == 'true' %}
     - 'pydocstyle "${PROJECT_NAME}"'
     - 'pydocstyle --config=.pydocstyle.tests "${PROJECT_NAME}"'
 {%- endif %}
@@ -65,7 +67,7 @@
   path: "git_root"
   commands:
     - "poetry lock"
-    - "poetry install -E docs"
+    - "poetry install -E dev"
   success: "Reinstall Succeeded!"
   failure: "Reinstall Failed!"
 - name: "sectest"
@@ -84,7 +86,7 @@
     - 'pytest ${PIB_OVERLOAD_ARGUMENTS}'
   success: "Unittests Passed!"
   failure: "Unittests Failed!"
-{%- if cookiecutter.typing_support == 'true' %}
+{%- if cookiecutter.optional_typing_support == 'true' %}
 - name: "types"
   description: "Run the type checker."
   path: "git_root"

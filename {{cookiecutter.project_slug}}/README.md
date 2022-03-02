@@ -3,8 +3,10 @@
 ## {{ cookiecutter.project_name }}
 
 {{ cookiecutter.description }}
+{%- if cookiecutter.optional_sphinx_support == 'true' %}
 
 [Project Documentation](https://{{cookiecutter.project_slug}}.readthedocs.io/)
+{%- endif %}
 
 ### Master Branch Builds
 - [![{{cookiecutter.project_slug}} Generic Push](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-generic/badge.svg?branch=master)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
@@ -17,6 +19,11 @@
 ### Release Automation
 - [![{{cookiecutter.project_slug}} Release Container](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-release-container/badge.svg)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
 - [![{{cookiecutter.project_slug}} Release Wheel](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-release-wheel/badge.svg)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
+{%- if cookiecutter.optional_sphinx_support == 'true' %}
+
+### Documentation Builds
+- [![Documentation Status](https://readthedocs.org/projects/{{cookiecutter.project_slug}}/badge/?version=latest)](https://{{cookiecutter.project_slug}}.readthedocs.io/en/latest/?badge=latest)
+{%- endif %}
 
 ## Quick Start Guide
 
