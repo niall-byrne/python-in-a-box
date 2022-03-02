@@ -84,18 +84,12 @@
     - 'pytest ${PIB_OVERLOAD_ARGUMENTS}'
   success: "Unittests Passed!"
   failure: "Unittests Failed!"
+{%- if cookiecutter.typing_support == 'true' %}
 - name: "types"
   description: "Run the type checker."
   path: "git_root"
-{%- if cookiecutter.typing_support == 'true' %}
   commands:
-    - 'mypy --strict ${PROJECT_NAME}/'
+    - 'mypy --strict --show-error-codes --implicit-reexport ${PROJECT_NAME}'
   success: "Type Check Passed!"
   failure: "Type Check Failed!"
-{%- endif %}
-{%- if cookiecutter.typing_support == 'false' %}
-  commands:
-    - 'echo "Typing is disabled for this project."'
-  success: ""
-  failure: ""
 {%- endif %}

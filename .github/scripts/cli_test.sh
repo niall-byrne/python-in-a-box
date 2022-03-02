@@ -22,7 +22,8 @@ main() {
   dev reinstall-requirements
   dev sectest
   dev test
-  dev types
+
+  [[ "${TEMPLATE_SELECTION_TYPING}" == "1" ]] && dev types
 
   [[ "$(dev @pib version)" =~ pib_cli[[:space:]]version:[[:space:]]1.[0-9]+.[0-9]+ ]]
 
