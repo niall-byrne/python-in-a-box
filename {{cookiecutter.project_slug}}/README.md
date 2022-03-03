@@ -40,16 +40,6 @@ Inside the container you'll find the Development CLI:
 - For more details see the [pib_cli](https://pypi.org/project/pib-cli/) Python Package.
 - [Customize](./assets/cli.yml) the CLI to suit your needs.
 
-## Environment
-The [local.env](./assets/local.env) file can be modified to inject environment variable content into the container.
-
-You can override the values set in this file by setting shell ENV variables prior to starting the container:
-- `export GIT_HOOKS_PROTECTED_BRANCHES='.*'`
-- `docker-compose kill` (Kill the current running container.)
-- `docker-compose rm` (Remove the stopped container.)
-- `docker-compose up -d` (Restart the dev environment, with a new container, containing the override.)
-- `./container`
-
 ## Git Hooks
 The python library [pre-commit](https://pre-commit.com/) comes installed with a host of useful initial hooks:
 
