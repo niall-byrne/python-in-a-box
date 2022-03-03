@@ -111,6 +111,8 @@ Of special note is the [Development CLI](./{{cookiecutter.project_slug}}/assets/
 After you initialize the template with cookiecutter, you'll likely want to customize the resulting development environment to suit your needs.
 You can find a more in-depth guide to customizations [here](./markdown/CUSTOMIZATION.md).
 
+You'll also need to know about the environment variables in use.  There's a [guide](./markdown/ENVIRONMENT.md) for that too.
+
 ## Setting up CI/CD
 
 The template renders complete working CI/CD for [Github Actions](https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions).  The caveat is that you'll need to configure some [Github Secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets) to make it all work seamlessly.  Consult the individual [workflow](./{{cookiecutter.project_slug}}/.github/workflows) files to figure out what values you need. 
