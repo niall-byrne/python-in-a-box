@@ -114,6 +114,7 @@ There's a handy index to all the configuration files in the template [here](./ma
 ## Centralized Configuration (PEP 518 Compliance)
 
 - [pyproject.toml](./{{cookiecutter.project_slug}}/pyproject.toml) centralizes configuration for the following:
+  - [bandit](https://bandit.readthedocs.io/en/latest/)
   - [coverage](https://coverage.readthedocs.io/en/stable/)
   - [isort](https://pycqa.github.io/isort/)
   - [mypy](https://mypy.readthedocs.io/en/stable/)

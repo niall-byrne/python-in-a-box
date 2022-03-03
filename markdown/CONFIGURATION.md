@@ -2,9 +2,6 @@
 
 The following configuration files are created in the project root folder:
 
-- [Bandit](https://bandit.readthedocs.io/en/latest/)
-  - [.bandit](../{{cookiecutter.project_slug}}/.bandit)
-  - [.banditrc](../{{cookiecutter.project_slug}}/.bandit.rc)
 - [Darglint](https://github.com/terrencepreilly/darglint)
   - Only if you opt in for [Sphinx](https://www.sphinx-doc.org/en/master/) support. 
   - [darglint](../{{cookiecutter.project_slug}}/.darglint)
