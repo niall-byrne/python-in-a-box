@@ -20,6 +20,3 @@ The following configuration files are created in the project root folder:
   - .pydocstyle.tests - Optionally rendered config for PEP 257
 - [yamllint](https://github.com/adrienverge/yamllint)
   - [.yamllint.yml](../{{cookiecutter.project_slug}}/.yamllint.yml)  
-- [yapf](https://readthedocs.org/)
-  - [.style.yapf](../{{cookiecutter.project_slug}}/.style.yapf)
-  - [.yapfignore](../{{cookiecutter.project_slug}}/.yapfignore)

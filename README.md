@@ -71,19 +71,6 @@ Now open the project folder in your favorite IDE, or use [VIM](https://www.vim.o
 
 A `master` branch will be created, allowing you to manage a separate `production` branch in [gitlabflow](https://docs.gitlab.com/ee/topics/gitlab_flow.html) style.
 
-## Strict PEP Compliance
-
-I personally prefer a 2 space indent.  This might not be your cup of tea.  No problem.
-
-You can patch your project after you've rendered the template.  Once you're inside your development environment:
-- `git apply patches/pep.patch`
-- `dev reinstall-requirements`
-
-> This will patch your template to use black instead of yapf, and remove unnecessary configuration files.
-> Check in your changes, and you'll now be using black to achieve full PEP compliance.
-
-Alternatively, modify your [.style.yapf](./{{cookiecutter.project_slug}}/.style.yapf) file to achieve the same results.
-
 ## Container Base Images
 
 - [python:3.7-slim](https://github.com/docker-library/repo-info/blob/master/repos/python/remote/3.7-slim.md)
@@ -133,6 +120,7 @@ There's a handy index to all the configuration files in the template [here](./ma
   - [poetry](https://python-poetry.org/) ([scripts/extras.sh](./{{cookiecutter.project_slug}}/scripts/extras.sh))
   - [pylint](https://www.pylint.org/)
   - [pytest](https://docs.pytest.org/en/stable/)
+  - [yapf](https://github.com/google/yapf)
 
 More configurations will be moved into this centralized file as the individual tools support this standard.
 
@@ -146,7 +134,7 @@ Integrations with the following third party services are configured during templ
   - [release_container.yml](./{{cookiecutter.project_slug}}/.github/workflows/release_container.yml)
 - [pypi.org](https://pypi.org/)
   - [pyproject.toml](./{{cookiecutter.project_slug}}/pyproject.toml)
-- [Read The Docs](https://readthedocs.org/)
+- [Read The Docs](https://readthedocs.org/) 
   - [.readthedocs.yml](./{{cookiecutter.project_slug}}/.readthedocs.yml)
 
 ## Production Containers

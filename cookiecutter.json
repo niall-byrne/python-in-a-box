@@ -3,6 +3,7 @@
     "typing_support": ["true", "false"],
     "project_name": "Mmmm Cookies",
     "project_slug": "{{ cookiecutter.project_name|slugify|replace('-', '_') }}",
+    "formatting": ["PEP8", "Niall's 2-Space Preference"],
     "description": "Not the evil tracking type.",
     "author": "Niall Byrne",
     "email": "niall@niallbyrne.ca",
