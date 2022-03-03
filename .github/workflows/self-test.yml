@@ -77,8 +77,9 @@ jobs:
 
       - name: Container Build Test -- Standardized CLI Test
         run: |
+          cp ./template/.github/scripts/cli_test.sh "${TEMPLATED_NAME}/cli_test.sh"
           cd "${TEMPLATED_NAME}"
-          docker-compose exec -T "${TEMPLATED_NAME}" bash -c 'source /app/.github/scripts/cli_test.sh'
+          docker-compose exec -T "${TEMPLATED_NAME}" bash -c 'source /app/cli_test.sh'
 
       - name: Container Build Test -- Test Priviledge Escalation
         run: |
@@ -251,7 +252,7 @@ jobs:
         with:
           use-quiet-mode: 'no'
           use-verbose-mode: 'yes'
-          folder-path: 'template, template/.github/workflows'
+          folder-path: 'template, template/markdown, template/.github/workflows'
           max-depth: 1
 
       - name: Documentation -- Check Markdown Links For Rendered Template
@@ -312,7 +313,10 @@ jobs:
 
       - name: Hostmachine Test -- Patch Environment
         run: |
+          TEMPLATE_GIT_ROOT="$(pwd)/${TEMPLATED_NAME}"
           echo "PROJECT_NAME=${TEMPLATED_NAME}" >> "$GITHUB_ENV"
+          echo "TEMPLATE_GIT_ROOT=${TEMPLATE_GIT_ROOT}" >> "$GITHUB_ENV"
+          echo "PIB_CONFIG_FILE_LOCATION=${TEMPLATE_GIT_ROOT}/assets/cli.yml" >> $GITHUB_ENV
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
@@ -324,11 +328,9 @@ jobs:
         env:
           GITLEAKSVERSION: "v7.2.0"
 
-      - name: Hostmachine Test -- Setup Hostmachine Test
+      - name: Hostmachine Test -- Remove Configuration Container Restrictions
         run: |
-          cd "${TEMPLATED_NAME}"
-          ROOT="$(git rev-parse --show-toplevel)"
-          echo "PIB_CONFIG_FILE_LOCATION=${ROOT}/assets/cli.yml" >> $GITHUB_ENV
+          sed -i 's/container_only: true/container_only: false/g' "${TEMPLATE_GIT_ROOT}/assets/cli.yml"
 
       - name: Hostmachine Test -- Lint pyproject.toml
         run: |
@@ -345,7 +347,7 @@ jobs:
         run: |
           cd "${TEMPLATED_NAME}"
           source "$(poetry env info --path)/bin/activate"
-          source .github/scripts/cli_test.sh
+          source ../template/.github/scripts/cli_test.sh
 
       - name: Hostmachine Test -- Test Patch Pep Compliance
         run: |

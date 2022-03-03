@@ -1,8 +1,6 @@
 # Python Development CookieCutter Template
 
-Python [3.7/3.8/3.9] dockerized development environment.
-
-(Please see the [cookiecutter documentation](https://cookiecutter.readthedocs.io/) for instructions on how to use this project template.)
+A [cookiecutter](https://cookiecutter.readthedocs.io/) based Python [3.7/3.8/3.9] dockerized development environment.
 
 ##### Master Branch:
 [![Python In A Box Self Test](https://github.com/niall-byrne/python-in-a-box/workflows/Python%20In%20A%20Box%20Self%20Test/badge.svg?branch=master)](https://github.com/niall-byrne/python-in-a-box/actions)
@@ -10,27 +8,55 @@ Python [3.7/3.8/3.9] dockerized development environment.
 ##### Production Branch:
 [![Python In A Box Self Test](https://github.com/niall-byrne/python-in-a-box/workflows/Python%20In%20A%20Box%20Self%20Test/badge.svg?branch=production)](https://github.com/niall-byrne/python-in-a-box/actions)
 
+##### Version 1.0.0 Compatibility
+
+Please be aware that version 1.0.0 has introduced some incompatible changes with the CLI configuration:
+- Some minor changes will be required to keep your configuration compatible.
+- Please see the latest [pib_cli](https://pypi.org/project/pib-cli/) release for details.
+
 ## About
 
-This container provides my preferred CLI tooling, and a compartmentalized development environment for working on Python projects.
+This project provides extensive CLI tooling and automation inside a docker container for working on Python projects. 
+
+Batteries are included:
+- functional CI on day one
+- preconfigured Docker and Docker Compose files
+- preconfigured git hooks
+- structured commit enforcement
+- an automated changelog
+- preconfigured code formatters and linters
+- preconfigured documentation generation
+- a customizable `dev` command to orchestrate everything
+- a lot more (too much to list here, just try it out...)
 
 ## Project Requirements
 
- - [Python](https://www.python.org/)  (Specifically, a [version supported by Poetry](https://pypi.org/project/poetry/)).
+ - [Linux](https://en.wikipedia.org/wiki/Linux) or [OSX](https://en.wikipedia.org/wiki/MacOS) based host machine (Unfortunately not [Windows](https://en.wikipedia.org/wiki/Microsoft_Windows) compatible at this time.)
+ - [Python](https://www.python.org/)  (3.7, 3.8, or 3.9)
  - [Docker](https://www.docker.com/) 
  - [Docker Compose](https://docs.docker.com/compose/install/)
+ - [Cookiecutter](https://cookiecutter.readthedocs.io/)
+ - [Poetry](https://python-poetry.org/)
 
 ## Quick Start Guide
 
-- `pip install cookiecutter poetry`
-- `cookiecutter https://github.com/niall-byrne/python-in-a-box.git --checkout v0.1.6`
+1. Start by making sure Docker and Docker Compose are both installed.
+   - They are bundled together in most modern Docker distributions
 
-Give your project a name, and populate the other required template inputs.
 
-> There is an optional feature to mount your ssh keys into the container to facilitate commits from inside the container.  
-> I've found this approach preferable to bouncing back and forth between the container and the host machine.
+2. Install Poetry and Cookiecutter, and instantiate the template:
+   - `pip install cookiecutter poetry`
+   - `cookiecutter https://github.com/niall-byrne/python-in-a-box.git`
 
-Once the templating is finished:
+
+3. Give your project a name, and populate the other required template inputs.
+
+> The Python-in-a-Box approach to development suggests that you always work INSIDE the container.
+> To facilitate this, there is an optional feature to mount your SSH keys into the container.  
+> This allows you to push commits from the container using your credentials without making your ssh keys part of the container.
+> Be aware of it, and use the included [Gitleaks](https://github.com/zricethezav/gitleaks) integrations to ensure your container stays safe.
+
+4. Once the templating is finished:
 - `cd <your new project directory>`
 - `docker-compose build`  (Build the docker environment, this will take a couple of minutes)
 - `docker-compose up` (Start the environment, if you are running an app like [Flask](https://flask.palletsprojects.com/) or [Django](https://www.djangoproject.com/) or other containers are in your environment, logs will be produced here.)
@@ -56,196 +82,60 @@ You can patch your project after you've rendered the template.  Once you're insi
 
 Alternatively, modify your [.style.yapf](./{{cookiecutter.project_slug}}/.style.yapf) file to achieve the same results.
 
-## Container
+## Container Base Images
 
 - [python:3.7-slim](https://github.com/docker-library/repo-info/blob/master/repos/python/remote/3.7-slim.md)
 - [python:3.8-slim](https://github.com/docker-library/repo-info/blob/master/repos/python/remote/3.8-slim.md)
 - [python:3.9-slim](https://github.com/docker-library/repo-info/blob/master/repos/python/remote/3.9-slim.md)
 
-## License
+## Template License
 
 [MPL-2](LICENSE)
 
-## Tooling Reference
-The CLI is installed by default inside the container, and is also available on the host machine.
-Run the CLI without arguments to see the complete list of available commands: `dev`
+- Modify the template however you like!
+- This does not affect your software, license it however you like.
 
-[The 'pib_cli' Python Package](https://pypi.org/project/pib-cli/)
+## What does this thing come with?
 
-The local CLI configuration is managed by the [cli.yml](./{{cookiecutter.project_slug}}/assets/cli.yml) file.
+It's batteries included.
 
-## Adding / Removing Dependencies For Your Project
+This template is brimming with practical Python libraries and open-source binary tools that enable clean, fast development.  You can find the complete list of installed software [here](./markdown/DEPENDENCIES.md).
 
-#### Python Dependencies:
+Of special note is the [Development CLI](./{{cookiecutter.project_slug}}/assets/cli.yml):
+- Run the CLI without arguments to see the complete list of available commands: `dev`
+- For more details see the [pib_cli](https://pypi.org/project/pib-cli/) Python Package.
+- [Customize](./{{cookiecutter.project_slug}}/assets/cli.yml) the CLI to suit your needs.
 
-Use the [pyproject.toml](./{{cookiecutter.project_slug}}/pyproject.toml) file to store your project dependencies in accordance with [PEP 518](https://www.python.org/dev/peps/pep-0518/) and [Poetry Dependency Management](https://python-poetry.org/docs/pyproject/#dependencies-and-dev-dependencies).
+## Customizing your Development Environment (Webapps, APIs, CLIs...)
 
-Poetry is installed inside the container, so you can leverage this tool:
-- [Adding Python Packages with Poetry](https://python-poetry.org/docs/cli/#add)
-- [Removing Python Packages With Poetry](https://python-poetry.org/docs/cli/#remove)
+After you initialize the template with cookiecutter, you'll likely want to customize the resulting development environment to suit your needs.
+You can find a more in-depth guide to customizations [here](./markdown/CUSTOMIZATION.md).
 
-The Poetry lock file itself is an OPTIONAL component for your dev environment, and depending on your project you may wish to exclude it from the codebase and your Docker container.  You are given the option to do so during the templating process.
+## Setting up CI/CD
 
-#### OS Level Dependencies:
+The template renders complete working CI/CD for [Github Actions](https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions).  The caveat is that you'll need to configure some [Github Secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets) to make it all work seamlessly.  Consult the individual [workflow](./{{cookiecutter.project_slug}}/.github/workflows) files to figure out what values you need. 
 
-Modify the [Dockerfile](./{{cookiecutter.project_slug}}/assets/Dockerfile) to accomplish to this.
-- Add to the base dependencies list if your package should be in both development and production
-- Add to the dev dependencies list if it's a development only package
+## Configuration and Control
 
-The container is using a [Debian](https://www.debian.org/) derived image, so [apt-get](https://linux.die.net/man/8/apt-get) is the package manager.
-
-## Default Installed Python Packages:
-| package    | Description                       |
-| ---------- | --------------------------------- |
-| bandit     | Finds common security issues      |
-| commitizen | Standardizes commit messages      |
-| isort      | Sorts imports                     |
-| poetry     | Python Package Manager            |
-| pylint     | Static Code Analysis              |
-| pytest     | Test suite                        |
-| pytest-cov | Coverage support for pytest       |
-| sphinx     | Generating documentation          |
-| sphinx-autopackagesummary | Template nested module content |
-| safety     | Dependency vulnerability scanning |
-| wheel      | Package distribution tools        |
-| yamllint   | Lint yaml configuration files     |
-| yapf       | Customizable Code Formatting      |
-
-(The pib_cli 'docs' extras are installed by default.)
-
-### pib_cli 'docstrings' extras:
-| package    | Description                       |
-| ---------- | --------------------------------- |
-| pydocstyle | PEP 257 enforcement               |
-
-### pib_cli 'types' extras:
-| package    | Description                       |
-| ---------- | --------------------------------- |
-| mypy       | Static type checker               |
-
-## Default Installed Container OS Packages
-| package         | Description                                                 |
-|-----------------|-------------------------------------------------------------|
-| bash            |  with a customizable environment and shellcheck for linting |
-| build-essential |  A collection of packages for compiling, linking            |
-| curl            |  CLI based web client                                       |
-| fish            |  Alternative Shell                                          |
-| gitleaks        |  Scans for checked-in credentials                           |                            
-| jq              |  processing json                                            |
-| git, ssh        |  managing git commits                                       |
-| shellcheck      |  BASH Linting                                               | 
-| tig             |  managing git history                                       |
-| tomll           |  a toml file linter, and formatter                          |
-| vim             |  managing small edits, and git commit messages              |
-
-
-## Customizing The Development Environment
-
-After you initialize the template with cookiecutter, you'll likely want to customize the resulting development environment to suit your needs.  Here's a couple of quick examples to get you started...
-
-### Webapps, APIs
-
-Install your framework with poetry before making these modifications (see section above).  After everything noted below is suits your needs, rebuild your container:
-`docker-compose build && docker-compose up`
-
-For a webapp like [Flask](https://flask.palletsprojects.com/) or [Django](https://www.djangoproject.com/), you'll want to customize the container [init script](./{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}/container_init.sh), as well as expose a port in the [docker-compose](./{{cookiecutter.project_slug}}/docker-compose.yml) file.
-
-In the [docker-compose](./{{cookiecutter.project_slug}}/docker-compose.yml) file, find your service, and add a yaml line to include one or more exposed port(s):
-
-```yaml
-services:
-  mywebapp:
-    build:
-      context: .
-      dockerfile: assets/Dockerfile
-      target: development
-    env_file:
-      - assets/local.env
-    ports:
-      - "127.0.0.1:8000:8000"
-```
-
-> Here `127.0.0.1` refers to your local dev machine, so you can reach your webservice in your browser
-
-In the [init script](./{{cookiecutter.project_slug}}/{{cookiecutter.project_slug}}/container_init.sh), modify either the `DEVELOPMENT` or `PRODUCTION` function, depending on the use case:
-- Remove the line `while true; do sleep 1; done`
-- Replace it with the command to start your development server:
-  - `python manage.py runserver 0.0.0.0:8000` (for Django projects)
-  - `FLASK_ENV=development flask run --host=0.0.0.0` (for Flask projects)
-
-> Be sure to bind to 0.0.0.0 inside the container to expose the service to your host machine
-
-### Adding Databases
-
-Databases are fairly straightforward to add to your [docker-compose](./{{cookiecutter.project_slug}}/docker-compose.yml) file, expose them to your host machine if you want to use applications or tools you've installed to manage the database:
-
-```yaml
-services:
-  mywebapp:
-    build:
-      context: .
-      dockerfile: assets/Dockerfile
-      target: development
-    env_file:
-      - assets/local.env
-    ports:
-      - "127.0.0.1:8000:8000"
-  db:
-    image: postgres:12.0-alpine
-    ports:
-      - "127.0.0.1:5432:5432"
-    env_file:
-      - assets/local.env
-```
-
-> `mywebapp` can now reach the database at `db:5432`
-
-> To reach the same database on your host machine, build a connection string using `127.0.0.1:5432` 
-
-> Consult the documentation for the database image you are using to learn about how to set credentials, and place any environment variables in the [local.env](./{{cookiecutter.project_slug}}/assets/local.env) file for your development environment (Do not check-in any production values here.)
-
-## Configuration Files
-
-Files are created in the project root folder for the following:
-
-- [Bandit](https://bandit.readthedocs.io/en/latest/)
-  - [.bandit](./{{cookiecutter.project_slug}}/.bandit)
-  - [.banditrc](./{{cookiecutter.project_slug}}/.bandit.rc)
-- [Default Software License](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/licensing-a-repository)
-  - [LICENSE](./{{cookiecutter.project_slug}}/LICENSE)
-- [Git](https://git-scm.com/)
-  - [.gitignore](./{{cookiecutter.project_slug}}/.gitignore)
-- [Hadolint](https://github.com/hadolint/hadolint)
-  - [.hadolint.yml](./{{cookiecutter.project_slug}}/.hadolint.yml)
-- [Read The Docs](https://readthedocs.org/)
-  - [.readthedocs.yml](./{{cookiecutter.project_slug}}/.readthedocs.yml)
-- [poetry](https://python-poetry.org/)  
-  - [pyproject.toml](./{{cookiecutter.project_slug}}/pyproject.toml)
-- [pydocstyle](https://python-poetry.org/)  
-  - .pydocstyle - Optionally rendered config for PEP 257
-  - .pydocstyle.tests - Optionally rendered config for PEP 257
-- [yamllint](https://github.com/adrienverge/yamllint)
-  - [.yamllint.yml](./{{cookiecutter.project_slug}}/.yamllint.yml)  
-- [yapf](https://readthedocs.org/)
-  - [.style.yapf](./{{cookiecutter.project_slug}}/.style.yapf)
-  - [.yapfignore](./{{cookiecutter.project_slug}}/.yapfignore)
+There's a handy index to all the configuration files in the template [here](./markdown/CONFIGURATION.md).
   
-## PEP 518 Compliance
+## Centralized Configuration (PEP 518 Compliance)
 
 - [pyproject.toml](./{{cookiecutter.project_slug}}/pyproject.toml) centralizes configuration for the following:
-  - [coverage](https://coverage.readthedocs.io/en/coverage-5.3.1/)
+  - [coverage](https://coverage.readthedocs.io/en/stable/)
   - [isort](https://pycqa.github.io/isort/)
+  - [mypy](https://mypy.readthedocs.io/en/stable/)
   - [poetry](https://python-poetry.org/) ([scripts/extras.sh](./{{cookiecutter.project_slug}}/scripts/extras.sh))
   - [pylint](https://www.pylint.org/)
   - [pytest](https://docs.pytest.org/en/stable/)
 
 More configurations will be moved into this centralized file as the individual tools support this standard.
 
-## Third Party Integrations
+## Integrations
 
 Integrations with the following third party services are configured during templating:
 
-- [Github Workflows](https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions)
+- [Github Actions](https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions)
   - [workflows](./{{cookiecutter.project_slug}}/.github/workflows)
 - [Docker Hub](https://hub.docker.com/)
   - [release_container.yml](./{{cookiecutter.project_slug}}/.github/workflows/release_container.yml)
@@ -256,9 +146,9 @@ Integrations with the following third party services are configured during templ
 
 ## Production Containers
 
-There is an additional [docker-compose.yml](./{{cookiecutter.project_slug}}/docker-compose.production.yml) file for testing/interacting with production containers.
+There is an additional [docker-compose.yml](./{{cookiecutter.project_slug}}/docker-compose.production.yml) file for creating production containers.
 This gives you the opportunity to incorporate further testing in the CI/CD pipeline, and make local modifications.
 
-This container is built without any of the dev dependencies, but does contain compilation tools for installing pip packages.
+Leveraging [multi stage](https://docs.docker.com/develop/develop-images/multistage-build/) Docker builds, this container keeps Poetry out of the mix, and aims to give you a bare-bones version of your application with a narrower attack plane.
 
-You'll need to create an `assets/production.env` file that resembles your [assets/local.env](./{{cookiecutter.project_slug}}/assets/local.env) file.
+(You'll need to create an `assets/production.env` file that resembles your [assets/local.env](./{{cookiecutter.project_slug}}/assets/local.env) file, and integrate with your CD process.)

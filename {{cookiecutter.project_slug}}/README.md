@@ -6,15 +6,15 @@
 
 [Project Documentation](https://{{cookiecutter.project_slug}}.readthedocs.io/)
 
-### Master Branch Builds (Staging Environment)
+### Master Branch Builds
 - [![{{cookiecutter.project_slug}} Generic Push](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-generic/badge.svg?branch=master)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
 - [![{{cookiecutter.project_slug}} Wheel Push](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-wheel/badge.svg?branch=master)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
 
-### Production Branch Builds (Tags Created on Production Branch)
+### Production Branch Builds
 - [![{{cookiecutter.project_slug}} Generic Push](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-generic/badge.svg?branch=production)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
 - [![{{cookiecutter.project_slug}} Wheel Push](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-wheel/badge.svg?branch=production)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
 
-### Release Builds
+### Release Automation
 - [![{{cookiecutter.project_slug}} Release Container](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-release-container/badge.svg)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
 - [![{{cookiecutter.project_slug}} Release Wheel](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-release-wheel/badge.svg)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
 
@@ -23,8 +23,6 @@
 You'll need to install:
  - [Docker](https://www.docker.com/) 
  - [Docker Compose](https://docs.docker.com/compose/install/)
- - [cookiecutter](https://cookiecutter.readthedocs.io/en/latest/)
- - [poetry](https://python-poetry.org/)
 
 Build the development environment container (this takes a few minutes):
 - `docker-compose build`
@@ -36,12 +34,11 @@ Spawn a shell inside the container:
 - `./container`
 
 ## Tooling Reference
-The CLI is installed by default inside the container, and is also available on the host machine.
-Run the CLI without arguments to see the complete list of available commands: `dev`
 
-[The 'pib_cli' Python Package](https://pypi.org/project/pib-cli/)
-
-The local CLI configuration is managed by the [cli.yml](./assets/cli.yml) file.
+Inside the container you'll find the Development CLI:
+- Run the CLI without arguments to see the complete list of available commands: `dev`
+- For more details see the [pib_cli](https://pypi.org/project/pib-cli/) Python Package.
+- [Customize](./assets/cli.yml) the CLI to suit your needs.
 
 ## Environment
 The [local.env](./assets/local.env) file can be modified to inject environment variable content into the container.
@@ -79,7 +76,8 @@ Source this script, and use the `dev` command on your host:
 
 This is most useful for making an IDE like pycharm aware of what's installed in your project.
 
-> It is still recommended to work inside the container, as you'll have access to the full managed python environment, 
+> It is still always recommended to work inside the container, as you'll have access to the full managed python environment, 
 > as well as any additional services you are running in containers.  
 
-If you wish to use the cli outside the container for all tasks, [tomll](https://github.com/pelletier/go-toml) and [gitleaks](https://github.com/zricethezav/gitleaks) will also need to be installed, or the [cli.yml](./assets/cli.yml) configuration will need to be customized to remove these commands. (Not recommended.)
+The dev CLI sometimes makes calls to binaries that are installed inside the container, as such it's not always practical to use it on your host machine.
+

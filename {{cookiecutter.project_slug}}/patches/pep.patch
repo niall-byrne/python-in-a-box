@@ -23,8 +23,8 @@ diff --git a/assets/cli.yml b/assets/cli.yml
 index e151af4..cd0594c 100644
 --- a/assets/cli.yml
 +++ b/assets/cli.yml
-@@ -25,7 +25,7 @@
-   path_method: "project_root"
+@@ -30,7 +30,7 @@
+   path: "git_root"
    commands:
      - 'tomll pyproject.toml'
 -    - 'yapf -i --recursive .'
