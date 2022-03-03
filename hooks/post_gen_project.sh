@@ -5,8 +5,25 @@
 
 # Host machine only.  This script is part of the template process.
 
-# PIB_SKIP_POETRY_INIT: set to a value to skip poetry installation
-# PIB_SKIP_GIT_INIT: set to a value to skip the repository initialization
+# PIB_SKIP_GIT_INIT:        set to a value to skip the repository initialization
+# PIB_SKIP_FMT_INIT: set to a value to skip initial formatting
+# PIB_SKIP_POETRY_INIT:     set to a value to skip poetry installation
+
+FORMATTING_TYPE="{{ cookiecutter.formatting }}"
+
+initialize_fmt() {
+
+ if [[ "${FORMATTING_TYPE}" == "Niall's 2-Space Preference" ]]; then
+    find . -name '*.py' -print0 | while read -r -d $'\0' FILE_NAME; do
+      python -c "import re;source=open('${FILE_NAME}', 'r');contents=source.read();source.close();destination=open('${FILE_NAME}', 'w'); destination.write(re.sub(r'    ', '  ', contents));destination.close()"
+    done
+  fi
+
+  if command -v yapf; then
+    yapf -i --recursive .
+  fi
+
+}
 
 initialize_git() {
 
@@ -33,6 +50,10 @@ main() {
 
   if [[ -z "${PIB_SKIP_POETRY_INIT}" ]]; then
     initialize_poetry
+  fi
+
+  if [[ -z "${PIB_SKIP_FMT_INIT}" ]]; then
+    initialize_fmt
   fi
 
   if [[ -z "${PIB_SKIP_GIT_INIT}" ]]; then

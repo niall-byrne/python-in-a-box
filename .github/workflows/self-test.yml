@@ -33,15 +33,19 @@ jobs:
           - python-version: "3.7"
             cookie-cutter-lockfile-selection: 1
             cookie-cutter-python-selection: 1
+            cookie-cutter-formatting-selection: 1
           - python-version: "3.8"
             cookie-cutter-lockfile-selection: 1
             cookie-cutter-python-selection: 2
+            cookie-cutter-formatting-selection: 1
           - python-version: "3.9"
             cookie-cutter-lockfile-selection: 1
             cookie-cutter-python-selection: 3
+            cookie-cutter-formatting-selection: 1
           - python-version: "3.10"
             cookie-cutter-lockfile-selection: 1
             cookie-cutter-python-selection: 4
+            cookie-cutter-formatting-selection: 1
 
     steps:
       - name: Container Build Test -- Set up Python ${{ matrix.python-version }}
@@ -57,9 +61,10 @@ jobs:
       - name: Container Build Test -- Setup Environment
         run: |
           source ./template/.github/scripts/setup.sh
-          source ./template/.github/scripts/template.sh "${SELECTION_PYTHON}" "${SELECTION_LOCKFILE}"
+          source ./template/.github/scripts/template.sh "${SELECTION_PYTHON}" "${SELECTION_FORMATTING}" "${SELECTION_LOCKFILE}"
         env:
           PYTHON_VERSION: ${{ matrix.python-version }}
+          SELECTION_FORMATTING: ${{ matrix.cookie-cutter-formatting-selection }}
           SELECTION_LOCKFILE: ${{ matrix.cookie-cutter-lockfile-selection }}
           SELECTION_PYTHON: ${{ matrix.cookie-cutter-python-selection }}
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
@@ -89,11 +94,6 @@ jobs:
           cd "${TEMPLATED_NAME}"
           docker-compose exec -T "${TEMPLATED_NAME}" sudo ls -la /root
 
-      - name: Container Build Test -- Test Patch Pep Compliance
-        run: |
-          cd "${TEMPLATED_NAME}"
-          docker-compose exec -T "${TEMPLATED_NAME}" bash -c 'source /app/.github/scripts/patch_pep.sh'
-
       - name: Container Build Test -- Report Job Status on Success
         if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
         run: |
@@ -114,27 +114,35 @@ jobs:
           - python-version: "3.7"
             cookie-cutter-lockfile-selection: 1
             cookie-cutter-python-selection: 1
+            cookie-cutter-formatting-selection: 1
           - python-version: "3.8"
             cookie-cutter-lockfile-selection: 1
             cookie-cutter-python-selection: 2
+            cookie-cutter-formatting-selection: 1
           - python-version: "3.9"
             cookie-cutter-lockfile-selection: 1
             cookie-cutter-python-selection: 3
+            cookie-cutter-formatting-selection: 1
           - python-version: "3.10"
             cookie-cutter-lockfile-selection: 1
             cookie-cutter-python-selection: 4
+            cookie-cutter-formatting-selection: 1
           - python-version: "3.7"
             cookie-cutter-lockfile-selection: 2
             cookie-cutter-python-selection: 1
+            cookie-cutter-formatting-selection: 2
           - python-version: "3.8"
             cookie-cutter-lockfile-selection: 2
             cookie-cutter-python-selection: 2
+            cookie-cutter-formatting-selection: 2
           - python-version: "3.9"
             cookie-cutter-lockfile-selection: 2
             cookie-cutter-python-selection: 3
+            cookie-cutter-formatting-selection: 2
           - python-version: "3.10"
             cookie-cutter-lockfile-selection: 2
             cookie-cutter-python-selection: 4
+            cookie-cutter-formatting-selection: 2
 
     steps:
       - name: Container Production Build Test -- Set up Python ${{ matrix.python-version }}
@@ -150,9 +158,10 @@ jobs:
       - name: Container Production Build Test -- Setup Environment
         run: |
           source ./template/.github/scripts/setup.sh
-          source ./template/.github/scripts/template.sh "${SELECTION_PYTHON}" "${SELECTION_LOCKFILE}"
+          source ./template/.github/scripts/template.sh "${SELECTION_PYTHON}" "${SELECTION_FORMATTING}" "${SELECTION_LOCKFILE}"
         env:
           PYTHON_VERSION: ${{ matrix.python-version }}
+          SELECTION_FORMATTING: ${{ matrix.cookie-cutter-formatting-selection }}
           SELECTION_LOCKFILE: ${{ matrix.cookie-cutter-lockfile-selection }}
           SELECTION_PYTHON: ${{ matrix.cookie-cutter-python-selection }}
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
@@ -292,15 +301,19 @@ jobs:
           - python-version: "3.7"
             cookie-cutter-lockfile-selection: 1
             cookie-cutter-python-selection: 1
+            cookie-cutter-formatting-selection: 1
           - python-version: "3.8"
             cookie-cutter-lockfile-selection: 1
             cookie-cutter-python-selection: 2
+            cookie-cutter-formatting-selection: 1
           - python-version: "3.9"
             cookie-cutter-lockfile-selection: 1
             cookie-cutter-python-selection: 3
+            cookie-cutter-formatting-selection: 1
           - python-version: "3.10"
             cookie-cutter-lockfile-selection: 1
             cookie-cutter-python-selection: 4
+            cookie-cutter-formatting-selection: 1
 
     steps:
       - name: Hostmachine Test -- Set up Python ${{ matrix.python-version }}
@@ -316,9 +329,10 @@ jobs:
       - name: Hostmachine Test -- Setup Environment
         run: |
           source ./template/.github/scripts/setup.sh
-          source ./template/.github/scripts/template.sh "${SELECTION_PYTHON}" "${SELECTION_LOCKFILE}"
+          source ./template/.github/scripts/template.sh "${SELECTION_PYTHON}" "${SELECTION_FORMATTING}" "${SELECTION_LOCKFILE}"
         env:
           PYTHON_VERSION: ${{ matrix.python-version }}
+          SELECTION_FORMATTING: ${{ matrix.cookie-cutter-formatting-selection }}
           SELECTION_LOCKFILE: ${{ matrix.cookie-cutter-lockfile-selection }}
           SELECTION_PYTHON: ${{ matrix.cookie-cutter-python-selection }}
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
@@ -361,12 +375,6 @@ jobs:
           source "$(poetry env info --path)/bin/activate"
           source ../template/.github/scripts/cli_test.sh
 
-      - name: Hostmachine Test -- Test Patch Pep Compliance
-        run: |
-          cd "${TEMPLATED_NAME}"
-          source "$(poetry env info --path)/bin/activate"
-          source .github/scripts/patch_pep.sh
-
       - name: Hostmachine Test -- Report Job Status on Success
         if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
         run: |
@@ -393,7 +401,7 @@ jobs:
         run: |
           source ./template/.github/scripts/setup.sh
           source ./template/.github/scripts/release_test.sh
-          source ./template/.github/scripts/template.sh "1" "1" "GitHub Action" "action@github.com"
+          source ./template/.github/scripts/template.sh "1" "1" "1" "GitHub Action" "action@github.com"
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
