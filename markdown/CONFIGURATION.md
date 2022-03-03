@@ -5,6 +5,9 @@ The following configuration files are created in the project root folder:
 - [Bandit](https://bandit.readthedocs.io/en/latest/)
   - [.bandit](../{{cookiecutter.project_slug}}/.bandit)
   - [.banditrc](../{{cookiecutter.project_slug}}/.bandit.rc)
+- [Darglint](https://github.com/terrencepreilly/darglint)
+  - Only if you opt in for [Sphinx](https://www.sphinx-doc.org/en/master/) support. 
+  - [darglint](../{{cookiecutter.project_slug}}/.darglint)
 - [Default Software License](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/licensing-a-repository)
   - [LICENSE](../{{cookiecutter.project_slug}}/LICENSE)
 - [Git](https://git-scm.com/)
