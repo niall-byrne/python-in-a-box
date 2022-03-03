@@ -1,19 +1,23 @@
-ARG PYTHON_VERSION={{cookiecutter.python_version}}
-FROM python:$PYTHON_VERSION-slim AS base
+ARG BUILD_ARG_PYTHON_VERSION={{cookiecutter.python_version}}
+FROM python:$BUILD_ARG_PYTHON_VERSION-slim AS base
+
+ARG BUILD_ARG_ASPELL_LANGUAGE="en"
 
 LABEL maintainer="{{cookiecutter.email}}"
 LABEL project="{{cookiecutter.project_slug}}"
-LABEL environment=""
+LABEL environment="stage1"
 
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED "1"
 ENV PROJECT_NAME "{{cookiecutter.project_slug}}"
 ENV PIB_CONFIG_FILE_LOCATION "/app/assets/cli.yml"
 
-ENV VERSION_GITLEAKS "v7.2.0"
+ENV VERSION_ASPELL "aspell-${BUILD_ARG_ASPELL_LANGUAGE}=*"
+ENV VERSION_GITLEAKS "8.3.0"
 ENV VERSION_POETRY "poetry>=1.1.12,<1.2.0"
 
 # Mark Container
-RUN echo "{{cookiecutter.project_slug}}" > /etc/container_release
+RUN echo "1.0.0" > /etc/container_pib_version                       && \
+    echo "{{cookiecutter.project_slug}}" > /etc/container_release
 
 # Install Base Dependencies
 RUN apt-get update               && \
@@ -43,9 +47,10 @@ ENV PATH "/home/user/.local/bin/:${PATH}"
 # Poetry Intermediary
 FROM base AS poetry
 
-LABEL environment=""
+LABEL environment="stage2"
 
 # Install Poetry
+# hadolint ignore=DL3013
 RUN pip install --no-cache-dir "${VERSION_POETRY}"
 
 # ======================================================
@@ -56,9 +61,11 @@ LABEL environment="DEVELOPMENT"
 ENV ENVIRONMENT DEVELOPMENT
 
 # Install Dev Dependencies
+# hadolint ignore=DL3008
 RUN apt-get update                      && \
     apt-get install -y                     \
     --no-install-recommends                \
+    "${VERSION_ASPELL}"                    \
     curl=7.74.*                            \
     fish=3.1.*                             \
     golang-github-pelletier-go-toml=1.8.*  \
@@ -70,8 +77,12 @@ RUN apt-get update                      && \
     vim=2:8.*
 
 # Install Git Leaks
-RUN curl --fail -sL "https://github.com/zricethezav/gitleaks/releases/download/${VERSION_GITLEAKS}/gitleaks-linux-amd64"    \
-    -o /usr/bin/gitleaks                                                                                                 && \
+RUN curl --fail -sL                                                                                                                   \
+    "https://github.com/zricethezav/gitleaks/releases/download/v${VERSION_GITLEAKS}/gitleaks_${VERSION_GITLEAKS}_linux_x64.tar.gz"    \
+    -o gitleaks.tar.gz                                                                                                             && \
+    tar -xvzf gitleaks.tar.gz gitleaks                                                                                             && \
+    mv ./gitleaks /usr/bin/gitleaks                                                                                                && \
+    rm gitleaks.tar.gz                                                                                                             && \
     chmod +x /usr/bin/gitleaks
 
 # Add user to sudoers, and make the default user
@@ -95,10 +106,16 @@ RUN poetry install
 # Create A Symlink For the Bash Customizations
 RUN ln -sf /app/assets/.bash_customize /home/user/.bash_customize
 
-# Setup The Dev CLI
-RUN poetry run dev setup-bash
+# Modify the git hooks permissions
+USER root
+RUN chown user /app/.git/hooks
+USER user
 
-CMD ["./{{cookiecutter.project_slug}}/container_init.sh"]
+# Setup The Dev CLI, bootstrapping the current version of pib_cli
+RUN poetry install                              && \
+    poetry run dev @pib container setup
+
+CMD ["bash", "-cl", "./{{cookiecutter.project_slug}}/container_init.sh"]
 
 # ======================================================
 

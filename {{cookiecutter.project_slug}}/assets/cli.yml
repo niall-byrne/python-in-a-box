@@ -1,19 +1,22 @@
 # Development Environment CLI Configuration
 ---
 - name: "build-docs"
-  path_method: "project_docs"
+  description: "Build the project's documentation."
+  path: "documentation_root"
   commands:
     - "make html"
   success: "Documentation Built"
   failure: "Error Building Documentation"
 - name: "build-wheel"
-  path_method: "project_root"
+  description: "Build a distribution wheel."
+  path: "git_root"
   commands:
     - "poetry build"
   success: "Wheel Built"
   failure: "Error Building Wheel"
 - name: "coverage"
-  path_method: "project_root"
+  description: "Run code coverage test."
+  path: "git_root"
   commands: |
     pytest --cov-config=.coveragerc --cov-report term-missing --cov-fail-under=100 --cov="${PROJECT_NAME}" "${PROJECT_NAME}/" ${PIB_OVERLOAD_ARGUMENTS}
     EXIT_CODE="$?"
@@ -22,7 +25,9 @@
   success: "Coverage Passed!"
   failure: "Coverage Failed!"
 - name: "fmt"
-  path_method: "project_root"
+  description: "Run code formatters."
+  container_only: true
+  path: "git_root"
   commands:
     - 'tomll pyproject.toml'
     - 'yapf -i --recursive .'
@@ -30,33 +35,38 @@
   success: "Formatting Finished!"
   failure: "Formatting Error!"
 - name: "leaks"
-  path_method: "project_root"
+  description: "Run a scan for leaked credentials in commits."
+  container_only: true
+  path: "git_root"
   commands:
-    - 'gitleaks --path=. -v'
+    - 'gitleaks detect -v'
   success: "Credential Leaks Test Passed!"
   failure: "Credential Leaks Test Failed!"
 - name: "lint"
-  path_method: "project_root"
+  description: "Run the code linters."
+  path: "git_root"
   commands:
     - 'shellcheck ${PROJECT_NAME}/container_init.sh'
 {%- if cookiecutter.lint_docstrings == 'true' %}
     - 'pydocstyle "${PROJECT_NAME}"'
     - 'pydocstyle --config=.pydocstyle.tests "${PROJECT_NAME}"'
 {%- endif %}
-    - 'yamllint *.yml .*.yml assets/ .github/workflows/'
+    - 'yamllint . assets/ .github/workflows/'
     - 'isort -c "${PROJECT_NAME}"'
     - 'pytest --pylint --pylint-jobs=2 "${PROJECT_NAME}"'
   success: "Linter Test Passed!"
   failure: "Linter Test Failed!"
 - name: "reinstall-requirements"
-  path_method: "project_root"
+  description: "Reinstall the project requirements."
+  path: "git_root"
   commands:
     - "poetry lock"
     - "poetry install -E docs"
   success: "Reinstall Succeeded!"
   failure: "Reinstall Failed!"
 - name: "sectest"
-  path_method: "project_root"
+  description: "Run the security tests."
+  path: "git_root"
   commands:
     - 'bandit -r "${PROJECT_NAME}" -c .bandit.rc --ini .bandit -x tests'
     - 'echo "\nPoetry is exporting the lockfile standby..."'
@@ -64,16 +74,18 @@
   success: "Security Test Passed!"
   failure: "Security Test Failed!"
 - name: "test"
-  path_method: "project_root"
+  description: "Run the unittests."
+  path: "git_root"
   commands:
     - 'pytest ${PIB_OVERLOAD_ARGUMENTS}'
   success: "Unittests Passed!"
   failure: "Unittests Failed!"
 - name: "types"
-  path_method: "project_root"
+  description: "Run the type checker."
+  path: "git_root"
 {%- if cookiecutter.typing_support == 'true' %}
   commands:
-    - 'mypy --strict ${PROJECT_NAME}'
+    - 'mypy --strict ${PROJECT_NAME}/'
   success: "Type Check Passed!"
   failure: "Type Check Failed!"
 {%- endif %}

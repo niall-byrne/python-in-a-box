@@ -1,8 +1,13 @@
 #!/bin/bash
 
+# .github/scripts/release_test.sh
+# Controls the version used during the CI "push" job.
+
+# CI only script.
+
 set -eo pipefail
 
-RELEASE_VERSION="0.0.11"  # Increment for end to end testing
+RELEASE_VERSION="1.0.0"  # Increment for end to end testing
 
 main() {
 

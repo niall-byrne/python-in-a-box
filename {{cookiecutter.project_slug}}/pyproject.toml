@@ -28,10 +28,10 @@
     no_lines_before = "LOCALFOLDER"
     sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
     skip_glob = "*_pb2.py"
-
+{% if cookiecutter.typing_support == 'true' %}
   [tool.mypy]
     ignore_missing_imports = false
-
+{% endif %}
   [tool.poetry]
     authors = ["{{cookiecutter.author}} <{{cookiecutter.email}}>"]
     description = "{{cookiecutter.description}}"
@@ -47,7 +47,7 @@
     version = "0.0.1"
 
     [tool.poetry.dependencies]
-      python = ">={{cookiecutter.python_version}}.0,<4.0.0"
+      python = ">={{cookiecutter.python_version}}.0,<3.10.0"
 
       [tool.poetry.dependencies.pib_cli]
         extras = ["docs"{% if cookiecutter.lint_docstrings == 'true' %}, "docstrings"{% endif %}{% if cookiecutter.typing_support == 'true' %}, "types"{% endif %}]
