@@ -56,7 +56,7 @@ template_filter() {
   fi
 
   if [[ "${OPTION_SPHINX}" == "false" ]]; then
-    rm .readthedocs.yml
+    rm .darglint .readthedocs.yml
     rm -rf documentation
   fi
 

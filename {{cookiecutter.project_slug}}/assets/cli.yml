@@ -53,6 +53,9 @@
   path: "git_root"
   commands:
     - 'shellcheck ${PROJECT_NAME}/container_init.sh'
+{%- if cookiecutter.optional_sphinx_support == 'true' %}
+    - 'find "${PROJECT_NAME}" -name "*.py" | xargs darglint'
+{%- endif %}
 {%- if cookiecutter.optional_docstring_linting == 'true' %}
     - 'pydocstyle "${PROJECT_NAME}"'
     - 'pydocstyle --config=.pydocstyle.tests "${PROJECT_NAME}"'

@@ -30,6 +30,15 @@ repos:
         minimum_pre_commit_version: "0.15.4"
         require_serial: true
         always_run: true
+{%- if cookiecutter.optional_sphinx_support == 'true' %}
+      - id: darglint
+        name: darglint
+        description: 'Check docstrings for Sphinx compliance.'
+        entry: darglint
+        language: python
+        types: [python]
+        require_serial: true
+{%- endif %}
       - id: gitleaks
         name: check for credentials
         description: "Scan the commit for leaked credentials."
