@@ -166,7 +166,7 @@
       additional-builtins = ""
       allow-global-unused-variables = "yes"
       callbacks = "cb_,_cb"
-      dummy-variables-rgx = "_$|dummy"
+      dummy-variables-rgx = "_+$|(_[a-zA-Z0-9_]*[a-zA-Z0-9]+?$)|dummy"
       ignored-argument-names = "_.*"
       init-import = "no"
       redefining-builtins-modules = "six.moves,past.builtins,future.builtins,builtins,io"
