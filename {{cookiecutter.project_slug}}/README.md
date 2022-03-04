@@ -9,18 +9,18 @@
 {%- endif %}
 
 ### Master Branch Builds
-- [![{{cookiecutter.project_slug}} Push Container](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-container/badge.svg?branch=master)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
-- [![{{cookiecutter.project_slug}} Push Generic](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-generic/badge.svg?branch=master)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
-- [![{{cookiecutter.project_slug}} Push Wheel](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-wheel/badge.svg?branch=master)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
+- [![{{cookiecutter.project_slug}} Push Container](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-container/badge.svg?branch=master)](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/actions)
+- [![{{cookiecutter.project_slug}} Push Generic](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-generic/badge.svg?branch=master)](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/actions)
+- [![{{cookiecutter.project_slug}} Push Wheel](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-wheel/badge.svg?branch=master)](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/actions)
 
 ### Production Branch Builds
-- [![{{cookiecutter.project_slug}} Push Container](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-container/badge.svg?branch=production)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
-- [![{{cookiecutter.project_slug}} Push Generic](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-generic/badge.svg?branch=production)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
-- [![{{cookiecutter.project_slug}} Push Wheel](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-wheel/badge.svg?branch=production)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
+- [![{{cookiecutter.project_slug}} Push Container](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-container/badge.svg?branch=production)](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/actions)
+- [![{{cookiecutter.project_slug}} Push Generic](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-generic/badge.svg?branch=production)](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/actions)
+- [![{{cookiecutter.project_slug}} Push Wheel](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-wheel/badge.svg?branch=production)](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/actions)
 
 ### Release Automation
-- [![{{cookiecutter.project_slug}} Release Container](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-release-container/badge.svg)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
-- [![{{cookiecutter.project_slug}} Release Wheel](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-release-wheel/badge.svg)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
+- [![{{cookiecutter.project_slug}} Release Container](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-release-container/badge.svg)](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/actions)
+- [![{{cookiecutter.project_slug}} Release Wheel](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-release-wheel/badge.svg)](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/actions)
 {%- if cookiecutter.optional_sphinx_support == 'true' %}
 
 ### Documentation Builds
@@ -47,7 +47,7 @@ Spawn a shell inside the container:
 Inside the container you'll find the Development CLI:
 - Run the CLI without arguments to see the complete list of available commands: `dev`
 - For more details see the [pib_cli](https://pypi.org/project/pib-cli/) Python Package.
-- [Customize](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/tree/master/assets/cli.yml) the CLI to suit your needs.
+- [Customize](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/tree/master/assets/cli.yml) the CLI to suit your needs.
 
 ## Git Hooks
 The python library [pre-commit](https://pre-commit.com/) comes installed with a host of useful initial hooks:
@@ -64,12 +64,12 @@ The python library [pre-commit](https://pre-commit.com/) comes installed with a 
 | pyproject.toml     | Runs [tomll](https://github.com/Ainiroad/go-toml) on your TOML configuration file.                           |
 | yamllint           | Runs [yamllint](https://github.com/adrienverge/yamllint) on your YAML configuration files.                   |
 
-Most of these hooks use values from [local.env](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/tree/master/assets/local.env) file that can be customized.
-Furthermore, the spell check script manages its own [word dictionary](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/tree/master/.aspell.pws) that you can customize. 
+Most of these hooks use values from [local.env](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/tree/master/assets/local.env) file that can be customized.
+Furthermore, the spell check script manages its own [word dictionary](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/tree/master/.aspell.pws) that you can customize. 
 
 ## Installing a virtual environment, and the CLI on your host machine
 
-The [scripts/extras.sh](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/tree/master/scripts/extras.sh) script does this for you.
+The [scripts/extras.sh](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/tree/master/scripts/extras.sh) script does this for you.
 
 Source this script, and use the `dev` command on your host:
 - `pip install poetry`
