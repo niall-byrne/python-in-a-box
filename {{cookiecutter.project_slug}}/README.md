@@ -9,12 +9,14 @@
 {%- endif %}
 
 ### Master Branch Builds
-- [![{{cookiecutter.project_slug}} Generic Push](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-generic/badge.svg?branch=master)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
-- [![{{cookiecutter.project_slug}} Wheel Push](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-wheel/badge.svg?branch=master)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
+- [![{{cookiecutter.project_slug}} Push Container](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-container/badge.svg?branch=master)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
+- [![{{cookiecutter.project_slug}} Push Generic](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-generic/badge.svg?branch=master)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
+- [![{{cookiecutter.project_slug}} Push Wheel](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-wheel/badge.svg?branch=master)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
 
 ### Production Branch Builds
-- [![{{cookiecutter.project_slug}} Generic Push](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-generic/badge.svg?branch=production)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
-- [![{{cookiecutter.project_slug}} Wheel Push](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-wheel/badge.svg?branch=production)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
+- [![{{cookiecutter.project_slug}} Push Container](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-container/badge.svg?branch=production)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
+- [![{{cookiecutter.project_slug}} Push Generic](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-generic/badge.svg?branch=production)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
+- [![{{cookiecutter.project_slug}} Push Wheel](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-push-wheel/badge.svg?branch=production)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
 
 ### Release Automation
 - [![{{cookiecutter.project_slug}} Release Container](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-release-container/badge.svg)](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/actions)
