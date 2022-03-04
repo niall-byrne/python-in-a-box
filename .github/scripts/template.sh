@@ -12,6 +12,8 @@
 # 7: Git Username
 # 8: Git Email
 
+# TEMPLATED_BASE_BRANCH: The base branch name set as a string
+
 # CI only script.
 
 set -eo pipefail
@@ -40,7 +42,7 @@ main() {
     echo "TEMPLATE_SELECTION_LOCKFILE=${SELECTION_LOCKFILE}"
   } >> "$GITHUB_ENV"
 
-  echo -e "${SELECTION_PYTHON}\n${SELECTION_DOCSTRINGS}\n${SELECTION_SPHINX}\n${SELECTION_TYPING}\n\n\n${SELECTION_FORMATTING}\n\n\n\n\n${SELECTION_LOCKFILE}\n2\n2\n2\n" | cookiecutter template/
+  echo -e "${SELECTION_PYTHON}\n${SELECTION_DOCSTRINGS}\n${SELECTION_SPHINX}\n${SELECTION_TYPING}\n\n\n${SELECTION_FORMATTING}\n\n${TEMPLATED_BASE_BRANCH}\n\n\n\n${SELECTION_LOCKFILE}\n2\n2\n2\n" | cookiecutter template/
 
   echo "Templated With:"
   cat "${TEMPLATED_NAME}/.cookiecutter/cookiecutter.json"

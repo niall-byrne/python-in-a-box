@@ -10,6 +10,7 @@
 # PIB_SKIP_FMT_INIT:        set to a value to skip initial formatting
 # PIB_SKIP_POETRY_INIT:     set to a value to skip poetry installation
 
+BASE_BRANCH_NAME="{{ cookiecutter.git_base_branch }}"
 FORMATTING_TYPE="{{ cookiecutter.formatting }}"
 OPTION_DOCSTRINGS="{{ cookiecutter.optional_docstring_linting }}"
 OPTION_SPHINX="{{ cookiecutter.optional_sphinx_support }}"
@@ -31,6 +32,7 @@ initialize_fmt() {
 initialize_git() {
 
   [[ -d .git ]] && return 0
+  [[ "${BASE_BRANCH_NAME}" == "production" ]] && echo "You cannot name your base branch production" && exit 127
 
   git init
   git stage .
@@ -38,6 +40,7 @@ initialize_git() {
   git tag v0.0.0
   git checkout -b production
   git checkout master
+  [[ "${BASE_BRANCH_NAME}" != "master" ]] && git branch -m master "${BASE_BRANCH_NAME}"
 
 }
 

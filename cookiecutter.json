@@ -7,6 +7,7 @@
     "project_slug": "{{ cookiecutter.project_name|slugify|replace('-', '_') }}",
     "formatting": ["PEP8", "Niall's 2-Space Preference"],
     "description": "Not the evil tracking type.",
+    "git_base_branch": "master",
     "author": "Niall Byrne",
     "email": "niall@niallbyrne.ca",
     "git_username": "niall-byrne",
