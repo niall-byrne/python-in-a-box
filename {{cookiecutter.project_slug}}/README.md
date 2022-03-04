@@ -47,7 +47,7 @@ Spawn a shell inside the container:
 Inside the container you'll find the Development CLI:
 - Run the CLI without arguments to see the complete list of available commands: `dev`
 - For more details see the [pib_cli](https://pypi.org/project/pib-cli/) Python Package.
-- [Customize](./assets/cli.yml) the CLI to suit your needs.
+- [Customize](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/tree/master/assets/cli.yml) the CLI to suit your needs.
 
 ## Git Hooks
 The python library [pre-commit](https://pre-commit.com/) comes installed with a host of useful initial hooks:
@@ -64,12 +64,12 @@ The python library [pre-commit](https://pre-commit.com/) comes installed with a 
 | pyproject.toml     | Runs [tomll](https://github.com/Ainiroad/go-toml) on your TOML configuration file.                           |
 | yamllint           | Runs [yamllint](https://github.com/adrienverge/yamllint) on your YAML configuration files.                   |
 
-Most of these hooks use values from [local.env](./assets/local.env) file that can be customized.
-Furthermore, the spell check script manages its own [word dictionary](.aspell.pws) that you can customize. 
+Most of these hooks use values from [local.env](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/tree/master/assets/local.env) file that can be customized.
+Furthermore, the spell check script manages its own [word dictionary](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/tree/master/.aspell.pws) that you can customize. 
 
 ## Installing a virtual environment, and the CLI on your host machine
 
-The [scripts/extras.sh](scripts/extras.sh) script does this for you.
+The [scripts/extras.sh](https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/tree/master/scripts/extras.sh) script does this for you.
 
 Source this script, and use the `dev` command on your host:
 - `pip install poetry`
