@@ -42,6 +42,7 @@
 {% endif %}
   [tool.poetry]
     authors = ["{{cookiecutter.author}} <{{cookiecutter.email}}>"]
+    classifiers = []
     description = "{{cookiecutter.description}}"
     documentation = "https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/README.md"
     exclude = ["**/tests/*", "**/*.sh"]
