@@ -1,1 +1,5 @@
+# ASDF Version Files
+.tool-versions
+
+# Poetry Lock File
 poetry.lock
