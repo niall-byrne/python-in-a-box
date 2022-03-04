@@ -1,5 +1,5 @@
 ---
-name: {{cookiecutter.project_slug}}-push-generic
+name: {{cookiecutter.project_slug}}-push-wheel
 
 # Workflow Secrets:
 # SLACK_WEBHOOK              (Required, for slack notifications...)
@@ -112,6 +112,7 @@ jobs:
 
       - name: Create Release -- Generate Github Release Draft
         if: contains(github.ref, '/tags/v')
+        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -136,7 +137,6 @@ jobs:
 
       - name: Create Release -- Upload Release Asset
         if: contains(github.ref, '/tags/v')
-        id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

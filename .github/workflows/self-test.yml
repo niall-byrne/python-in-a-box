@@ -479,6 +479,10 @@ jobs:
     needs: [container_cli_test, container_production_build_test, documentation_test, hostmachine_cli_test, security_test, shellcheck_test, start_notification, workflow_lint_test]
 
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - python-version: "3.7"
 
     steps:
       - name: Push Template -- Checkout Repository
@@ -490,17 +494,39 @@ jobs:
       - name: Push Template -- Setup Environment
         run: |
           source ./template/.github/scripts/setup.sh
-          source ./template/.github/scripts/release_test.sh
           source ./template/.github/scripts/template.sh "1" "1" "1" "1" "1" "1" "GitHub Action" "action@github.com"
         env:
+          PYTHON_VERSION: ${{ matrix.python-version }}
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
-      - name: Push Template -- Clean Up Tags for Git Push
+      - name: Push Template -- Ensure File System is Writable by the Container
         run: |
           cd "${TEMPLATED_NAME}"
-          git checkout master
-          git tag --delete v0.0.0  # Don't Repush
-          git tag v1.0.0
+          sudo chmod -R o+w .
+
+      - name: Push Template -- Build Docker Image, Start Container
+        run: |
+          cd "${TEMPLATED_NAME}"
+          bash -c 'source .github/scripts/build_container.sh'
+
+      - name: Push Template -- Create Test Commit
+        run: |
+          cd "${TEMPLATED_NAME}"
+          touch empty-file-commit
+          git stage .
+          git commit -m 'feat(EMPTY): an empty test commit'
+
+      - name: Push Template -- Bump Semantic Version
+        run: |
+          cd "${TEMPLATED_NAME}"
+          docker-compose exec -T "${TEMPLATED_NAME}" git config --global user.name "GitHub Action"
+          docker-compose exec -T "${TEMPLATED_NAME}" git config --global user.email "action@github.com"
+          docker-compose exec -T "${TEMPLATED_NAME}" dev bump
+
+      - name: Push Template -- Clean Up Tags
+        run: |
+          cd "${TEMPLATED_NAME}"
+          git tag --delete v0.0.0
 
       - name: Push Template -- Push master
         uses: ad-m/github-push-action@v0.6.0
