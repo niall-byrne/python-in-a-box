@@ -100,19 +100,12 @@ jobs:
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
-      - name: Create Release -- Prepare Content
-        if: contains(github.ref, '/tags/v')
-        run: |
-          echo "{}" > package.json
-
       - name: Create Release -- Generate Changelog
         if: contains(github.ref, '/tags/v')
-        uses: {% endraw %}{{ cookiecutter._GITHUB_GENERATE_CHANGELOG_ACTION }}{% raw %}
-        id: Changelog
-        env:
-          REPO: ${{ github.repository }}
+        run: |
+          source .github/scripts/changelog.sh
 
-      - name: Create Release -- Create Github Release
+      - name: Create Release -- Generate Github Release Draft
         if: contains(github.ref, '/tags/v')
         uses: actions/create-release@v1
         env:
@@ -121,11 +114,7 @@ jobs:
           tag_name: ${{ env.BRANCH_OR_TAG }}
           release_name: Release ${{ env.BRANCH_OR_TAG }}
           body: |
-            ${{ steps.Changelog.outputs.changelog }}
-            ## Deployment Checklist
-            - [ ] Ensure documentation is accurate
-            - [ ] Ensure readthedocs integration is working
-            - [ ] Ensure unnecessary alerts are ignored/disabled
+            ${{ env.CHANGE_LOG_CONTENT }}
           draft: true
           prerelease: false
 

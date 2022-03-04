@@ -256,17 +256,10 @@ jobs:
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
-      - name: Create Release -- Prepare Release Content
-        if: contains(github.ref, '/tags/v')
-        run: |
-          echo "{}" > package.json
-
       - name: Create Release -- Generate Changelog
         if: contains(github.ref, '/tags/v')
-        uses: scottbrenner/generate-changelog-action@v1.3.1
-        id: Changelog
-        env:
-          REPO: ${{ github.repository }}
+        run: |
+          source ./{{cookiecutter.project_slug}}/.github/scripts/changelog.sh
 
       - name: Create Release -- Generate Github Release Draft
         if: contains(github.ref, '/tags/v')
@@ -277,11 +270,7 @@ jobs:
           tag_name: ${{ env.BRANCH_OR_TAG }}
           release_name: Release ${{ env.BRANCH_OR_TAG }}
           body: |
-            ${{ steps.Changelog.outputs.changelog }}
-            ## Deployment Checklist
-            - [ ] Ensure correct version of pib_cli is installed
-            - [ ] Ensure documentation is accurate
-            - [ ] Ensure git commits are properly formatted
+            ${{ env.CHANGE_LOG_CONTENT }}
           draft: true
           prerelease: false
 
