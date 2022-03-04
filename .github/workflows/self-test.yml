@@ -18,6 +18,7 @@ on:
 env:
   PROJECT_NAME: "python-in-a-box"
   TEMPLATED_NAME: "mmmm_cookies"
+  TEMPLATED_BASE_BRANCH: "main"
   USERNAME: "niall-byrne"
   VERBOSE_NOTIFICATIONS: 0
 
@@ -523,17 +524,17 @@ jobs:
           cd "${TEMPLATED_NAME}"
           git tag --delete v0.0.0
 
-      - name: Push Template -- Push master
+      - name: Push Template -- Push Base Branch
         uses: ad-m/github-push-action@v0.6.0
         with:
           github_token: ${{ secrets.REMOTE_TOKEN }}
-          branch: master
+          branch: ${{ env.TEMPLATED_BASE_BRANCH }}
           tags: false
           directory: ${{ env.TEMPLATED_NAME }}
           repository: ${{ secrets.REMOTE_ORIGIN }}
           force: true
 
-      - name: Push Template -- Push production
+      - name: Push Template -- Push Production
         uses: ad-m/github-push-action@v0.6.0
         with:
           github_token: ${{ secrets.REMOTE_TOKEN }}
@@ -543,7 +544,7 @@ jobs:
           repository: ${{ secrets.REMOTE_ORIGIN }}
           force: true
 
-      - name: Push Template -- Push release tag
+      - name: Push Template -- Push Release Tag
         uses: ad-m/github-push-action@v0.6.0
         with:
           github_token: ${{ secrets.REMOTE_TOKEN }}

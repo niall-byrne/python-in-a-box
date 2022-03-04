@@ -69,7 +69,7 @@ Now open the project folder in your favorite IDE, or use [VIM](https://www.vim.o
 
 > You can now use `cz` to make [commitzen](https://github.com/commitizen-tools/commitizen) style commits, and have access to the `dev` command line interface to help you work
 
-A `master` branch will be created, allowing you to manage a separate `production` branch in [gitlabflow](https://docs.gitlab.com/ee/topics/gitlab_flow.html) style.
+A configurable base branch will be created, allowing you to manage a separate `production` branch in [gitlabflow](https://docs.gitlab.com/ee/topics/gitlab_flow.html) style.
 
 ## Container Base Images
 
@@ -137,7 +137,7 @@ Integrations with the following third party services are configured during templ
 - [pypi.org](https://pypi.org/)
   - [pyproject.toml](./{{cookiecutter.project_slug}}/pyproject.toml)
 - [Read The Docs](https://readthedocs.org/) 
-  - Only if you opt in for [Sphinx](https://www.sphinx-doc.org/en/master/) support. 
+  - Only if you opt in for [Sphinx](https://www.sphinx-doc.org/) support. 
   - [.readthedocs.yml](./{{cookiecutter.project_slug}}/.readthedocs.yml)
 
 ## Production Containers
