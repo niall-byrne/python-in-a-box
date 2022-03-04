@@ -8,4 +8,4 @@ updates:
       interval: "weekly"
       day: "sunday"
     reviewers:
-      - "{{ cookiecutter.github_username }}"
+      - "{{ cookiecutter.git_username }}"

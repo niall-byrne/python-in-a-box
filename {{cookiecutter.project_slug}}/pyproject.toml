@@ -44,15 +44,15 @@
     authors = ["{{cookiecutter.author}} <{{cookiecutter.email}}>"]
     classifiers = []
     description = "{{cookiecutter.description}}"
-    documentation = "https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}/README.md"
+    documentation = "https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/README.md"
     exclude = ["**/tests/*", "**/*.sh"]
-    homepage = "https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}"
+    homepage = "https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}"
     include = ["{{cookiecutter.project_slug}}/data/*"]
     keywords = []
     license = "MPL-2.0"
     name = "{{cookiecutter.project_slug}}"
     readme = "README.md"
-    repository = "https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}"
+    repository = "https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}"
     version = "0.0.0"
 
     [tool.poetry.dependencies]

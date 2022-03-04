@@ -12,7 +12,7 @@ on:
 
 env:
   PROJECT_NAME: "{{ cookiecutter.project_slug }}"
-  USERNAME: "{{ cookiecutter.github_username }}"
+  USERNAME: "{{ cookiecutter.git_username }}"
   VERBOSE_NOTIFICATIONS: 0
 
 jobs:
