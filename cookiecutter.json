@@ -9,7 +9,7 @@
     "description": "Not the evil tracking type.",
     "author": "Niall Byrne",
     "email": "niall@niallbyrne.ca",
-    "github_username": "niall-byrne",
+    "git_username": "niall-byrne",
     "include_lock_file": ["true", "false"],
     "include_ssh_keys": ["true", "false"],
     "include_gitconfig": ["true", "false"],

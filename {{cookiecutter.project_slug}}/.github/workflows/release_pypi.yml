@@ -23,7 +23,7 @@ on:
 env:
   PROJECT_NAME: "{{ cookiecutter.project_slug }}"
   SELECTED_PYPI_REPOSITORY: "test"
-  USERNAME: "{{ cookiecutter.github_username }}"
+  USERNAME: "{{ cookiecutter.git_username }}"
 
 jobs:
   release:
