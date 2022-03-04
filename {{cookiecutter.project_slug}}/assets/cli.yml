@@ -4,6 +4,7 @@
   description: "Build the project's documentation."
   path: "documentation_root"
   commands:
+    - '[ ! -d "./source/codebase/${PROJECT_NAME}/_autosummary" ] || rm -rf "./source/codebase/${PROJECT_NAME}/_autosummary"'
     - "make html"
   success: "Documentation Built"
   failure: "Error Building Documentation"
