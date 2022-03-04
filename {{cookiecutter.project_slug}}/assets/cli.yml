@@ -17,6 +17,18 @@
     - "poetry build"
   success: "Wheel Built"
   failure: "Error Building Wheel"
+- name: "bump"
+  description: "Increment the project's semantic version and create a Git tag."
+  path: "git_root"
+  commands: |
+    set -e
+    _BUMP_TYPE="$(cz bump --dry-run)"
+    _BUMP_TYPE="$(echo "${_BUMP_TYPE}" | grep increment | cut -d":" -f2 | tr '[:upper:]' '[:lower:]' | xargs)"
+    poetry version "${_BUMP_TYPE}"
+    git stage .
+    cz bump
+  success: "Version incremented and tag created."
+  failure: "Could not increment version."
 - name: "coverage"
   description: "Run code coverage test."
   path: "git_root"
