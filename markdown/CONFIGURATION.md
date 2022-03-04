@@ -3,7 +3,7 @@
 The following configuration files are created in the project root folder:
 
 - [Darglint](https://github.com/terrencepreilly/darglint)
-  - Only if you opt in for [Sphinx](https://www.sphinx-doc.org/en/master/) support. 
+  - Only if you opt in for [Sphinx](https://www.sphinx-doc.org/) support. 
   - [darglint](../{{cookiecutter.project_slug}}/.darglint)
 - [Default Software License](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/licensing-a-repository)
   - [LICENSE](../{{cookiecutter.project_slug}}/LICENSE)
@@ -12,7 +12,7 @@ The following configuration files are created in the project root folder:
 - [Hadolint](https://github.com/hadolint/hadolint)
   - [.hadolint.yml](../{{cookiecutter.project_slug}}/.hadolint.yml)
 - [Read The Docs](https://readthedocs.org/)
-  - Only if you opt in for [Sphinx](https://www.sphinx-doc.org/en/master/) support. 
+  - Only if you opt in for [Sphinx](https://www.sphinx-doc.org/) support. 
   - [.readthedocs.yml](../{{cookiecutter.project_slug}}/.readthedocs.yml)
 - [poetry](https://python-poetry.org/)  
   - [pyproject.toml](../{{cookiecutter.project_slug}}/pyproject.toml)
