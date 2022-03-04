@@ -150,3 +150,6 @@ poetry.lock
 
 # Autosummary Documentation
 documentation/source/codebase/{{cookiecutter.project_slug}}/_autosummary/
+
+# ASDF Version Files
+.tool-versions
