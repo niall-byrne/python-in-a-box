@@ -16,7 +16,7 @@
     "include_gitconfig": ["true", "false"],
     "include_gitconfig_global": ["true", "false"],
     "_pib_cli_version": "^1.0.0",
-    "_GITHUB_ACTION_MARKDOWN_LINK_CHECK": "gaurav-nelson/github-action-markdown-link-check@1.0.12",
+    "_GITHUB_ACTION_MARKDOWN_LINK_CHECK": "gaurav-nelson/github-action-markdown-link-check@1.0.13",
     "_GITHUB_ANCHORE_SCAN_ACTION": "anchore/scan-action@v2",
     "_GITHUB_DOCKER_BUILD_PUSH_ACTION": "docker/build-push-action@v2",
     "_GITHUB_DOCKER_BUILDX_ACTION": "docker/setup-buildx-action@v1",
