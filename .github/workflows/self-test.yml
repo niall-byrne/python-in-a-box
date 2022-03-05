@@ -26,7 +26,7 @@ jobs:
 
   container_cli_test:
 
-    runs-on: ubuntu-latest
+    runs-on: "ubuntu-latest"
     strategy:
       matrix:
         include:
@@ -156,7 +156,7 @@ jobs:
 
   container_production_build_test:
 
-    runs-on: ubuntu-latest
+    runs-on: "ubuntu-latest"
     strategy:
       matrix:
         include:
@@ -328,6 +328,74 @@ jobs:
         run: |
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":x: documentation checks failed!"
 
+  hooks_tests:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - python-version: "3.7"
+
+    steps:
+      - name: Hooks Test -- Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Hooks Test -- Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Hooks Test -- Patch Environment
+        run: |
+          echo "PROJECT_NAME=hooks" >> "$GITHUB_ENV"
+          echo "PIB_CONFIG_FILE_LOCATION=$(pwd)/hooks/assets/cli.yml" >> $GITHUB_ENV
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Hooks Test -- Install Required Binaries
+        run: |
+          sudo apt-get install -y golang-github-pelletier-go-toml
+          source ./.github/scripts/gitleaks.sh
+        env:
+          VERSION_GITLEAKS: "8.3.0"
+
+      - name: Hooks Test -- Install Python Packages
+        run: |
+          pip install poetry
+          poetry lock
+          poetry install
+
+      - name: Hooks Test -- Coverage and Unittests
+        run:
+          poetry run dev coverage
+
+      - name: Hooks Test -- Run Code Formatters
+        run: |
+          poetry run dev fmt
+          git diff --exit-code
+
+      - name: Hooks Test -- Run Security Credential Check
+        run: |
+          poetry run dev leaks
+
+      - name: Hooks Test -- Run Security Test
+        run: |
+          poetry run dev sectest
+
+      - name: Hooks Test -- Run Type Checker
+        run: |
+          poetry run dev types
+
+      - name: Hooks Test -- Report Job Status on Success
+        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
+        run: |
+          ./{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: cookiecutter hooks test for Python ${PYTHON_VERSION} build was successful!"
+
+      - name: Hooks Test --- Report Job Status on Failure
+        if: failure()
+        run: |
+          ./{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":x: cookiecutter hooks test for Python ${PYTHON_VERSION} build failed!"
+
   hostmachine_cli_test:
 
     runs-on: ubuntu-latest
@@ -435,10 +503,9 @@ jobs:
       - name: Hostmachine Test -- Install Additional Hostmachine Software
         run: |
           sudo apt-get install -y golang-github-pelletier-go-toml
-          sudo curl --fail -sL "https://github.com/zricethezav/gitleaks/releases/download/${GITLEAKSVERSION}/gitleaks-linux-amd64" -o /usr/bin/gitleaks
-          sudo chmod +x /usr/bin/gitleaks
+          source ./template/.github/scripts/gitleaks.sh
         env:
-          GITLEAKSVERSION: "v7.2.0"
+          VERSION_GITLEAKS: "8.3.0"
 
       - name: Hostmachine Test -- Remove Configuration Container Restrictions
         run: |
@@ -472,7 +539,7 @@ jobs:
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":x: hostmachine for Python ${PYTHON_VERSION} build failed!"
 
   push_repository_test:
-    needs: [container_cli_test, container_production_build_test, documentation_test, hostmachine_cli_test, security_test, shellcheck_test, start_notification, workflow_lint_test]
+    needs: [container_cli_test, container_production_build_test, documentation_test, hooks_tests, hostmachine_cli_test, security_test, shellcheck_test, start_notification, workflow_lint_test]
 
     runs-on: ubuntu-latest
     strategy:
