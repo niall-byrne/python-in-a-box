@@ -33,12 +33,17 @@ Batteries are included:
 
 ## Project Requirements
 
- - [Linux](https://en.wikipedia.org/wiki/Linux) or [OSX](https://en.wikipedia.org/wiki/MacOS) based host machine (Unfortunately not [Windows](https://en.wikipedia.org/wiki/Microsoft_Windows) compatible at this time.)
+#### Operating System
+ - A [Linux](https://en.wikipedia.org/wiki/Linux) or [OSX](https://en.wikipedia.org/wiki/MacOS) based host machine
+ - [Windows](https://en.wikipedia.org/wiki/Microsoft_Windows) based host machines will need both [Bash](https://docs.microsoft.com/en-us/windows/wsl/install) and [Docker](https://www.docker.com/) with [Linux Containers](https://docs.microsoft.com/en-us/virtualization/windowscontainers/deploy-containers/linux-containers)
+
+#### Software Requirements
  - [Python](https://www.python.org/)  (3.7, 3.8, 3.9 or 3.10)
- - [Docker](https://www.docker.com/) 
+ - [Docker](https://www.docker.com/)
  - [Docker Compose](https://docs.docker.com/compose/install/)
  - [Cookiecutter](https://cookiecutter.readthedocs.io/)
  - [Poetry](https://python-poetry.org/)
+ 
 
 ## Quick Start Guide
 
