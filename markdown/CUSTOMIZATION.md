@@ -13,7 +13,7 @@ You'll want to modify the default template to suit your needs.  These key files 
 | [local.env](../{{cookiecutter.project_slug}}/assets/local.env)                              | Set environment variables for use in development.  Keep sensitive secrets out of here!                |
 | [pyproject.toml](../{{cookiecutter.project_slug}}/pyproject.toml)                           | Manage your project's Python dependencies here with Poetry.                                           |
 | [scripts](../{{cookiecutter.project_slug}}/scripts)                                         | A collection of goodies to further ease the pains of Development.                                     |
-| [testing_shim](../{{cookiecutter.project_slug}}/testing_shim)                               | When building an invokable command (like a CLI), having this handy is convenient for testing.         |
+| [testing_shim](../{{cookiecutter.project_slug}}/testing_shim)                               | When building an invocable command (like a CLI), having this handy is convenient for testing.         |
 
 ### An Example Webapp
 

@@ -21,7 +21,7 @@ This project provides extensive CLI tooling and automation inside a docker conta
 Batteries are included:
 - functional CI on day one
 - preconfigured Docker and Docker Compose files
-- preconfigured git hooks
+- preconfigured pre-commit Git hooks
 - structured commit enforcement
 - an automated changelog
 - preconfigured code formatters and linters
@@ -58,23 +58,50 @@ Batteries are included:
 
 3. Give your project a name, and populate the other required template inputs.
 
-> The Python-in-a-Box approach to development suggests that you always work INSIDE the container.
-> To facilitate this, there is an optional feature to mount your SSH keys into the container.  
-> This allows you to push commits from the container using your credentials without making your ssh keys part of the container.
-> Be aware of it, and use the included [Gitleaks](https://github.com/zricethezav/gitleaks) integrations to ensure your container stays safe.
 
 4. Once the templating is finished:
 - `cd <your new project directory>`
-- `docker-compose build`  (Build the docker environment, this will take a couple of minutes)
-- `docker-compose up` (Start the environment, if you are running an app like [Flask](https://flask.palletsprojects.com/) or [Django](https://www.djangoproject.com/) or other containers are in your environment, logs will be produced here.)
+- `docker-compose build`  (Build the docker environment, this will take a couple of minutes.)
+- `docker-compose up` (Start the environment, the logs from your [Flask](https://flask.palletsprojects.com/) or [Django](https://www.djangoproject.com/) app, or any other process or container, will appear here.)
 - Open a new shell in your terminal, and go to the same new project folder
-- `./container` (Puts you inside the development environment)
+- `./container` (Puts you inside the development environment, time to break things.)
 
 Now open the project folder in your favorite IDE, or use [VIM](https://www.vim.org/) inside the container to begin writing code.
 
-> You can now use `cz` to make [commitzen](https://github.com/commitizen-tools/commitizen) style commits, and have access to the `dev` command line interface to help you work
+> Inside the container?<br>
+> You can now use `cz` to make structured commits with [Commitizen](https://github.com/commitizen-tools/commitizen). <br>
+> You have access to the `dev` CLI to help you work.  It brings all the installed tooling together under a single CLI. <br>
+> You'll find [Coverage](https://coverage.readthedocs.io/en/stable/), [Mypy](https://mypy.readthedocs.io/en/stable/), [Pylint](https://www.pylint.org/) and [Pytest](https://docs.pytest.org/en/stable/) pre-configured with sane defaults, ready to go.
 
-A configurable base branch will be created, allowing you to manage a separate `production` branch in [gitlabflow](https://docs.gitlab.com/ee/topics/gitlab_flow.html) style.
+A configurable base branch will be created, allowing you to manage a separate `production` branch in [GitHubFlow](https://docs.github.com/en/get-started/quickstart/github-flow) or [GitLabFlow](https://docs.gitlab.com/ee/topics/gitlab_flow.html) style.
+
+## Working with Git inside Docker Containers
+
+Python-in-a-Box advocates using your favorite IDE on your host machine as your normally would, but doing your CLI development work *inside* the container.
+As such there are a couple of keys points to think through:
+
+### How will you manage your ssh keys?
+
+The PIB approach is to mount your local `.ssh` folder inside your Docker Container to make it available to Git and SSH as needed.  This folder should be kept strictly separate from any code dependencies and be consumed only by these development tools.
+
+- This is *NOT* adding the keys to your code base, but instead making them available to your development tooling.
+- The keys are *NOT* added to the Dockerfile, they are injected at runtime by Docker.
+- The inclusion of [Gitleaks](https://github.com/zricethezav/gitleaks) in PIB is there to enforce the separation.
+
+There may be other strategies that work, and we'd love to hear about them, but this is the most tried and true approach that we have found.  
+
+To use this strategy answer `true` then Cookiecutter asks you if you want to `include_ssh_keys` in your template.
+
+### How will you manage your git configuration?
+
+The PIB approach is to mount your local Git configuration inside the Docker Container to handle this seamlessly.  
+
+- The PIB container is a blank playground that needs to be customized from scratch.  
+- PIB handles setting up Python and Development tooling, but you'll need to configure Git to make it your own. 
+- The configuration is *NOT* added to the Dockerfile, it is injected at runtime by Docker.
+
+To use this strategy answer `true` when Cookiecutter asks you if you want to `include_gitconfig` or `include_gitconfig_global` in your template.  
+(Depending on your local Git configuration you may have one or both of these files.)
 
 ## Container Base Images
 
