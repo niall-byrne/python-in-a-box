@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# scripts/release.sh
+# scripts/utilities/check_release.sh
 # Perform a series of release validation tests.
 
 # Host machine only:  Please do not use this script inside a PIB container.
