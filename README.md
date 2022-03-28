@@ -34,8 +34,8 @@ Batteries are included:
 ## Project Requirements
 
 #### Operating System
- - A [Linux](https://en.wikipedia.org/wiki/Linux) or [OSX](https://en.wikipedia.org/wiki/MacOS) based host machine
- - [Windows](https://en.wikipedia.org/wiki/Microsoft_Windows) based host machines will need both [Bash](https://docs.microsoft.com/en-us/windows/wsl/install) and [Docker](https://www.docker.com/) with [Linux Containers](https://docs.microsoft.com/en-us/virtualization/windowscontainers/deploy-containers/linux-containers)
+ - A [Linux](https://wikipedia.org/wiki/Linux) or [OSX](https://wikipedia.org/wiki/MacOS) based host machine
+ - [Windows](https://wikipedia.org/wiki/Microsoft_Windows) based host machines will need both [Bash](https://docs.microsoft.com/windows/wsl/install) and [Docker](https://www.docker.com/) with [Linux Containers](https://docs.microsoft.com/virtualization/windowscontainers/deploy-containers/linux-containers)
 
 #### Software Requirements
  - [Python](https://www.python.org/)  (3.7, 3.8, 3.9 or 3.10)
@@ -71,9 +71,9 @@ Now open the project folder in your favorite IDE, or use [VIM](https://www.vim.o
 > Inside the container?<br>
 > You can now use `cz` to make structured commits with [Commitizen](https://github.com/commitizen-tools/commitizen). <br>
 > You have access to the `dev` CLI to help you work.  It brings all the installed tooling together under a single CLI. <br>
-> You'll find [Coverage](https://coverage.readthedocs.io/en/stable/), [Mypy](https://mypy.readthedocs.io/en/stable/), [Pylint](https://www.pylint.org/) and [Pytest](https://docs.pytest.org/en/stable/) pre-configured with sane defaults, ready to go.
+> You'll find [Coverage](https://coverage.readthedocs.io/), [Mypy](https://mypy.readthedocs.io/), [Pylint](https://pylint.pycqa.org/) and [Pytest](https://docs.pytest.org/) pre-configured with sane defaults, ready to go.
 
-A configurable base branch will be created, allowing you to manage a separate `production` branch in [GitHubFlow](https://docs.github.com/en/get-started/quickstart/github-flow) or [GitLabFlow](https://docs.gitlab.com/ee/topics/gitlab_flow.html) style.
+A configurable base branch will be created, allowing you to manage a separate `production` branch in [GitHubFlow](https://docs.github.com/get-started/quickstart/github-flow) or [GitLabFlow](https://docs.gitlab.com/ee/topics/gitlab_flow.html) style.
 
 ## Working with Git inside Docker Containers
 
@@ -137,7 +137,7 @@ You'll also need to know about the environment variables in use.  There's a [gui
 
 ## Setting up CI/CD
 
-The template renders complete working CI/CD for [Github Actions](https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions).  The caveat is that you'll need to configure some [Github Secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets) to make it all work seamlessly.  Consult the individual [workflow](./{{cookiecutter.project_slug}}/.github/workflows) files to figure out what values you need. 
+The template renders complete working CI/CD for [Github Actions](https://docs.github.com/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions).  The caveat is that you'll need to configure some [Github Secrets](https://docs.github.com/actions/security-guides/encrypted-secrets) to make it all work seamlessly.  Consult the individual [workflow](./{{cookiecutter.project_slug}}/.github/workflows) files to figure out what values you need. 
 
 ## Configuration and Control
 
@@ -146,14 +146,14 @@ There's a handy index to all the configuration files in the template [here](./ma
 ## Centralized Configuration (PEP 518 Compliance)
 
 - [pyproject.toml](./{{cookiecutter.project_slug}}/pyproject.toml) centralizes configuration for the following:
-  - [bandit](https://bandit.readthedocs.io/en/latest/)
+  - [bandit](https://bandit.readthedocs.io/)
   - [commitizen](https://commitizen-tools.github.io/commitizen/)
-  - [coverage](https://coverage.readthedocs.io/en/stable/)
+  - [coverage](https://coverage.readthedocs.io)
   - [isort](https://pycqa.github.io/isort/)
-  - [mypy](https://mypy.readthedocs.io/en/stable/)
+  - [mypy](https://mypy.readthedocs.io)
   - [poetry](https://python-poetry.org/) ([scripts/extras.sh](./{{cookiecutter.project_slug}}/scripts/extras.sh))
-  - [pylint](https://www.pylint.org/)
-  - [pytest](https://docs.pytest.org/en/stable/)
+  - [pylint](https://pylint.pycqa.org/)
+  - [pytest](https://docs.pytest.org)
   - [yapf](https://github.com/google/yapf)
 
 More configurations will be moved into this centralized file as the individual tools support this standard.
@@ -162,7 +162,7 @@ More configurations will be moved into this centralized file as the individual t
 
 Integrations with the following third party services are configured during templating:
 
-- [Github Actions](https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions)
+- [Github Actions](https://docs.github.com/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions)
   - [workflows](./{{cookiecutter.project_slug}}/.github/workflows)
 - [Docker Hub](https://hub.docker.com/)
   - [release_container.yml](./{{cookiecutter.project_slug}}/.github/workflows/release_container.yml)
