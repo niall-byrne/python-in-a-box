@@ -35,6 +35,9 @@ extensions = [
     'sphinx_autopackagesummary',
 ]
 
+add_module_names = False
+autodoc_typehints_format = "short"
+
 
 def detect_tests():
     """Create a list of import paths with tests."""
