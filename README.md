@@ -8,15 +8,9 @@ A [cookiecutter](https://cookiecutter.readthedocs.io/) based Python [3.7/3.8/3.9
 ##### Production Branch:
 [![Python In A Box Self Test](https://github.com/niall-byrne/python-in-a-box/workflows/Python%20In%20A%20Box%20Self%20Test/badge.svg?branch=production)](https://github.com/niall-byrne/python-in-a-box/actions)
 
-##### Version 1.0.0 Compatibility
-
-Please be aware that version 1.0.0 has introduced some incompatible changes with the CLI configuration:
-- Some minor changes will be required to keep your configuration compatible.
-- Please see the latest [pib_cli](https://pypi.org/project/pib-cli/) release for details.
-
 ## About
 
-This project provides extensive CLI tooling and automation inside a docker container for working on Python projects. 
+This project provides extensive CLI tooling and automation inside a container, specifically for working on Python projects. 
 
 Batteries are included:
 - functional CI on day one
@@ -26,7 +20,7 @@ Batteries are included:
 - an automated changelog
 - preconfigured code formatters and linters
 - preconfigured documentation generation
-- a customizable `dev` command to orchestrate everything
+- a customizable `dev` CLI to orchestrate everything
 - a lot more (too much to list here, just try it out...)
 
 ![Demo Image](https://i.ibb.co/sqddjYb/render1646245029095.gif)
@@ -35,7 +29,7 @@ Batteries are included:
 
 #### Operating System
  - A [Linux](https://wikipedia.org/wiki/Linux) or [OSX](https://wikipedia.org/wiki/MacOS) based host machine
- - [Windows](https://wikipedia.org/wiki/Microsoft_Windows) based host machines will need both [Bash](https://docs.microsoft.com/windows/wsl/install) and [Docker](https://www.docker.com/) with [Linux Containers](https://docs.microsoft.com/virtualization/windowscontainers/deploy-containers/linux-containers)
+ - [Windows](https://wikipedia.org/wiki/Microsoft_Windows) based host machines will need both [Bash](https://docs.microsoft.com/windows/wsl/install) and [Docker with Linux Containers](https://docs.microsoft.com/virtualization/windowscontainers/deploy-containers/linux-containers)
 
 #### Software Requirements
  - [Python](https://www.python.org/)  (3.7, 3.8, 3.9 or 3.10)
@@ -82,7 +76,7 @@ As such there are a couple of keys points to think through:
 
 ### How will you manage your ssh keys?
 
-The PIB approach is to mount your local `.ssh` folder inside your Docker Container to make it available to Git and SSH as needed.  This folder should be kept strictly separate from any code dependencies and be consumed only by these development tools.
+The PIB approach is to mount your local `.ssh` folder inside your Docker container to make it available to Git and SSH as needed.  This folder should be kept strictly separate from any code dependencies and be consumed only by these development tools.
 
 - This is *NOT* adding the keys to your code base, but instead making them available to your development tooling.
 - The keys are *NOT* added to the Dockerfile, they are injected at runtime by Docker.
@@ -91,6 +85,8 @@ The PIB approach is to mount your local `.ssh` folder inside your Docker Contain
 There may be other strategies that work, and we'd love to hear about them, but this is the most tried and true approach that we have found.  
 
 To use this strategy answer `true` then Cookiecutter asks you if you want to `include_ssh_keys` in your template.
+
+**Using a password on your Git SSH key provides an additional layer of security that's recommended.**
 
 ### How will you manage your git configuration?
 

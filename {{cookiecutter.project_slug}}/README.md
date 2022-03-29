@@ -1,6 +1,4 @@
-# Project Documentation
-
-## {{ cookiecutter.project_name }}
+# {{ cookiecutter.project_name }}
 
 {{ cookiecutter.description }}
 {%- if cookiecutter.optional_sphinx_support == 'true' %}
@@ -27,7 +25,7 @@
 - [![Documentation Status](https://readthedocs.org/projects/{{cookiecutter.project_slug}}/badge/?version=latest)](https://{{cookiecutter.project_slug}}.readthedocs.io/en/latest/?badge=latest)
 {%- endif %}
 
-## Quick Start Guide
+## Development Quick Start Guide
 
 You'll need to install:
  - [Docker](https://www.docker.com/) 
@@ -42,14 +40,14 @@ Start the environment container:
 Spawn a shell inside the container:
 - `./container`
 
-## Tooling Reference
+## Development Tooling Reference
 
 Inside the container you'll find the Development CLI:
 - Run the CLI without arguments to see the complete list of available commands: `dev`
 - For more details see the [pib_cli](https://pypi.org/project/pib-cli/) Python Package.
 - [Customize](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/tree/{{cookiecutter.git_base_branch}}/assets/cli.yml) the CLI to suit your needs.
 
-## Git Hooks
+## Pre-Commit Git Hooks
 The python library [pre-commit](https://pre-commit.com/) comes installed with a host of useful initial hooks:
 
 ## Default Installed Pre-Commit Hooks:
@@ -57,7 +55,7 @@ The python library [pre-commit](https://pre-commit.com/) comes installed with a 
 | ------------------ | ------------------------------------------------------------------------------------------------------------ |
 | check_container    | Encourages you to make commits inside the [PIB](https://github.com/niall-byrne/python-in-a-box) environment. |
 | check_spelling     | Runs [aspell](http://aspell.net/) on your commit messages to prevent typos.                                  |
-| commitizen         | Runs commitizen on your commit message to validate it.                                                       |
+| commitizen         | Runs [commitizen](https://commitizen-tools.github.io/commitizen/) on your commit message to validate it.     |
 | gitleaks           | Runs [gitleaks](https://github.com/zricethezav/gitleaks) to scan for credential leaks.                       |
 | protected_branches | Runs additional tests for branches marked as important.                                                      |
 | shellcheck         | Runs [shellcheck](https://www.shellcheck.net/) on your shell scripts.                                        |
@@ -77,9 +75,6 @@ Source this script, and use the `dev` command on your host:
 - `pib_setup_hostmachine` (to install the poetry dependencies)  
 - `dev --help` (to run the cli outside the container)
 
-This is most useful for making an IDE like pycharm aware of what's installed in your project.
+This is most useful for making a local IDE (like [Pycharm](https://www.jetbrains.com/pycharm/)) aware of what Python packages are installed in your project.
 
-> It is still always recommended to work inside the container, as you'll have access to the full managed python environment, 
-> as well as any additional services you are running in containers.  
-
-The dev CLI sometimes makes calls to binaries that are installed inside the container, as such it's not always practical to use it on your host machine.
+> It is still always recommended to work with CLI commands inside the container, as you'll have access to the full managed Python environment.

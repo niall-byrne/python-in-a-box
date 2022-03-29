@@ -7,7 +7,7 @@ The [Dockerfile](../{{cookiecutter.project_slug}}/assets/Dockerfile) sets some m
 | Variable                     | Use Case                                                                                                              |
 |------------------------------|-----------------------------------------------------------------------------------------------------------------------|
 | BUILD_ARG_PYTHON_VERSION     | Set this value to override the default Python version your container is built for.  Useful for cross-version testing. |
-| BUILD_ARG_ASPELL_LANGUAGE    | Set this value to override the language [aspell](http://aspell.net/) will be installed to support.                    |
+| BUILD_ARG_ASPELL_LANGUAGE    | Set this value to override the language [aspell](http://aspell.net/) will be installed to support. (defaults to 'en') |
 
 ## Default Environment Variables
 
