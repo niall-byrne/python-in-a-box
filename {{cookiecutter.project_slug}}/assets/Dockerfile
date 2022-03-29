@@ -8,10 +8,14 @@ LABEL project="{{cookiecutter.project_slug}}"
 LABEL environment="stage1"
 
 ENV PIB_CONFIG_FILE_LOCATION "/app/assets/cli.yml"
-ENV PROJECT_ROOT "/app"
-ENV PROJECT_NAME "{{cookiecutter.project_slug}}"
+ENV PIB_DOCUMENTATION_ROOT "/app/documentation"
+ENV PIB_PROJECT_NAME "{{cookiecutter.project_slug}}"
+
+ENV PROJECT_NAME "${PIB_PROJECT_NAME}"
 ENV PROJECT_AUTHOR "{{cookiecutter.author}}"
+
 ENV PYTHONUNBUFFERED "1"
+
 ENV VERSION_ASPELL "aspell-${BUILD_ARG_ASPELL_LANGUAGE}=*"
 ENV VERSION_GITLEAKS "8.3.0"
 ENV VERSION_POETRY "poetry>=1.1.12,<1.2.0"
@@ -96,6 +100,9 @@ USER user
 COPY pyproject.toml *.lock /app/
 
 # Cache Dependencies
+# It should be noted here that a 'dev' extras is maintained containing pib
+# to allow for compatibillity with read-the-docs.
+# Please see this thread for details:
 RUN poetry install --no-root -E dev
 
 # Copy the Codebase

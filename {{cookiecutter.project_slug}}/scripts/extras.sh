@@ -7,13 +7,13 @@
 
 set -eo pipefail
 
-PIB_PROJECT_ROOT="$(git rev-parse --show-toplevel)"
-export PIB_PROJECT_ROOT
+GIT_ROOT="$(git rev-parse --show-toplevel)"
+export GIT_ROOT
 
 pib_setup_hostmachine() {
   poetry install -E dev
-  poetry run "${PIB_PROJECT_ROOT}/scripts/hooks/_install.sh"
+  poetry run "${GIT_ROOT}/scripts/hooks/_install.sh"
 
   # shellcheck disable=SC2139
-  alias dev="PROJECT_NAME=\"{{cookiecutter.project_slug}}\" PIB_CONFIG_FILE_LOCATION=\"${PIB_PROJECT_ROOT}/assets/cli.yml\" poetry run dev"
+  alias dev="PIB_PROJECT_NAME=\"{{cookiecutter.project_slug}}\" PIB_CONFIG_FILE_LOCATION=\"${GIT_ROOT}/assets/cli.yml\" poetry run dev"
 }
