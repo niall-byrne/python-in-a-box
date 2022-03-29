@@ -347,8 +347,7 @@ jobs:
 
       - name: Hooks Test -- Patch Environment
         run: |
-          echo "PROJECT_NAME=hooks" >> "$GITHUB_ENV"
-          echo "PIB_CONFIG_FILE_LOCATION=$(pwd)/hooks/assets/cli.yml" >> $GITHUB_ENV
+          source ./{{cookiecutter.project_slug}}/.github/scripts/setup.sh
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
