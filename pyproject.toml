@@ -54,7 +54,7 @@
 
       [tool.poetry.dev-dependencies.pib_cli]
         extras = ["types"]
-        version = "^1.0.0"
+        version = "^1.2.0"
 
   [tool.pylint]
 
