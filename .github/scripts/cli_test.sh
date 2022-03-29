@@ -26,24 +26,26 @@ main() {
 
   [[ "${TEMPLATE_SELECTION_TYPING}" == "1" ]] && dev types
 
-  [[ "$(dev @pib version)" =~ pib_cli[[:space:]]version:[[:space:]]1.[0-9]+.[0-9]+ ]]
+  dev -h
 
-  dev @pib config validate
+  dev @pib version | grep -E "pib_cli version: 1.[0-9]+.[0-9]+"
+
+  dev @pib config validate | grep "This configuration is valid."
 
   diff <(dev @pib config show) "${PIB_CONFIG_FILE_LOCATION}"
-  [[ "$(dev @pib config where)" == "Current Configuration: ${PIB_CONFIG_FILE_LOCATION}" ]]
 
-  set +e
+  dev @pib config where | grep "Configuration file: ${PIB_CONFIG_FILE_LOCATION}"
+
+  set +eo pipefail
 
   if [[ -f /etc/container_release ]]; then
-    set -e
-    dev @pib container setup
-    [[ "$(dev @pib container version)" =~ Detected[[:space:]]PIB[[:space:]]container[[:space:]]version:[[:space:]]1\.[0-9]+\.[0-9]+ ]]
-    [[ "$(dev @pib container validate)" == "Detected valid container." ]]
+    dev @pib container setup | grep "Setup Succeeded!" || exit 127
+    dev @pib container version | grep -E 'Container version: 1\.[0-9]+\.[0-9]+' || exit 127
+    dev @pib container validate | grep "This container is valid." || exit 127
   else
-    set -e
-    [[ "$(dev @pib container validate)" == "No PIB container found." ]] || echo
-    [[ "$(dev @pib container version)" == "No PIB container found." ]] || echo
+    dev @pib container setup | grep "This command can only be run inside a PIB container." || exit 127
+    dev @pib container version | grep "No PIB container found." || exit 127
+    dev @pib container validate | grep "No compatible PIB container found." || exit 127
   fi
 
 }

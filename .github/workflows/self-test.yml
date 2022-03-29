@@ -499,7 +499,7 @@ jobs:
       - name: Hostmachine Test -- Patch Environment
         run: |
           TEMPLATE_GIT_ROOT="$(pwd)/${TEMPLATED_NAME}"
-          echo "PROJECT_NAME=${TEMPLATED_NAME}" >> "$GITHUB_ENV"
+          echo "PIB_PROJECT_NAME=${TEMPLATED_NAME}" >> "$GITHUB_ENV"
           echo "TEMPLATE_GIT_ROOT=${TEMPLATE_GIT_ROOT}" >> "$GITHUB_ENV"
           echo "PIB_CONFIG_FILE_LOCATION=${TEMPLATE_GIT_ROOT}/assets/cli.yml" >> $GITHUB_ENV
         env:
