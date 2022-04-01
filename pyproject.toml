@@ -11,7 +11,7 @@
   [tool.commitizen]
     name = "cz_conventional_commits"
     tag_format = "v$version"
-    version = "0.1.6"
+    version = "0.2.0"
 
   [tool.coverage]
 
@@ -45,7 +45,7 @@
     description = "A containerized development environment for Python projects."
     license = "MPL-2.0"
     name = "python-in-a-box"
-    version = "0.1.6"
+    version = "0.2.0"
 
     [tool.poetry.dependencies]
       python = ">=3.7.0,<3.11.0"
