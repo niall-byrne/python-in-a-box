@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# .github/scripts/lint_shellcheck.sh
+# scripts/ci/lint_shellcheck.sh
 # Runs shellcheck on all scripts.
 
 # CI only script

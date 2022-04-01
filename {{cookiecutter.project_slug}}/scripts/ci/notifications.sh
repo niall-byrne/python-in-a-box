@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# .github/scripts/notifications.sh
+# scripts/ci/notifications.sh
 # Sends a notification to slack.
 
 # 1: The branch information to display.

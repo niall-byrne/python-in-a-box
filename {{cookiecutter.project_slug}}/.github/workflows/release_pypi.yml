@@ -83,7 +83,7 @@ jobs:
 
       - name: Publish to PyPi -- Build Container
         run: |
-          source .github/scripts/build_container.sh
+          source scripts/ci/build_container.sh
 
       # START Continuous Deployment -- Customize this Section Depending on your strategy
 
@@ -99,20 +99,20 @@ jobs:
       - name: Publish to PyPi -- Report Success (CD is enabled) (Test PyPi)
         if: env.CD_USE_TEST == 'true'
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: new release has been pushed to Test PyPi!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":white_check_mark: new release has been pushed to Test PyPi!"
 
       - name: Publish to PyPi -- Report Success (CD is enabled)
         if: env.CD_USE_PRODUCTION == 'true'
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: new release has been pushed to PyPi!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":white_check_mark: new release has been pushed to PyPi!"
 
       - name: Publish to PyPi -- Report Success (CD is not enabled)
         if: env.CD_USE_PRODUCTION != 'true' && env.CD_USE_TEST != 'true'
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" "new release wheel has been built, but CD is disabled for this repository!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" "new release wheel has been built, but CD is disabled for this repository!"
 
       - name: Publish to PyPi -- Report Failure
         if: failure()
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":x: automated PyPi release has failed!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":x: automated PyPi release has failed!"
 {% endraw %}

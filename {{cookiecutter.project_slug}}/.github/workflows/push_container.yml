@@ -49,7 +49,7 @@ jobs:
 
       - name: Build -- Build Container
         run: |
-          source .github/scripts/build_container.sh
+          source scripts/ci/build_container.sh
 
       - name: Build -- Run TOML Linter
         run: |
@@ -74,12 +74,12 @@ jobs:
       - name: Build -- Report Job Status (Success)
         if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: build for Python ${PYTHON_VERSION} was successful"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":white_check_mark: build for Python ${PYTHON_VERSION} was successful"
 
       - name: Build -- Report Job Status (Failure)
         if: failure()
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":x: build for Python ${PYTHON_VERSION} failed!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":x: build for Python ${PYTHON_VERSION} failed!"
 
   create_release:
     needs: [build, dockerfile_test, documentation_test, security_test, shellcheck_test, start_notification, workflow_lint_test]
@@ -108,7 +108,9 @@ jobs:
       - name: Create Release -- Generate Changelog
         if: contains(github.ref, '/tags/v')
         run: |
-          source .github/scripts/generate_changelog.sh
+          echo "CHANGE_LOG<<EOF" >> "${GITHUB_ENV}"
+          echo "$(source scripts/ci/generate_changelog.sh)" >> "$GITHUB_ENV"
+          echo "EOF" >> "${GITHUB_ENV}"
 
       - name: Create Release -- Generate Github Release Draft
         if: contains(github.ref, '/tags/v')
@@ -126,12 +128,12 @@ jobs:
       - name: Create Release -- Report Success
         if: contains(github.ref, '/tags/v')
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: automated release has been created:\nhttps://github.com/${USERNAME}/${PROJECT_NAME}/releases"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":white_check_mark: automated release has been created:\nhttps://github.com/${USERNAME}/${PROJECT_NAME}/releases"
 
       - name: Create Release -- Report Failure
         if: failure() && contains(github.ref, '/tags/v')
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":x: automated release generation failed!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":x: automated release generation failed!"
 
   dockerfile_test:
 
@@ -174,12 +176,12 @@ jobs:
       - name: Dockerfile Test -- Report Success
         if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: dockerfile linting was successful!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":white_check_mark: dockerfile linting was successful!"
 
       - name: Dockerfile Test -- Report Failure
         if: failure()
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":x: dockerfile linting failed!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":x: dockerfile linting failed!"
 
   documentation_test:
 
@@ -204,12 +206,12 @@ jobs:
       - name: Documentation Test -- Report Success
         if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: documentation checks were successful!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":white_check_mark: documentation checks were successful!"
 
       - name: Documentation Test -- Report Failure
         if: failure()
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":x: documentation checks failed!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":x: documentation checks failed!"
 
   security_test:
 
@@ -234,12 +236,12 @@ jobs:
       - name: Security Test -- Report Success
         if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: security checks were successful!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":white_check_mark: security checks were successful!"
 
       - name: Security Test -- Report Failure
         if: failure()
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":x: security checks failed!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":x: security checks failed!"
 
   shellcheck_test:
 
@@ -257,17 +259,17 @@ jobs:
 
       - name: Shellcheck -- Check Scripts
         run: |
-          source ./.github/scripts/lint_shellcheck.sh
+          source ./scripts/ci/lint_shellcheck.sh
 
       - name: Shellcheck -- Report Job Status on Success
         if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: shellcheck checks were successful!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":white_check_mark: shellcheck checks were successful!"
 
       - name: Shellcheck -- Report Job Status on Failure
         if: failure()
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":x: shellcheck checks failed!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":x: shellcheck checks failed!"
 
   start_notification:
     runs-on: ubuntu-latest
@@ -284,12 +286,12 @@ jobs:
 
       - name: Start -- Report Job Status on Success
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: workflow has started!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":white_check_mark: workflow has started!"
 
       - name: Start -- Report Job Status on Failure
         if: failure()
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":x: error reporting job status!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":x: error reporting job status!"
 
   success_notification:
     needs: [create_release]
@@ -308,12 +310,12 @@ jobs:
 
       - name: Success -- Report Job Status on Success
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: all checks were successful!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":white_check_mark: all checks were successful!"
 
       - name: Success -- Report Job Status on Failure
         if: failure()
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":x: error reporting job status!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":x: error reporting job status!"
 
   workflow_lint_test:
 
@@ -339,10 +341,10 @@ jobs:
       - name: Workflow Lint -- Report Job Status on Success
         if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: workflow linting was successful!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":white_check_mark: workflow linting was successful!"
 
       - name: Workflow Lint -- Report Job Status on Failure
         if: failure()
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":x: workflow linting has failed!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":x: workflow linting has failed!"
 {% endraw %}

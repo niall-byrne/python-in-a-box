@@ -101,15 +101,15 @@ jobs:
       - name: Publish Container -- Report Success (CD is enabled)
         if: env.CD_DOCKER_REPO_ENABLED == 'true'
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: new docker image has been built and pushed!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":white_check_mark: new docker image has been built and pushed!"
 
       - name: Publish Container -- Report Success (CD is not enabled)
         if: env.CD_DOCKER_REPO_ENABLED == 'false'
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" "new docker image has been built, but CD is disabled for this repository!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" "new docker image has been built, but CD is disabled for this repository!"
 
       - name: Publish Container -- Report Failure
         if: failure()
         run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":x: automated docker image build has failed!"
+          ./scripts/ci/notifications.sh "${NOTIFICATION}" ":x: automated docker image build has failed!"
 {% endraw %}
