@@ -3,7 +3,7 @@
 # scripts/ci/build_container.sh
 # Builds the container to a specific Python version.
 
-# 1: The docker-compose file to use, defaults to "docker-compose.yaml"
+# 1: The docker-compose file to use, defaults to "docker-compose.yml"
 # PYTHON_VERSION: The version of Python to build the container with.
 
 # CI only script.
