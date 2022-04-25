@@ -303,16 +303,18 @@ jobs:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
       - name: Documentation -- Check Markdown Links For Readme
-        uses: gaurav-nelson/github-action-markdown-link-check@1.0.11
+        uses: gaurav-nelson/github-action-markdown-link-check@1.0.13
         with:
+          config-file: 'template/{{cookiecutter.project_slug}}/.github/config/markdown.link.check.json'
           use-quiet-mode: 'no'
           use-verbose-mode: 'yes'
           folder-path: 'template, template/markdown, template/.github/workflows'
           max-depth: 1
 
       - name: Documentation -- Check Markdown Links For Rendered Template
-        uses: gaurav-nelson/github-action-markdown-link-check@1.0.11
+        uses: gaurav-nelson/github-action-markdown-link-check@1.0.13
         with:
+          config-file: 'template/{{cookiecutter.project_slug}}/.github/config/markdown.link.check.json'
           use-quiet-mode: 'no'
           use-verbose-mode: 'yes'
           folder-path: ${{ env.TEMPLATED_NAME }}

@@ -193,6 +193,7 @@ jobs:
       - name: Documentation Test -- Documentation Validation
         uses: {% endraw %}{{ cookiecutter._GITHUB_ACTION_MARKDOWN_LINK_CHECK }}{% raw %}
         with:
+          config-file: './github/config/markdown.link.check.json'
           use-quiet-mode: 'no'
           use-verbose-mode: 'yes'
 
