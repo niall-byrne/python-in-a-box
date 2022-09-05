@@ -18,7 +18,7 @@ ENV PYTHONUNBUFFERED "1"
 
 ENV VERSION_ASPELL "aspell-${BUILD_ARG_ASPELL_LANGUAGE}=*"
 ENV VERSION_GITLEAKS "8.3.0"
-ENV VERSION_POETRY "poetry>=1.1.12,<1.2.0"
+ENV VERSION_POETRY "poetry>=1.2.0"
 
 # Mark Container
 RUN echo "1.0.0" > /etc/container_pib_version                       && \
@@ -56,7 +56,7 @@ LABEL environment="stage2"
 
 # Install Poetry
 # hadolint ignore=DL3013
-RUN pip install --no-cache-dir "${VERSION_POETRY}"
+RUN pip install --no-cache-dir "${VERSION_POETRY}" setuptools
 
 # ======================================================
 
@@ -100,16 +100,13 @@ USER user
 COPY pyproject.toml *.lock /app/
 
 # Cache Dependencies
-# It should be noted here that a 'dev' extras is maintained containing pib
-# to allow for compatibillity with read-the-docs.
-# Please see this thread for details:
 RUN poetry install --no-root -E dev
 
 # Copy the Codebase
 COPY . /app
 
 # Install the Application
-RUN poetry install
+RUN poetry install -E dev
 
 # Create A Symlink For the Bash Customizations
 RUN ln -sf /app/assets/.bash_customize /home/user/.bash_customize
@@ -120,8 +117,7 @@ RUN chown user /app/.git/hooks
 USER user
 
 # Setup The Dev CLI, bootstrapping the current version of pib_cli
-RUN poetry install                              && \
-    poetry run dev @pib container setup
+RUN poetry run dev @pib container setup
 
 CMD ["bash", "-cl", "./{{cookiecutter.project_slug}}/container_init.sh"]
 

@@ -21,7 +21,7 @@ main() {
     set -eo pipefail
       echo -e "${SELECTION_PYTHON}\n${SELECTION_DOCSTRINGS}\n${SELECTION_SPHINX}\n${SELECTION_TYPING}\n\n\n${SELECTION_FORMATTING}\n\n${BASE_BRANCH_NAME}\n\n\n\n${SELECTION_LOCKFILE}\n2\n2\n2\n" | PIB_SKIP_POETRY_INIT=1 cookiecutter ./python-in-a-box/
       cd mmmm_cookies  || exit 127
-      docker-compose build
+      docker-compose build --no-cache
       docker-compose up -d
     set +eo pipefail
     sleep 1

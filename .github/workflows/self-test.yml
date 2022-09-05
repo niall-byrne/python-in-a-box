@@ -21,6 +21,8 @@ env:
   TEMPLATED_BASE_BRANCH: "main"
   USERNAME: "niall-byrne"
   VERBOSE_NOTIFICATIONS: 0
+  PYTHON_KEYRING_BACKEND: "keyring.backends.fail.Keyring"
+  SETUPTOOLS_USE_DISTUTILS: "stdlib"
 
 jobs:
 
