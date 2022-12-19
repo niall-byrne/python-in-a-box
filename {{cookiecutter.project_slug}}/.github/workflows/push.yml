@@ -174,7 +174,7 @@ jobs:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
       - name: Documentation Test -- Documentation Validation
-        uses: {% endraw %}{{ cookiecutter._GITHUB_ACTION_MARKDOWN_LINK_CHECK }}{% raw %}
+        uses: {% endraw %}{{ cookiecutter._GITHUB_MARKDOWN_LINK_CHECK_ACTION }}{% raw %}
         with:
           config-file: './github/config/markdown.link.check.json'
           use-quiet-mode: 'no'
