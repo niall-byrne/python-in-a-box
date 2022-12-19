@@ -23,7 +23,7 @@
 
     [tool.coverage.run]
       branch = true
-      omit = ["*/test*"]
+      omit = ["*/tests/*"]
       source = ["."]
 
   [tool.isort]
