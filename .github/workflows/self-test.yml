@@ -98,7 +98,7 @@ jobs:
 
     steps:
       - name: Container Build Test -- Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -193,7 +193,7 @@ jobs:
 
     steps:
       - name: Container Production Build Test -- Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -342,7 +342,7 @@ jobs:
 
     steps:
       - name: Hooks Test -- Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -471,7 +471,7 @@ jobs:
 
     steps:
       - name: Hostmachine Test -- Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
