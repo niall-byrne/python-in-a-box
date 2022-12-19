@@ -28,7 +28,7 @@ jobs:
 {% raw %}
     steps:
       - name: Build -- Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Build -- Setup Environment
         run: |
@@ -89,7 +89,7 @@ jobs:
     steps:
       - name: Create Release -- Checkout
         if: contains(github.ref, '/tags/v')
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -134,7 +134,7 @@ jobs:
 
     steps:
       - name: Dockerfile Test -- Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Dockerfile Test -- Setup Environment
         run: |
@@ -165,7 +165,7 @@ jobs:
 
     steps:
       - name: Documentation Test -- Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Documentation Test -- Setup Environment
         run: |
@@ -197,7 +197,7 @@ jobs:
     steps:
 
       - name: Security Test -- Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -226,7 +226,7 @@ jobs:
 
     steps:
       - name: Shellcheck -- Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Shellcheck -- Setup Environment
         run: |
@@ -253,7 +253,7 @@ jobs:
 
     steps:
       - name: Start -- Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Start -- Setup Environment
         run: |
@@ -277,7 +277,7 @@ jobs:
 
     steps:
       - name: Success -- Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Success -- Setup Environment
         run: |
@@ -300,7 +300,7 @@ jobs:
 
     steps:
       - name: Workflow Lint -- Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Workflow Lint -- Setup Environment
         run: |
