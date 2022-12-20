@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# .github/scripts/changelog.sh
+# Generates a changelog based off the diff between $TAG and the previous sequential tag.
+
+# TAG: The new git tag the changelog is being generated for.
+
+# CI only script
+
 set -eo pipefail
 
 main() {
