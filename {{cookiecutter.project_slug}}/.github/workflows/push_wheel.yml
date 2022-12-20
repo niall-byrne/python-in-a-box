@@ -17,6 +17,52 @@ env:
 
 jobs:
 
+  {% raw %}_start_notification:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Start -- Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Start -- Setup Environment
+        run: |
+          source ./.github/scripts/setup.sh
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Start -- Report Job Status on Success
+        run: |
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: workflow has started!"
+
+      - name: Start -- Report Job Status on Failure
+        if: failure()
+        run: |
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":x: error reporting job status!"
+
+  _success_notification:
+    needs: [create_release]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Success -- Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Success -- Setup Environment
+        run: |
+          source .github/scripts/setup.sh
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Success -- Report Job Status on Success
+        run: |
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: all checks were successful!"
+
+      - name: Success -- Report Job Status on Failure
+        if: failure()
+        run: |
+          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":x: error reporting job status!"
+
   build:
 
     runs-on: ubuntu-latest
@@ -24,9 +70,9 @@ jobs:
       max-parallel: 4
       matrix:
         include:
-          - python-version: {{cookiecutter.python_version}}
+          {% endraw %}- python-version: {{cookiecutter.python_version}}{% raw %}
 
-    {% raw %}steps:
+    steps:
       - name: Build -- Checkout
         uses: actions/checkout@v3
 
@@ -82,7 +128,7 @@ jobs:
           ./.github/scripts/notifications.sh "${NOTIFICATION}" ":x: build for Python ${PYTHON_VERSION} failed!"
 
   create_release:
-    needs: [build, dockerfile_test, documentation_test, security_test, shellcheck_test, start_notification, workflow_lint_test]
+    needs: [_start_notification, build, dockerfile_test, documentation_test, security_test, shellcheck_test, workflow_lint_test]
 
     runs-on: ubuntu-latest
 
@@ -276,52 +322,6 @@ jobs:
         if: failure()
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" ":x: shellcheck checks failed!"
-
-  start_notification:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Start -- Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Start -- Setup Environment
-        run: |
-          source ./.github/scripts/setup.sh
-        env:
-          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-
-      - name: Start -- Report Job Status on Success
-        run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: workflow has started!"
-
-      - name: Start -- Report Job Status on Failure
-        if: failure()
-        run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":x: error reporting job status!"
-
-  success_notification:
-    needs: [create_release]
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Success -- Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Success -- Setup Environment
-        run: |
-          source .github/scripts/setup.sh
-        env:
-          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-
-      - name: Success -- Report Job Status on Success
-        run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: all checks were successful!"
-
-      - name: Success -- Report Job Status on Failure
-        if: failure()
-        run: |
-          ./.github/scripts/notifications.sh "${NOTIFICATION}" ":x: error reporting job status!"
 
   workflow_lint_test:
 
