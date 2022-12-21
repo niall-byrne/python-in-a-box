@@ -30,7 +30,7 @@ cli_definition:
     description: "Run a scan for leaked credentials in commits."
     path: "git_root"
     commands:
-      - 'gitleaks detect -v'
+      - 'trufflehog git file://. --fail --no-update'
     success: "Credential leaks Test Passed!"
     failure: "Credential leaks Test Failed!"
   - name: "lint"

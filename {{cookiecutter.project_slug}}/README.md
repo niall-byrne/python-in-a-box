@@ -56,9 +56,9 @@ The python library [pre-commit](https://pre-commit.com/) comes installed with a 
 | check_container    | Encourages you to make commits inside the [PIB](https://github.com/niall-byrne/python-in-a-box) environment. |
 | check_spelling     | Runs [aspell](http://aspell.net/) on your commit messages to prevent typos.                                  |
 | commitizen         | Runs [commitizen](https://commitizen-tools.github.io/commitizen/) on your commit message to validate it.     |
-| gitleaks           | Runs [gitleaks](https://github.com/zricethezav/gitleaks) to scan for credential leaks.                       |
 | protected_branches | Runs additional tests for branches marked as important.                                                      |
 | shellcheck         | Runs [shellcheck](https://www.shellcheck.net/) on your shell scripts.                                        |
+| trufflehog         | Runs [TruffleHog](https://github.com/trufflesecurity/trufflehog) to scan for credential leaks.               |
 | pyproject.toml     | Runs [tomll](https://github.com/Ainiroad/go-toml) on your TOML configuration file.                           |
 | yamllint           | Runs [yamllint](https://github.com/adrienverge/yamllint) on your YAML configuration files.                   |
 

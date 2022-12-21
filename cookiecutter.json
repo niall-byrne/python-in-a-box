@@ -21,9 +21,9 @@
     "_GITHUB_DOCKER_BUILDX_ACTION": "docker/setup-buildx-action@v1",
     "_GITHUB_DOCKER_LOGIN_ACTION": "docker/login-action@v1",
     "_GITHUB_CODEQL_ACTION_UPLOAD_SARIF": "github/codeql-action/upload-sarif@v1",
-    "_GITHUB_GITLEAKS_ACTION": "zricethezav/gitleaks-action@v2.3.1",
     "_GITHUB_HADOLINT_ACTION": "hadolint/hadolint-action@v1.6.0",
     "_GITHUB_MARKDOWN_LINK_CHECK_ACTION": "gaurav-nelson/github-action-markdown-link-check@1.0.13",
     "_GITHUB_PUSH_ACTION": "ad-m/github-push-action@v0.6.0",
+    "_GITHUB_TRUFFLEHOG_ACTION": "trufflesecurity/trufflehog@v3.20.0",
     "_GITHUB_YAMLLINT_ACTION": "ibiqlik/action-yamllint@v3"
 }

@@ -25,8 +25,8 @@ jobs:
       matrix:
         include:
           - python-version: {{cookiecutter.python_version}}
-{% raw %}
-    steps:
+
+    {% raw %}steps:
       - name: Build -- Checkout
         uses: actions/checkout@v3
 
@@ -201,14 +201,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Documentation Test -- Setup Environment
+      - name: Security Test -- Setup Environment
         run: |
-          source .github/scripts/setup.sh
+          source ./.github/scripts/setup.sh
+          source ./.github/scripts/pushed_commit_range.sh
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+          GITHUB_CONTEXT: ${{ toJson(github) }}
 
-      - name: Security Test -- Run Gitleaks
-        uses: {% endraw %}{{ cookiecutter._GITHUB_GITLEAKS_ACTION }}{% raw %}
+      - name: Security Test -- Run Trufflehog
+        uses: {% endraw %}{{ cookiecutter._GITHUB_TRUFFLEHOG_ACTION }}{% raw %}
+        with:
+          path: .
+          base: ${{ env.PUSHED_COMMIT_RANGE }}
+          head: ${{ env.BRANCH_OR_TAG }}
 
       - name: Security Test -- Report Success
         if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}

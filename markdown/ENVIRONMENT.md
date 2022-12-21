@@ -20,7 +20,7 @@ The [Dockerfile](../{{cookiecutter.project_slug}}/assets/Dockerfile) sets some a
 | PROJECT_AUTHOR               | Set to the author of your project, as entered into cookiecutter.                       |
 | PYTHONUNBUFFERED             | Disables buffering in Python to ensure stdout is readily available.                    |
 | VERSION_ASPELL               | The installed [aspell](http://aspell.net/) version as a string.                        |
-| VERSION_GITLEAKS             | The installed [Gitleaks](https://github.com/zricethezav/gitleaks) version as a string. |
+| VERSION_TRUFFLEHOG           | The installed [TruffleHog](https://github.com/trufflesecurity/trufflehog) version as a string. |
 | VERSION_POETRY               | The installed [Poetry](https://python-poetry.org/) version as a string.                |
 
 ## Configurable Environment Variables

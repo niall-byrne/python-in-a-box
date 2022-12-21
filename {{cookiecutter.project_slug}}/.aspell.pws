@@ -1,4 +1,4 @@
-personal_ws-1.1 en 86
+personal_ws-1.1 en 87
 api
 asdf
 aspell
@@ -75,6 +75,7 @@ testcase
 toc
 toml
 tomll
+trufflehog
 unittest
 unittests
 unpatched
