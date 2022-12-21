@@ -80,7 +80,7 @@ The PIB approach is to mount your local `.ssh` folder inside your Docker contain
 
 - This is *NOT* adding the keys to your code base, but instead making them available to your development tooling.
 - The keys are *NOT* added to the Dockerfile, they are injected at runtime by Docker.
-- The inclusion of [Gitleaks](https://github.com/zricethezav/gitleaks) in PIB is there to enforce the separation.
+- The inclusion of [TruffleHog](https://github.com/trufflesecurity/trufflehog) in PIB is there to enforce the separation.
 
 There may be other strategies that work, and we'd love to hear about them, but this is the most tried and true approach that we have found.  
 

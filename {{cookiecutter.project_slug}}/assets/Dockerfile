@@ -17,7 +17,7 @@ ENV PROJECT_AUTHOR "{{cookiecutter.author}}"
 ENV PYTHONUNBUFFERED "1"
 
 ENV VERSION_ASPELL "aspell-${BUILD_ARG_ASPELL_LANGUAGE}=*"
-ENV VERSION_GITLEAKS "8.3.0"
+ENV VERSION_TRUFFLEHOG "3.20.0"
 ENV VERSION_POETRY "poetry>=1.2.0"
 
 # Mark Container
@@ -82,13 +82,9 @@ RUN apt-get update                      && \
     vim=2:8.*
 
 # Install Git Leaks
-RUN curl --fail -sL                                                                                                                   \
-    "https://github.com/zricethezav/gitleaks/releases/download/v${VERSION_GITLEAKS}/gitleaks_${VERSION_GITLEAKS}_linux_x64.tar.gz"    \
-    -o gitleaks.tar.gz                                                                                                             && \
-    tar -xvzf gitleaks.tar.gz gitleaks                                                                                             && \
-    mv ./gitleaks /usr/bin/gitleaks                                                                                                && \
-    rm gitleaks.tar.gz                                                                                                             && \
-    chmod +x /usr/bin/gitleaks
+COPY scripts/utilities/install_trufflehog_linux.sh .
+RUN bash install_trufflehog_linux.sh &&   \
+    rm install_trufflehog_linux.sh
 
 # Add user to sudoers, and make the default user
 RUN echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers

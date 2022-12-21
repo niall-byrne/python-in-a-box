@@ -47,7 +47,7 @@
   container_only: true
   path: "git_root"
   commands:
-    - 'gitleaks detect -v'
+    - 'trufflehog git file://. --fail --no-update'
   success: "Credential Leaks Test Passed!"
   failure: "Credential Leaks Test Failed!"
 - name: "lint"

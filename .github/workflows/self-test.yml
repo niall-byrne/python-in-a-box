@@ -26,6 +26,56 @@ env:
 
 jobs:
 
+  _start_notification:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Start -- Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          path: 'template'
+
+      - name: Start -- Setup Environment
+        run: |
+          source ./template/.github/scripts/setup.sh
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Start -- Report Job Status on Success
+        run: |
+          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: workflow has started!"
+
+      - name: Start -- Report Job Status on Failure
+        if: failure()
+        run: |
+          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":x: error reporting job status!"
+
+  _success_notification:
+    needs: [create_release]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Success -- Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          path: 'template'
+
+      - name: Success -- Setup Environment
+        run: |
+          source ./template/.github/scripts/setup.sh
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+      - name: Success -- Report Job Status on Success
+        run: |
+          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: all checks were successful!"
+
+      - name: Success -- Report Job Status on Failure
+        if: failure()
+        run: |
+          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":x: error reporting job status!"
+
   container_cli_test:
 
     runs-on: "ubuntu-latest"
@@ -358,9 +408,9 @@ jobs:
       - name: Hooks Test -- Install Required Binaries
         run: |
           sudo apt-get install -y golang-github-pelletier-go-toml
-          source ./.github/scripts/gitleaks.sh
+          sudo -E bash ./{{cookiecutter.project_slug}}/scripts/utilities/install_trufflehog_linux.sh
         env:
-          VERSION_GITLEAKS: "8.3.0"
+          VERSION_TRUFFLEHOG: "3.20.0"
 
       - name: Hooks Test -- Install Python Packages
         run: |
@@ -506,9 +556,9 @@ jobs:
       - name: Hostmachine Test -- Install Additional Hostmachine Software
         run: |
           sudo apt-get install -y golang-github-pelletier-go-toml
-          source ./template/.github/scripts/gitleaks.sh
+          sudo -E bash ./template/{{cookiecutter.project_slug}}/scripts/utilities/install_trufflehog_linux.sh
         env:
-          VERSION_GITLEAKS: "8.3.0"
+          VERSION_TRUFFLEHOG: "3.20.0"
 
       - name: Hostmachine Test -- Remove Configuration Container Restrictions
         run: |
@@ -542,7 +592,7 @@ jobs:
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":x: hostmachine for Python ${PYTHON_VERSION} build failed!"
 
   push_repository_test:
-    needs: [container_cli_test, container_production_build_test, documentation_test, hooks_tests, hostmachine_cli_test, security_test, shellcheck_test, start_notification, workflow_lint_test]
+    needs: [_start_notification, container_cli_test, container_production_build_test, documentation_test, hooks_tests, hostmachine_cli_test, security_test, shellcheck_test, workflow_lint_test]
 
     runs-on: ubuntu-latest
     strategy:
@@ -643,15 +693,25 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          path: 'template'
 
       - name: Security Test -- Setup Environment
         run: |
-          source ./.github/scripts/setup.sh
+          source ./template/.github/scripts/setup.sh
+          source ./template/.github/scripts/template.sh
+          pushd template
+            source ./{{cookiecutter.project_slug}}/.github/scripts/pushed_commit_range.sh
+          popd
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+          GITHUB_CONTEXT: ${{ toJson(github) }}
 
-      - name: Security Test -- Run Gitleaks
-        uses: zricethezav/gitleaks-action@v2.3.1
+      - name: Security Test -- Run Trufflehog
+        uses: trufflesecurity/trufflehog@v3.20.0
+        with:
+          path: ./template
+          base: ${{ env.PUSHED_COMMIT_RANGE }}
+          head: ${{ env.BRANCH_OR_TAG }}
 
       - name: Security Test -- Report Job Status on Success
         if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
@@ -698,56 +758,6 @@ jobs:
         if: failure()
         run: |
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":x: shellcheck checks failed!"
-
-  start_notification:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Start -- Checkout Repository
-        uses: actions/checkout@v3
-        with:
-          path: 'template'
-
-      - name: Start -- Setup Environment
-        run: |
-          source ./template/.github/scripts/setup.sh
-        env:
-          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-
-      - name: Start -- Report Job Status on Success
-        run: |
-          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: workflow has started!"
-
-      - name: Start -- Report Job Status on Failure
-        if: failure()
-        run: |
-          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":x: error reporting job status!"
-
-  success_notification:
-    needs: [create_release]
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Success -- Checkout Repository
-        uses: actions/checkout@v3
-        with:
-          path: 'template'
-
-      - name: Success -- Setup Environment
-        run: |
-          source ./template/.github/scripts/setup.sh
-        env:
-          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-
-      - name: Success -- Report Job Status on Success
-        run: |
-          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: all checks were successful!"
-
-      - name: Success -- Report Job Status on Failure
-        if: failure()
-        run: |
-          ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":x: error reporting job status!"
 
   workflow_lint_test:
 

@@ -28,10 +28,10 @@ See the [pib_cli](https://github.com/niall-byrne/pib_cli) documentation for the 
 | build-essential |  A collection of packages for compiling, linking            |
 | curl            |  CLI based web client                                       |
 | fish            |  Alternative Shell                                          |
-| gitleaks        |  Scans for checked-in credentials                           |                            
 | jq              |  processing json                                            |
 | git, ssh        |  managing git commits                                       |
 | shellcheck      |  BASH Linting                                               | 
 | tig             |  managing git history                                       |
 | tomll           |  a toml file linter, and formatter                          |
+| trufflehog      |  Scans for checked-in credentials                           |                            
 | vim             |  managing small edits, and git commit messages              |

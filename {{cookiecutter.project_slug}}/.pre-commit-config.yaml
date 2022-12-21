@@ -39,15 +39,6 @@ repos:
         types: [python]
         require_serial: true
 {%- endif %}
-      - id: gitleaks
-        name: check for credentials
-        description: "Scan the commit for leaked credentials."
-        entry: gitleaks protect --verbose --redact --staged
-        language: system
-        stages: [commit]
-        pass_filenames: false
-        require_serial: true
-        always_run: true
       - id: protected_branches
         name: protected branches
         description: "Run additional checks on branches marked as protected."
@@ -71,6 +62,15 @@ repos:
         language: system
         stages: [commit]
         types: [file, shell]
+      - id: trufflehog
+        name: TruffleHog
+        description: "Scan the commit for leaked credentials."
+        entry: bash -c 'trufflehog git file://. --since-commit HEAD --only-verified --fail --no-update'
+        language: system
+        stages: [commit]
+        pass_filenames: false
+        require_serial: true
+        always_run: true
       - id: yamllint
         name: yamllint
         description: "Lint YAML files."
