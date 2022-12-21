@@ -154,16 +154,24 @@ jobs:
       - name: Create Release -- Generate Github Release Draft
         if: contains(github.ref, '/tags/v')
         id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/github-script@v6
         with:
-          tag_name: ${{ env.BRANCH_OR_TAG }}
-          release_name: Release ${{ env.BRANCH_OR_TAG }}
-          body: |
-            ${{ env.CHANGE_LOG_CONTENT }}
-          draft: true
-          prerelease: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            try {
+              const result = await github.rest.repos.createRelease({
+                body: process.env.CHANGE_LOG_CONTENT,
+                draft: true,
+                name: "Release " + process.env.BRANCH_OR_TAG,
+                owner: context.repo.owner,
+                prerelease: false,
+                repo: context.repo.repo,
+                tag_name: process.env.BRANCH_OR_TAG,
+              });
+              return result
+            } catch (error) {
+              core.setFailed(error.message);
+            }
 
       - name: Create Release -- Build Wheel
         if: contains(github.ref, '/tags/v')
@@ -178,14 +186,12 @@ jobs:
 
       - name: Create Release -- Upload Release Asset
         if: contains(github.ref, '/tags/v')
-        uses: actions/upload-release-asset@v1
+        run: |
+          source ./.github/scripts/upload_asset.sh
         env:
+          FILE_PATH: ./dist/${{ env.WHEEL_NAME }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/${{ env.WHEEL_NAME }}
-          asset_name: ${{ env.WHEEL_NAME }}
-          asset_content_type: application/zip
+          RELEASE_CONTEXT: ${{ steps.create_release.outputs.result }}
 
       - name: Create Release -- Report Success
         if: contains(github.ref, '/tags/v')

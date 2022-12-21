@@ -153,16 +153,25 @@ jobs:
 
       - name: Create Release -- Generate Github Release Draft
         if: contains(github.ref, '/tags/v')
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        id: create_release
+        uses: actions/github-script@v6
         with:
-          tag_name: ${{ env.BRANCH_OR_TAG }}
-          release_name: Release ${{ env.BRANCH_OR_TAG }}
-          body: |
-            ${{ env.CHANGE_LOG_CONTENT }}
-          draft: true
-          prerelease: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            try {
+              const result = await github.rest.repos.createRelease({
+                body: process.env.CHANGE_LOG_CONTENT,
+                draft: true,
+                name: "Release " + process.env.BRANCH_OR_TAG,
+                owner: context.repo.owner,
+                prerelease: false,
+                repo: context.repo.repo,
+                tag_name: process.env.BRANCH_OR_TAG,
+              });
+              return result.upload_url
+            } catch (error) {
+              core.setFailed(error.message);
+            }
 
       - name: Create Release -- Report Success
         if: contains(github.ref, '/tags/v')
