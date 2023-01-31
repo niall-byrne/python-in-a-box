@@ -1,0 +1,314 @@
+# The configurations that used for the recording, feel free to edit them
+config:
+
+  # Specify a command to be executed
+  # like `/bin/bash -l`, `ls`, or any other commands
+  # the default is bash for Linux
+  # or powershell.exe for Windows
+  command: null
+  
+  # Specify the current working directory path
+  # the default is the current working directory path
+  cwd: /Volumes/Code/Code/niall-byrne/mmmm_cookies
+  
+  # Export additional ENV variables
+  env:
+    recording: true
+  
+  # Explicitly set the number of columns
+  # or use `auto` to take the current
+  # number of columns of your shell
+  cols: 120
+  
+  # Explicitly set the number of rows
+  # or use `auto` to take the current
+  # number of rows of your shell
+  rows: 25
+  
+  # Amount of times to repeat GIF
+  # If value is -1, play once
+  # If value is 0, loop indefinitely
+  # If value is a positive number, loop n times
+  repeat: 0
+  
+  # Quality
+  # 1 - 100
+  quality: 100
+  
+  # Delay between frames in ms
+  # If the value is `auto` use the actual recording delays
+  frameDelay: auto
+  
+  # Maximum delay between frames in ms
+  # Ignored if the `frameDelay` isn't set to `auto`
+  # Set to `auto` to prevent limiting the max idle time
+  maxIdleTime: 1000
+  
+  # The surrounding frame box
+  # The `type` can be null, window, floating, or solid`
+  # To hide the title use the value null
+  # Don't forget to add a backgroundColor style with a null as type
+  frameBox:
+    type: floating
+    title: Python In A Box
+    style:
+      border: 0px black solid
+      # boxShadow: none
+      # margin: 0px
+  
+  # Add a watermark image to the rendered gif
+  # You need to specify an absolute path for
+  # the image on your machine or a URL, and you can also
+  # add your own CSS styles
+  watermark:
+    imagePath: null
+    style:
+      position: absolute
+      right: 15px
+      bottom: 15px
+      width: 100px
+      opacity: 0.9
+  
+  # Cursor style can be one of
+  # `block`, `underline`, or `bar`
+  cursorStyle: block
+  
+  # Font family
+  # You can use any font that is installed on your machine
+  # in CSS-like syntax
+  fontFamily: "Monaco, Lucida Console, Ubuntu Mono, Monospace"
+  
+  # The size of the font
+  fontSize: 12
+  
+  # The height of lines
+  lineHeight: 1
+  
+  # The spacing between letters
+  letterSpacing: 0
+  
+  # Theme
+  theme:
+    background: "transparent"
+    foreground: "#afafaf"
+    cursor: "#c7c7c7"
+    black: "#232628"
+    red: "#fc4384"
+    green: "#b3e33b"
+    yellow: "#ffa727"
+    blue: "#75dff2"
+    magenta: "#ae89fe"
+    cyan: "#708387"
+    white: "#d5d5d0"
+    brightBlack: "#626566"
+    brightRed: "#ff7fac"
+    brightGreen: "#c8ed71"
+    brightYellow: "#ebdf86"
+    brightBlue: "#75dff2"
+    brightMagenta: "#ae89fe"
+    brightCyan: "#b1c6ca"
+    brightWhite: "#f9f9f4"
+  
+# Records, feel free to edit them
+records:
+  - delay: 1
+    content: "\r\n"
+  - delay: 1
+    content: "Entering Development Container ...\r\n"
+  - delay: 80
+    content: "\e[31m*\e[0m"
+  - delay: 17
+    content: "[r:\e[33mmmmm_cookies\e[0m/b:\e[36mmain\e[0m]\r\n\e[?2004h\e[01;32muser@b25838700063\e[00m:\e[01;34m/app\e[00m$ "
+  - delay: 500
+    content: d
+  - delay: 50
+    content: e
+  - delay: 60
+    content: v
+  - delay: 545
+    content: "\r\n\e[?2004l\r"
+  - delay: 311
+    content: "Usage: dev [OPTIONS] COMMAND [ARGS]...\r\n\r\n  Python-In-A-Box CLI.\r\n\r\nOptions:\r\n  -h, --help  Show this message and exit.\r\n\r\nCommands:\r\n  @pib                    PIB built-in commands.\r\n  build-docs              Build the project's documentation.\r\n  build-wheel             Build a distribution wheel.\r\n  bump                    Increment the project's semantic version and...\r\n  coverage                Run code coverage test.\r\n  fmt                     Run code formatters.\r\n  leaks                   Run a scan for leaked credentials in commits.\r\n  lint                    Run the code linters.\r\n  reinstall-requirements  Reinstall the project requirements.\r\n  sectest                 Run the security tests.\r\n  test                    Run the unittests.\r\n  types                   Run the type checker.\r\n"
+  - delay: 74
+    content: "\e[31m*\e[0m"
+  - delay: 24
+    content: "[r:\e[33mmmmm_cookies\e[0m/b:\e[36mmain\e[0m]\r\n\e[?2004h\e[01;32muser@b25838700063\e[00m:\e[01;34m/app\e[00m$ "
+  - delay: 500
+    content: d
+  - delay: 60
+    content: e
+  - delay: 50
+    content: v
+  - delay: 60
+    content: ' '
+  - delay: 70
+    content: '@'
+  - delay: 80
+    content: p
+  - delay: 56
+    content: i
+  - delay: 60
+    content: b
+  - delay: 80
+    content: ' '
+  - delay: 80
+    content: v
+  - delay: 50
+    content: e
+  - delay: 64
+    content: r
+  - delay: 70
+    content: s
+  - delay: 80
+    content: i
+  - delay: 90
+    content: o
+  - delay: 100
+    content: 'n'
+  - delay: 313
+    content: "\r\n\e[?2004l\r"
+  - delay: 311
+    content: "pib_cli version: 1.2.0\r\n"
+  - delay: 69
+    content: "\e[31m*\e[0m"
+  - delay: 22
+    content: "[r:\e[33mmmmm_cookies\e[0m/b:\e[36mmain\e[0m]\r\n\e[?2004h\e[01;32muser@b25838700063\e[00m:\e[01;34m/app\e[00m$ "
+  - delay: 500
+    content: d
+  - delay: 50
+    content: e
+  - delay: 60
+    content: v
+  - delay: 545
+    content: "\r\n\e[?2004l\r"
+  - delay: 311
+    content: "Usage: dev [OPTIONS] COMMAND [ARGS]...\r\n\r\n  Python-In-A-Box CLI.\r\n\r\nOptions:\r\n  -h, --help  Show this message and exit.\r\n\r\nCommands:\r\n  @pib                    PIB built-in commands.\r\n  build-docs              Build the project's documentation.\r\n  build-wheel             Build a distribution wheel.\r\n  bump                    Increment the project's semantic version and...\r\n  coverage                Run code coverage test.\r\n  fmt                     Run code formatters.\r\n  leaks                   Run a scan for leaked credentials in commits.\r\n  lint                    Run the code linters.\r\n  reinstall-requirements  Reinstall the project requirements.\r\n  sectest                 Run the security tests.\r\n  test                    Run the unittests.\r\n  types                   Run the type checker.\r\n"
+  - delay: 74
+    content: "\e[31m*\e[0m"
+  - delay: 24
+    content: "[r:\e[33mmmmm_cookies\e[0m/b:\e[36mmain\e[0m]\r\n\e[?2004h\e[01;32muser@b25838700063\e[00m:\e[01;34m/app\e[00m$ "
+  - delay: 500
+    content: d
+  - delay: 60
+    content: e
+  - delay: 70
+    content: v
+  - delay: 80
+    content: ' '
+  - delay: 50
+    content: t
+  - delay: 60
+    content: e
+  - delay: 70
+    content: s
+  - delay: 80
+    content: t
+  - delay: 80
+    content: "\r\n\e[?2004l\r"
+  - delay: 957
+    content: "\e[1m============================================== test session starts ==============================================\e[0m\r\nplatform linux -- Python 3.7.16, pytest-7.2.1, pluggy-1.0.0\r\nrootdir: /app, configfile: pyproject.toml, testpaths: mmmm_cookies\r\nplugins: cov-3.0.0, pylint-0.18.0\r\n\e[1mcollecting ... \e[0m"
+  - delay: 51
+    content: "\e[1m\rcollected 1 item                                                                                                                    \e[0m\r\n\r\nmmmm_cookies/tests/test_app.py \e[32m.\e[0m\e[32m                                                                           [100%]\e[0m"
+  - delay: 5
+    content: "\r\n\r\n\e[32m=============================================== \e[32m\e[1m1 passed\e[0m\e[32m in 0.06s\e[0m\e[32m ===============================================\e[0m\r\n"
+  - delay: 164
+    content: "Unittests Passed!\r\n"
+  - delay: 69
+    content: "\e[31m*\e[0m"
+  - delay: 21
+    content: "[r:\e[33mmmmm_cookies\e[0m/b:\e[36mmain\e[0m]\r\n\e[?2004h\e[01;32muser@b25838700063\e[00m:\e[01;34m/app\e[00m$ "
+  - delay: 500
+    content: d
+  - delay: 50
+    content: e
+  - delay: 60
+    content: v
+  - delay: 545
+    content: "\r\n\e[?2004l\r"
+  - delay: 311
+    content: "Usage: dev [OPTIONS] COMMAND [ARGS]...\r\n\r\n  Python-In-A-Box CLI.\r\n\r\nOptions:\r\n  -h, --help  Show this message and exit.\r\n\r\nCommands:\r\n  @pib                    PIB built-in commands.\r\n  build-docs              Build the project's documentation.\r\n  build-wheel             Build a distribution wheel.\r\n  bump                    Increment the project's semantic version and...\r\n  coverage                Run code coverage test.\r\n  fmt                     Run code formatters.\r\n  leaks                   Run a scan for leaked credentials in commits.\r\n  lint                    Run the code linters.\r\n  reinstall-requirements  Reinstall the project requirements.\r\n  sectest                 Run the security tests.\r\n  test                    Run the unittests.\r\n  types                   Run the type checker.\r\n"
+  - delay: 74
+    content: "\e[31m*\e[0m"
+  - delay: 24
+    content: "[r:\e[33mmmmm_cookies\e[0m/b:\e[36mmain\e[0m]\r\n\e[?2004h\e[01;32muser@b25838700063\e[00m:\e[01;34m/app\e[00m$ "
+  - delay: 500
+    content: d
+  - delay: 60
+    content: e
+  - delay: 70
+    content: v
+  - delay: 80
+    content: ' '
+  - delay: 90
+    content: s
+  - delay: 96
+    content: e
+  - delay: 96
+    content: c
+  - delay: 100
+    content: t
+  - delay: 112
+    content: e
+  - delay: 80
+    content: s
+  - delay: 72
+    content: t
+  - delay: 193
+    content: "\r\n\e[?2004l\r"
+  - delay: 432
+    content: "[main]\tINFO\tprofile include tests: None\r\n[main]\tINFO\tprofile exclude tests: None\r\n[main]\tINFO\tcli include tests: None\r\n[main]\tINFO\tcli exclude tests: None\r\n[main]\tINFO\tusing config: pyproject.toml\r\n[main]\tINFO\trunning on Python 3.7.16\r\n"
+  - delay: 22
+    content: "\e[95mRun started:2023-01-31 21:44:11.006688\e[0m\r\n\e[95m\r\nTest results:\e[0m\r\n\tNo issues identified.\r\n\e[95m\r\nCode scanned:\e[0m\r\n\tTotal lines of code: 10\r\n\tTotal lines skipped (#nosec): 0\r\n\e[95m\r\nRun metrics:\e[0m\r\n\tTotal issues (by severity):\r\n\t\tUndefined: 0\r\n\t\tLow: 0\r\n\t\tMedium: 0\r\n\t\tHigh: 0\r\n\tTotal issues (by confidence):\r\n\t\tUndefined: 0\r\n\t\tLow: 0\r\n\t\tMedium: 0\r\n\t\tHigh: 0\r\n\e[95mFiles skipped (0):\e[0m\r\n"
+  - delay: 15
+    content: "\r\nPoetry is exporting the lockfile standby...\r\n"
+  - delay: 992
+    content: "+==============================================================================+\r\n|                                                                              |\r\n|                               /$$$$$$            /$$                         |\r\n|                              /$$__  $$          | $$                         |\r\n|           /$$$$$$$  /$$$$$$ | $$  \\__//$$$$$$  /$$$$$$   /$$   /$$           |\r\n|          /$$_____/ |____  $$| $$$$   /$$__  $$|_  $$_/  | $$  | $$           |\r\n|         |  $$$$$$   /$$$$$$$| $$_/  | $$$$$$$$  | $$    | $$  | $$           |\r\n|          \\____  $$ /$$__  $$| $$    | $$_____/  | $$ /$$| $$  | $$           |\r\n|          /$$$$$$$/|  $$$$$$$| $$    |  $$$$$$$  |  $$$$/|  $$$$$$$           |\r\n|         |_______/  \\_______/|__/     \\_______/   \\___/   \\____  $$           |\r\n|                                                          /$$  | $$           |\r\n|                                                         |  $$$$$$/           |\r\n|  by pyup.io                                              \\______/            |\r\n|                                                                              |\r\n+==============================================================================+\r\n| REPORT                                                                       |\r\n| checked 0 packages, using free DB (updated once a month)                     |\r\n+==============================================================================+\r\n| No known security vulnerabilities found.                                     |\r\n+==============================================================================+\e[0m\r\n"
+  - delay: 22
+    content: "Security Test Passed!\r\n"
+  - delay: 72
+    content: "\e[31m*\e[0m"
+  - delay: 23
+    content: "[r:\e[33mmmmm_cookies\e[0m/b:\e[36mmain\e[0m]\r\n\e[?2004h\e[01;32muser@b25838700063\e[00m:\e[01;34m/app\e[00m$ "
+  - delay: 500
+    content: d
+  - delay: 50
+    content: e
+  - delay: 60
+    content: v
+  - delay: 545
+    content: "\r\n\e[?2004l\r"
+  - delay: 311
+    content: "Usage: dev [OPTIONS] COMMAND [ARGS]...\r\n\r\n  Python-In-A-Box CLI.\r\n\r\nOptions:\r\n  -h, --help  Show this message and exit.\r\n\r\nCommands:\r\n  @pib                    PIB built-in commands.\r\n  build-docs              Build the project's documentation.\r\n  build-wheel             Build a distribution wheel.\r\n  bump                    Increment the project's semantic version and...\r\n  coverage                Run code coverage test.\r\n  fmt                     Run code formatters.\r\n  leaks                   Run a scan for leaked credentials in commits.\r\n  lint                    Run the code linters.\r\n  reinstall-requirements  Reinstall the project requirements.\r\n  sectest                 Run the security tests.\r\n  test                    Run the unittests.\r\n  types                   Run the type checker.\r\n"
+  - delay: 74
+    content: "\e[31m*\e[0m"
+  - delay: 24
+    content: "[r:\e[33mmmmm_cookies\e[0m/b:\e[36mmain\e[0m]\r\n\e[?2004h\e[01;32muser@b25838700063\e[00m:\e[01;34m/app\e[00m$ "
+  - delay: 500
+    content: d
+  - delay: 60
+    content: e
+  - delay: 70
+    content: v
+  - delay: 80
+    content: ' '
+  - delay: 90
+    content: l
+  - delay: 50
+    content: e
+  - delay: 96
+    content: a
+  - delay: 89
+    content: k
+  - delay: 60
+    content: s
+  - delay: 80
+    content: "\r\n\e[?2004l\r"
+  - delay: 498
+    content: "\U0001F437\U0001F511\U0001F437  TruffleHog. Unearth your secrets. \U0001F437\U0001F511\U0001F437\r\n\r\n"
+  - delay: 1246
+    content: "Credential Leaks Test Passed!\r\n"
+  - delay: 250
+    content: "\e[31m*\e[0m"
+  - delay: 20
+    content: "[r:\e[33mmmmm_cookies\e[0m/b:\e[36mmain\e[0m]\r\n\e[?2004h\e[01;32muser@b25838700063\e[00m:\e[01;34m/app\e[00m$ "
+

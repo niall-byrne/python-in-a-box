@@ -23,7 +23,7 @@ Batteries are included:
 - a customizable `dev` CLI to orchestrate everything
 - a lot more (too much to list here, just try it out...)
 
-![Demo Image](https://i.ibb.co/sqddjYb/render1646245029095.gif)
+![Demo Image](https://gist.githubusercontent.com/niall-byrne/287e5b6a8e253eea2f785cc4ab025a71/raw/c7b690731a0d9eaf878bef14c5ba9f8702e05aae/python-in-a-box-demo-v0.0.2.gif)
 
 ## Project Requirements
 
