@@ -4,10 +4,12 @@
 
 The [Dockerfile](../{{cookiecutter.project_slug}}/assets/Dockerfile) sets some modifiable parameters you can manipulate when building your container:
 
-| Variable                     | Use Case                                                                                                              |
-|------------------------------|-----------------------------------------------------------------------------------------------------------------------|
-| BUILD_ARG_PYTHON_VERSION     | Set this value to override the default Python version your container is built for.  Useful for cross-version testing. |
-| BUILD_ARG_ASPELL_LANGUAGE    | Set this value to override the language [aspell](http://aspell.net/) will be installed to support. (defaults to 'en') |
+| Variable                     | Use Case                                                                                                                  |
+|------------------------------|---------------------------------------------------------------------------------------------------------------------------|
+| BUILD_ARG_ASPELL_LANGUAGE    | Set this value to override the language [aspell](http://aspell.net/) will be installed to support.     (defaults to 'en') |
+| BUILD_ARG_CONTAINER_GID      | Set this value to override the default GID inside the container if you're having permission problems.  (defaults to 1000) |
+| BUILD_ARG_CONTAINER_UID      | Set this value to override the default UID inside the container if you're having permission problems.  (defaults to 1000) |
+| BUILD_ARG_PYTHON_VERSION     | Set this value to override the default Python version your container is built for.  Useful for cross-version testing.     |
 
 ## Default Environment Variables
 

@@ -52,10 +52,6 @@ jobs:
           touch ${HOME}/.gitconfig
           touch ${HOME}/.gitconfig_global
 
-      - name: Publish Container -- Ensure File System is Writable by the Container
-        run: |
-          sudo chmod -R o+w .
-
       - name: Publish Container -- Construct Image Tag
         run: |
           echo "IMAGE_NAME=${DOCKER_USERNAME}/${PROJECT_NAME}:${BRANCH_OR_TAG}" >> $GITHUB_ENV

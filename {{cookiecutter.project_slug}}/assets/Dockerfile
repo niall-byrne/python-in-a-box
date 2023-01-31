@@ -1,7 +1,10 @@
 ARG BUILD_ARG_PYTHON_VERSION={{cookiecutter.python_version}}
+
 FROM python:$BUILD_ARG_PYTHON_VERSION-slim AS base
 
 ARG BUILD_ARG_ASPELL_LANGUAGE="en"
+ARG BUILD_ARG_CONTAINER_GID=1000
+ARG BUILD_ARG_CONTAINER_UID=1000
 
 LABEL maintainer="{{cookiecutter.email}}"
 LABEL project="{{cookiecutter.project_slug}}"
@@ -33,16 +36,18 @@ RUN apt-get update               && \
     build-essential=12.*         && \
     rm -rf /var/lib/apt/lists/*
 
-# Setup directories
-RUN mkdir -p /home/user /app
-WORKDIR /app
-
 # Create the runtime user, and enforce permissions
-RUN useradd user -d /home/user           \
-                 -s /bin/bash            \
-                 -M                   && \
- chown -R user:user /home/user        && \
- chown -R user:user /app
+RUN groupadd user -g "${BUILD_ARG_CONTAINER_GID}"
+RUN useradd user -d /home/user                    \
+                 -s /bin/bash                     \
+                 -u "${BUILD_ARG_CONTAINER_UID}"  \
+                 -g "${BUILD_ARG_CONTAINER_GID}"  \
+                 -m
+
+# Setup directories
+RUN mkdir -p /app
+RUN chown -R user:user /app
+WORKDIR /app
 
 # Include the local binary folder in PATH
 ENV PATH "/home/user/.local/bin/:${PATH}"
@@ -107,9 +112,9 @@ RUN poetry install -E dev
 # Create A Symlink For the Bash Customizations
 RUN ln -sf /app/assets/.bash_customize /home/user/.bash_customize
 
-# Modify the git hooks permissions
+# Enforce git repository permissions
 USER root
-RUN chown user /app/.git/hooks
+RUN chown user:user -R /app
 USER user
 
 # Setup The Dev CLI, bootstrapping the current version of pib_cli
@@ -137,9 +142,6 @@ COPY pyproject.toml *.lock /app/
 RUN poetry lock{% endif %}
 RUN poetry export --without-hashes -f requirements.txt -o /app/requirements.txt
 
-# Copy the codebase
-COPY . /app
-
 # ======================================================
 
 # Production Environment
@@ -160,5 +162,10 @@ RUN pip --no-cache-dir install -r requirements.txt
 
 # Copy the codebase
 COPY . /app
+
+# Enforce codebase permissions
+USER root
+RUN chown user:user -R /app
+USER user
 
 CMD ["./{{cookiecutter.project_slug}}/container_init.sh"]
