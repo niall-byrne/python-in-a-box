@@ -114,7 +114,7 @@ jobs:
           docker-compose exec -T "${PROJECT_NAME}" ./scripts/utilities/check_release.sh
 
       - name: Build -- Report Job Status (Success)
-        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
+        if: env.VERBOSE_NOTIFICATIONS == '1'
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: build for Python ${PYTHON_VERSION} was successful"
 
@@ -129,26 +129,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Create Release -- Branch Filter
+        id: branch_filter
+        run: |
+          MATCH="FALSE"
+          [[ "${{ github.event.ref }}" =~ /tags/v\.* ]] && MATCH="TRUE"
+          echo "MATCH=${MATCH}" >> $GITHUB_OUTPUT
+
       - name: Create Release -- Checkout
-        if: contains(github.ref, '/tags/v')
+        if: steps.branch_filter.outputs.match == 'TRUE'
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
       - name: Create Release -- Setup Environment
-        if: contains(github.ref, '/tags/v')
+        if: steps.branch_filter.outputs.match == 'TRUE'
         run: |
           source .github/scripts/setup.sh
         env:
           WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 
       - name: Create Release -- Generate Changelog
-        if: contains(github.ref, '/tags/v')
+        if: steps.branch_filter.outputs.match == 'TRUE'
         run: |
           source .github/scripts/changelog.sh
 
       - name: Create Release -- Generate Github Release Draft
-        if: contains(github.ref, '/tags/v')
+        if: steps.branch_filter.outputs.match == 'TRUE'
         id: create_release
         uses: actions/github-script@v6
         with:
@@ -170,7 +177,7 @@ jobs:
             }
 
       - name: Create Release -- Build Wheel
-        if: contains(github.ref, '/tags/v')
+        if: steps.branch_filter.outputs.match == 'TRUE'
         run: |
           pip install poetry
           poetry install --no-dev
@@ -181,7 +188,7 @@ jobs:
           echo "WHEEL_NAME=${WHEEL_NAME}" >> $GITHUB_ENV
 
       - name: Create Release -- Upload Release Asset
-        if: contains(github.ref, '/tags/v')
+        if: steps.branch_filter.outputs.match == 'TRUE'
         run: |
           source ./.github/scripts/upload_asset.sh
         env:
@@ -190,12 +197,12 @@ jobs:
           RELEASE_CONTEXT: ${{ steps.create_release.outputs.result }}
 
       - name: Create Release -- Report Success
-        if: contains(github.ref, '/tags/v')
+        if: steps.branch_filter.outputs.match == 'TRUE'
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: automated release has been created:\nhttps://github.com/${USERNAME}/${PROJECT_NAME}/releases"
 
       - name: Create Release -- Report Failure
-        if: failure() && contains(github.ref, '/tags/v')
+        if: failure()
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" ":x: automated release generation failed!"
 
@@ -221,7 +228,7 @@ jobs:
           config: ./.hadolint.yml
 
       - name: Dockerfile Test -- Report Success
-        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
+        if: env.VERBOSE_NOTIFICATIONS == '1'
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: dockerfile linting was successful!"
 
@@ -252,7 +259,7 @@ jobs:
           use-verbose-mode: 'yes'
 
       - name: Documentation Test -- Report Success
-        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
+        if: env.VERBOSE_NOTIFICATIONS == '1'
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: documentation checks were successful!"
 
@@ -288,7 +295,7 @@ jobs:
           head: ${{ env.BRANCH_OR_TAG }}
 
       - name: Security Test -- Report Success
-        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
+        if: env.VERBOSE_NOTIFICATIONS == '1'
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: security checks were successful!"
 
@@ -316,7 +323,7 @@ jobs:
           source ./.github/scripts/lint_shellcheck.sh
 
       - name: Shellcheck -- Report Job Status on Success
-        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
+        if: env.VERBOSE_NOTIFICATIONS == '1'
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: shellcheck checks were successful!"
 
@@ -347,7 +354,7 @@ jobs:
           config_file: .yamllint.yml
 
       - name: Workflow Lint -- Report Job Status on Success
-        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
+        if: env.VERBOSE_NOTIFICATIONS == '1'
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: workflow linting was successful!"
 
