@@ -114,7 +114,7 @@ jobs:
           docker-compose exec -T "${PROJECT_NAME}" ./scripts/utilities/check_release.sh
 
       - name: Build -- Report Job Status (Success)
-        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
+        if: ${{ env.VERBOSE_NOTIFICATIONS == '1' }}
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: build for Python ${PYTHON_VERSION} was successful"
 
@@ -201,7 +201,7 @@ jobs:
           config: ./.hadolint.yml
 
       - name: Dockerfile Test -- Report Success
-        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
+        if: ${{ env.VERBOSE_NOTIFICATIONS == '1' }}
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: dockerfile linting was successful!"
 
@@ -232,7 +232,7 @@ jobs:
           use-verbose-mode: 'yes'
 
       - name: Documentation Test -- Report Success
-        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
+        if: ${{ env.VERBOSE_NOTIFICATIONS == '1' }}
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: documentation checks were successful!"
 
@@ -268,7 +268,7 @@ jobs:
           head: ${{ env.BRANCH_OR_TAG }}
 
       - name: Security Test -- Report Success
-        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
+        if: ${{ env.VERBOSE_NOTIFICATIONS == '1' }}
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: security checks were successful!"
 
@@ -296,7 +296,7 @@ jobs:
           source ./.github/scripts/lint_shellcheck.sh
 
       - name: Shellcheck -- Report Job Status on Success
-        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
+        if: ${{ env.VERBOSE_NOTIFICATIONS == '1' }}
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: shellcheck checks were successful!"
 
@@ -328,7 +328,7 @@ jobs:
           config_file: .yamllint.yml
 
       - name: Workflow Lint -- Report Job Status on Success
-        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
+        if: ${{ env.VERBOSE_NOTIFICATIONS == '1' }}
         run: |
           ./.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: workflow linting was successful!"
 

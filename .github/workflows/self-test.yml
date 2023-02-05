@@ -193,7 +193,7 @@ jobs:
           docker-compose exec -T "${TEMPLATED_NAME}" sudo ls -la /root
 
       - name: Container Build Test -- Report Job Status on Success
-        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
+        if: ${{ env.VERBOSE_NOTIFICATIONS == '1' }}
         run: |
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: container build for Python ${PYTHON_VERSION} was successful"
 
@@ -273,7 +273,7 @@ jobs:
           bash -c 'source .github/scripts/build_container.sh docker-compose.production.yml'
 
       - name: Container Production Build Test -- Report Job Status on Success
-        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
+        if: ${{ env.VERBOSE_NOTIFICATIONS == '1' }}
         run: |
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: Production container build for Python ${PYTHON_VERSION} was successful"
 
@@ -374,7 +374,7 @@ jobs:
           max-depth: -1
 
       - name: Documentation -- Report Job Status on Success
-        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
+        if: ${{ env.VERBOSE_NOTIFICATIONS == '1' }}
         run: |
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: documentation checks were successful!"
 
@@ -441,7 +441,7 @@ jobs:
           poetry run dev types
 
       - name: Hooks Test -- Report Job Status on Success
-        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
+        if: ${{ env.VERBOSE_NOTIFICATIONS == '1' }}
         run: |
           ./{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: cookiecutter hooks test for Python ${PYTHON_VERSION} build was successful!"
 
@@ -583,7 +583,7 @@ jobs:
           source ../template/.github/scripts/cli_test.sh
 
       - name: Hostmachine Test -- Report Job Status on Success
-        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
+        if: ${{ env.VERBOSE_NOTIFICATIONS == '1' }}
         run: |
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: hostmachine for Python ${PYTHON_VERSION} build was successful!"
 
@@ -671,7 +671,7 @@ jobs:
           force: true
 
       - name: Push Template -- Report Job Status on Success
-        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
+        if: ${{ env.VERBOSE_NOTIFICATIONS == '1' }}
         run: |
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: push has been triggered!"
 
@@ -710,7 +710,7 @@ jobs:
           head: ${{ env.BRANCH_OR_TAG }}
 
       - name: Security Test -- Report Job Status on Success
-        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
+        if: ${{ env.VERBOSE_NOTIFICATIONS == '1' }}
         run: |
           ./{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: security checks were successful!"
 
@@ -746,7 +746,7 @@ jobs:
           source ./.github/scripts/lint_shellcheck.sh
 
       - name: Shellcheck -- Report Job Status on Success
-        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
+        if: ${{ env.VERBOSE_NOTIFICATIONS == '1' }}
         run: |
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: shellcheck checks were successful!"
 
@@ -790,7 +790,7 @@ jobs:
           config_file: ./${{ env.TEMPLATED_NAME }}/.yamllint.yml
 
       - name: Workflow Lint -- Report Job Status on Success
-        if: ${{ env.VERBOSE_NOTIFICATIONS  == '1' }}
+        if: ${{ env.VERBOSE_NOTIFICATIONS == '1' }}
         run: |
           ./template/{{cookiecutter.project_slug}}/.github/scripts/notifications.sh "${NOTIFICATION}" ":white_check_mark: workflow linting was successful!"
 
