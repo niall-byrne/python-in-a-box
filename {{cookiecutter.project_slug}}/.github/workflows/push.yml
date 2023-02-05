@@ -263,7 +263,7 @@ jobs:
       - name: Security Test -- Run Trufflehog
         uses: {% endraw %}{{ cookiecutter._GITHUB_TRUFFLEHOG_ACTION }}{% raw %}
         with:
-          path: ./template
+          path: .
           base: ${{ env.PUSHED_COMMIT_RANGE }}
           head: ${{ env.BRANCH_OR_TAG }}
 
