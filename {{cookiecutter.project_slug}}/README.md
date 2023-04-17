@@ -3,7 +3,7 @@
 {{ cookiecutter.description }}
 {%- if cookiecutter.optional_sphinx_support == 'true' %}
 
-[Project Documentation](https://{{cookiecutter.project_slug}}.readthedocs.io/)
+[Project Documentation](https://{{cookiecutter.project_slug|replace('_', '-')}}.readthedocs.io/)
 {%- endif %}
 
 ### {{cookiecutter.git_base_branch|capitalize}} Branch Builds
@@ -22,7 +22,7 @@
 {%- if cookiecutter.optional_sphinx_support == 'true' %}
 
 ### Documentation Builds
-- [![Documentation Status](https://readthedocs.org/projects/{{cookiecutter.project_slug}}/badge/?version=latest)](https://{{cookiecutter.project_slug}}.readthedocs.io/en/latest/?badge=latest)
+- [![Documentation Status](https://readthedocs.org/projects/{{cookiecutter.project_slug}}/badge/?version=latest)](https://{{cookiecutter.project_slug|replace('_', '-')}}.readthedocs.io/en/latest/?badge=latest)
 {%- endif %}
 
 ## Development Quick Start Guide
