@@ -20,6 +20,7 @@ ENV PROJECT_AUTHOR "{{cookiecutter.author}}"
 ENV PYTHONUNBUFFERED "1"
 
 ENV VERSION_ASPELL "aspell-${BUILD_ARG_ASPELL_LANGUAGE}=*"
+ENV VERSION_TOMLL "v1.9.4"
 ENV VERSION_TRUFFLEHOG "3.20.0"
 ENV VERSION_POETRY "poetry>=1.2.0"
 
@@ -76,17 +77,21 @@ RUN apt-get update                      && \
     apt-get install -y                     \
     --no-install-recommends                \
     "${VERSION_ASPELL}"                    \
-    curl=7.74.*                            \
-    fish=3.1.*                             \
-    golang-github-pelletier-go-toml=1.8.*  \
+    curl=7.88.*                            \
+    fish=3.6.*                             \
     jq=1.6*                                \
-    openssh-client=1:8.*                   \
-    shellcheck=0.7.*                       \
+    openssh-client=1:9.*                   \
+    shellcheck=0.9.*                       \
     sudo=1.9.*                             \
     tig=2.5.*                              \
-    vim=2:8.*
+    vim=2:9.*
 
-# Install Git Leaks
+# Install tomll
+COPY scripts/utilities/install_tomll_linux.sh .
+RUN bash install_tomll_linux.sh &&   \
+    rm install_tomll_linux.sh
+
+# Install Trufflehog
 COPY scripts/utilities/install_trufflehog_linux.sh .
 RUN bash install_trufflehog_linux.sh &&   \
     rm install_trufflehog_linux.sh
