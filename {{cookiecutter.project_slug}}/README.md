@@ -18,7 +18,7 @@
 
 ### Release Automation
 - [![{{cookiecutter.project_slug}} Release Container](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-release-container/badge.svg)](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/actions)
-- [![{{cookiecutter.project_slug}} Release Wheel](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-release-wheel/badge.svg)](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/actions)
+- [![{{cookiecutter.project_slug}} Release PyPi](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/workflows/{{cookiecutter.project_slug}}-release-pypi/badge.svg)](https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/actions)
 {%- if cookiecutter.optional_sphinx_support == 'true' %}
 
 ### Documentation Builds
