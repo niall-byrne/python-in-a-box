@@ -1,7 +1,20 @@
 {
+  "httpHeaders": [
+    {
+      "urls": [
+        "https://github.com/",
+        "https://guides.github.com/",
+        "https://help.github.com/",
+        "https://docs.github.com/"
+      ],
+      "headers": {
+        "Accept-Encoding": "zstd, br, gzip, deflate"
+      }
+    }
+  ],
   "ignorePatterns": [
     {
-      "pattern": "^https://docs.github.com/"
+      "pattern": "^https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/"
     }
   ]
 }
