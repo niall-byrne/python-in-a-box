@@ -127,7 +127,7 @@ class PostGenGitSetup(BaseHookSystemCalls):
 
     git_initial_commit_message = "build(COOKIECUTTER): Initial Generation"
     git_root_folder = ".git"
-    git_default_branch_name = "master"
+    git_default_branch_name = Template.option_base_branch_name
     git_production_branch_name = "production"
 
     def condition(self) -> bool:
@@ -140,13 +140,12 @@ class PostGenGitSetup(BaseHookSystemCalls):
     def hook(self) -> None:
         """Configure Git for the template."""
         list(map(self.system_call, self._get_setup_commands()))
-        if Template.option_base_branch_name != self.git_default_branch_name:
-            self.system_call(self._get_rename_command())
 
     def _get_setup_commands(self) -> List[str]:
         return [
             "git init",
             "git stage .",
+            "git branch -m {name}".format(name=self.git_default_branch_name),
             "git commit -m '{message}'".format(
                 message=self.git_initial_commit_message
             ),
@@ -156,11 +155,6 @@ class PostGenGitSetup(BaseHookSystemCalls):
             ),
             "git checkout {name}".format(name=self.git_default_branch_name),
         ]
-
-    def _get_rename_command(self) -> str:
-        return "git branch -m master {name}".format(
-            name=Template.option_base_branch_name,
-        )
 
 
 class PostGenDocstringFilter(BaseHookFilter):

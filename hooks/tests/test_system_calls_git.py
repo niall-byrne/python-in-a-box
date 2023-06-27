@@ -12,10 +12,13 @@ from ..post_gen_project import BaseHookSystemCalls, PostGenGitSetup
 class TestPostGenGitSetup(TestCase):
     """Test the PostGenGitSetup class."""
 
-    def git_common_system_calls(self) -> List[str]:
+    def git_expected_system_calls(self) -> List[str]:
         return [
             "git init",
             "git stage .",
+            "git branch -m {name}".format(
+                name=self.instance.git_default_branch_name
+            ),
             "git commit -m '{message}'".format(
                 message=self.instance.git_initial_commit_message
             ),
@@ -43,7 +46,7 @@ class TestPostGenGitSetup(TestCase):
         )
         self.assertEqual(
             self.instance.git_default_branch_name,
-            "master",
+            "{{cookiecutter.git_base_branch}}",
         )
         self.assertEqual(
             self.instance.git_production_branch_name,
@@ -66,33 +69,14 @@ class TestPostGenGitSetup(TestCase):
             self.assertFalse(self.instance.condition())
 
     @patch("os.system")
-    def test_hook_default(self, m_system: Mock) -> None:
+    def test_system_calls(self, m_system: Mock) -> None:
         m_system.return_value = 1
-        expected_calls = list(map(call, self.git_common_system_calls()))
+        expected_calls = list(map(call, self.git_expected_system_calls()))
 
         with patch(post_gen_project.__name__ + ".Template") as m_template:
             m_template.option_base_branch_name = (
                 self.instance.git_default_branch_name
             )
             self.instance.hook()
-
-        m_system.assert_has_calls(expected_calls)
-
-    @patch("os.system")
-    def test_hook_non_default(self, m_system: Mock) -> None:
-        m_system.return_value = 1
-        expected_calls = list(map(call, self.git_common_system_calls()))
-
-        with patch(post_gen_project.__name__ + ".Template") as m_template:
-            m_template.option_base_branch_name = "custom_name"
-            self.instance.hook()
-
-        expected_calls.append(
-            call(
-                "git branch -m master {name}".format(
-                    name=m_template.option_base_branch_name
-                )
-            )
-        )
 
         m_system.assert_has_calls(expected_calls)
