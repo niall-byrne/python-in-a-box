@@ -15,13 +15,15 @@ class TestBaseHook(TestCase):
     def setUp(self) -> None:
         self.instance = ConcreteBaseHookSystemCalls()
 
-    def test_instantiate(self) -> None:
+    def test_initialize__has_correct_properties(self) -> None:
         self.assertIsInstance(self.instance, BaseHook)
         self.assertIsInstance(self.instance, BaseHookSystemCalls)
 
     @patch("os.system")
     @patch("sys.exit")
-    def test_system_call_zero_code(self, m_exit: Mock, m_system: Mock) -> None:
+    def test_system_call__zero_exit_code__does_not_terminate(
+        self, m_exit: Mock, m_system: Mock
+    ) -> None:
         test_command = "fly away and never come back"
         m_system.return_value = 1
 
@@ -32,7 +34,7 @@ class TestBaseHook(TestCase):
 
     @patch("os.system")
     @patch("sys.exit")
-    def test_system_call_non_zero_code(
+    def test_system_call__non_zero_exit_code__terminates(
         self, m_exit: Mock, m_system: Mock
     ) -> None:
         test_command = "just got back remember me"

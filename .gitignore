@@ -131,9 +131,6 @@ dmypy.json
 # Overrides
 override.env
 
-# Pycharm
-.idea
-
 # Archives
 .archive
 
@@ -143,8 +140,16 @@ override.env
 # Macs
 .DS_Store
 
+# ASDF Version Files
+.tool-versions
+
+# Pycharm
+.idea
+
+# CICD-Tools
+.cicd-tools/boxes/*
+!.cicd-tools/boxes/bootstrap
+
 # Poetry
 poetry.lock
 
-# ASDF Version Files
-.tool-versions

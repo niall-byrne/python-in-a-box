@@ -1,0 +1,31 @@
+{
+    "python_version": ["3.7"],
+    "optional_docstring_linting": ["true", "false"],
+    "optional_sphinx_support": ["true", "false"],
+    "optional_toml_linting": ["true", "false"],
+    "optional_typing_support": ["true", "false"],
+    "optional_workflow_linting": ["true", "false"],
+    "project_name": "Mmmm Cookies",
+    "project_slug": "{{ cookiecutter.project_name|slugify|replace('-', '_') }}",
+    "formatting": ["PEP8", "Niall's 2-Space Preference"],
+    "description": "Not the evil tracking type.",
+    "git_base_branch": "master",
+    "git_dev_branch": "dev",
+    "author": "Niall Byrne",
+    "email": "niall@niallbyrne.ca",
+    "git_handle": "niall-byrne",
+    "include_lock_file": ["true", "false"],
+    "_pib_cli_version": "^1.2.0",
+    "_BRANCH_NAME_DEVELOPMENT": "dev",
+    "_DOCKER_DEFAULT_CONTAINER": "ghcr.io/cicd-tools-org/cicd-tools:master",
+    "_GITHUB_CI_DEFAULT_CONCURRENCY": 4,
+    "_GITHUB_CI_DEFAULT_PYTHON_VERSIONS": ["3.7"],
+    "_GITHUB_CI_DEFAULT_VERBOSE_NOTIFICATIONS": false,
+    "_*DO_NOT_MODIFY_THIS_FILE*": "This file is created to assist with upgrading to future versions of this template.",
+    "_copy_without_render": [
+        ".cicd-tools/boxes/bootstrap/libraries/environment.sh",
+        ".cicd-tools/boxes/bootstrap/schemas",
+        ".github/actions",
+        ".github/deprecated"
+    ]
+}

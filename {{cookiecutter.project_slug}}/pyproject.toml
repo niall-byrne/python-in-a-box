@@ -1,202 +1,199 @@
-
 [build-system]
-  build-backend = "poetry.core.masonry.api"
-  requires = ["poetry-core>=1.0.0"]
+build-backend = 'poetry.core.masonry.api'
+requires = ['poetry-core>=1.0.0']
 
 [tool]
+[tool.bandit]
+skips = []
 
-  [tool.bandit]
-    skips = []
+[tool.commitizen]
+bump_message = 'bump(RELEASE): $current_version → $new_version'
+pre_bump_hooks = ['.cicd-tools/boxes/bootstrap/commitizen/pre_bump.sh']
+version = '0.1.0'
+version_files = ['pyproject.toml:version']
+version_provider = 'poetry'
 
-  [tool.commitizen]
-    name = "cz_conventional_commits"
-    tag_format = "v$version"
-    version = "0.0.0"
+[tool.coverage]
+[tool.coverage.report]
+exclude_lines = ['nocover']
+ignore_errors = true
+precision = 1
+show_missing = true
 
-  [tool.coverage]
+[tool.coverage.run]
+branch = true
+omit = ['*/test*', 'setup.py']
+source = ['.']
 
-    [tool.coverage.report]
-      exclude_lines = ["nocover"]
-      ignore_errors = true
-      precision = 1
-      show_missing = true
-
-    [tool.coverage.run]
-      branch = true
-      omit = ["*/test*", "setup.py"]
-      source = ["."]
-
-  [tool.isort]
-    default_section = "FIRSTPARTY"
-    include_trailing_comma = true
-    indent = "    "
-    length_sort = false
-    line_length = 80
-    multi_line_output = 3
-    no_lines_before = "LOCALFOLDER"
-    sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
-    skip_glob = "*_pb2.py"
+[tool.isort]
+default_section = 'FIRSTPARTY'
+include_trailing_comma = true
+indent = '    '
+length_sort = false
+line_length = 80
+multi_line_output = 3
+no_lines_before = 'LOCALFOLDER'
+sections = 'FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER'
+skip_glob = '*_pb2.py'
 {% if cookiecutter.optional_typing_support == 'true' %}
-  [tool.mypy]
-    ignore_missing_imports = false
+[tool.mypy]
+ignore_missing_imports = false
 {% endif %}
-  [tool.poetry]
-    authors = ["{{cookiecutter.author}} <{{cookiecutter.email}}>"]
-    classifiers = []
-    description = "{{cookiecutter.description}}"
-    documentation = "https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/README.md"
-    exclude = ["**/tests/*", "**/*.sh"]
-    homepage = "https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}"
-    include = ["{{cookiecutter.project_slug}}/data/*"]
-    keywords = []
-    license = "MPL-2.0"
-    name = "{{cookiecutter.project_slug}}"
-    readme = "README.md"
-    repository = "https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}"
-    version = "0.0.0"
+[tool.poetry]
+authors = ['{{cookiecutter.author}} <{{cookiecutter.email}}>']
+classifiers = []
+description = '{{cookiecutter.description}}'
+documentation = 'https://github.com/{{cookiecutter.git_handle}}/{{cookiecutter.project_slug}}/README.md'
+exclude = ['**/tests/*', '**/*.sh']
+homepage = 'https://github.com/{{cookiecutter.git_handle}}/{{cookiecutter.project_slug}}'
+include = ['{{cookiecutter.project_slug}}/data/*']
+keywords = []
+license = 'MPL-2.0'
+name = '{{cookiecutter.project_slug}}'
+readme = 'README.md'
+repository = 'https://github.com/{{cookiecutter.git_handle}}/{{cookiecutter.project_slug}}'
+version = '0.1.0'
 
-    [tool.poetry.dependencies]
-      python = ">={{cookiecutter.python_version}}.0,<3.11.0"
+[tool.poetry.dependencies]
+python = '>={{cookiecutter.python_version}}.0,<3.11.0'
 
-      [tool.poetry.dependencies.pib_cli]
-        extras = [{{-
-        [
-            {"extra": "docstrings", "include": cookiecutter.optional_docstring_linting},
-            {"extra": "docs",       "include": cookiecutter.optional_sphinx_support},
-            {"extra": "types",      "include": cookiecutter.optional_typing_support},
-        ] | selectattr('include', 'equalto', 'true') | map(attribute='extra') | map('tojson') | list | join(', ')
-        -}}]
-        optional = true
-        version = "{{cookiecutter._pib_cli_version}}"
+[tool.poetry.extras]
+dev = ['pib_cli']
+{%- if cookiecutter.optional_sphinx_support == 'true' %}
+docs = ['pib_cli']
+{%- endif %}
 
-    [tool.poetry.dev-dependencies]
+[tool.poetry.group]
+[tool.poetry.group.dev]
+[tool.poetry.group.dev.dependencies]
+[tool.poetry.group.dev.dependencies.pib_cli]
+extras = [{{-
+[
+  {'extra': 'docstrings', 'include': cookiecutter.optional_docstring_linting},
+  {'extra': 'docs',       'include': cookiecutter.optional_sphinx_support},
+  {'extra': 'types',      'include': cookiecutter.optional_typing_support},
+] | selectattr('include', 'equalto', 'true') | map(attribute='extra') | map('tojson') | list | join(', ') | replace('"', "'")
+-}}]
+version = '{{cookiecutter._pib_cli_version}}'
 
-    [tool.poetry.extras]
-      dev = ["pib_cli"]
-      {%- if cookiecutter.optional_sphinx_support == 'true' %}
-      docs = ["pib_cli"]
-      {%- endif %}
+[[tool.poetry.packages]]
+include = '{{cookiecutter.project_slug}}'
 
-    [[tool.poetry.packages]]
-      include = "{{cookiecutter.project_slug}}"
+[tool.poetry.scripts]
+{{cookiecutter.project_slug}} = '{{cookiecutter.project_slug}}.app:main'
 
-    [tool.poetry.scripts]
-      {{cookiecutter.project_slug}} = "{{cookiecutter.project_slug}}.app:main"
+[tool.pylint]
+[tool.pylint.basic]
+argument-rgx = '[a-z_][a-z0-9_]{1,30}$|^pk$'
+attr-rgx = '[a-z_][a-z0-9_]{2,30}$'
+bad-functions = 'map,filter,apply,input'
+bad-names = 'foo,bar,baz,toto,tutu,tata'
+class-attribute-rgx = '([A-Za-z_][A-Za-z0-9_]{2,30}|(__.*__))$'
+class-rgx = '[A-Z_][a-zA-Z0-9]+$'
+const-rgx = '(([A-Z_][A-Z0-9_]*)|(__.*__))$|^urls$|^app$|^User$|^router$'
+docstring-min-length = '-1'
+function-rgx = '[A-Za-z_][A-Za-z0-9_]{2,40}$'
+good-names = 'i,j,k,ex,Run,_'
+inlinevar-rgx = '[A-Za-z_][A-Za-z0-9_]*$'
+method-rgx = '[A-Za-z_][A-Za-z0-9_]{2,50}$'
+module-rgx = '(([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$'
+no-docstring-rgx = '.*'
+required-attributes = []
+variable-rgx = '[a-z_][a-z0-9_]{2,30}$|^pk$'
 
-  [tool.pylint]
+[tool.pylint.classes]
+defining-attr-methods = '__init__,__new__,setUp,__post_init__'
+valid-classmethod-first-arg = 'cls'
+valid-metaclass-classmethod-first-arg = 'mcs'
 
-    [tool.pylint.basic]
-      argument-rgx = "[a-z_][a-z0-9_]{1,30}$|^pk$"
-      attr-rgx = "[a-z_][a-z0-9_]{2,30}$"
-      bad-functions = "map,filter,apply,input"
-      bad-names = "foo,bar,baz,toto,tutu,tata"
-      class-attribute-rgx = "([A-Za-z_][A-Za-z0-9_]{2,30}|(__.*__))$"
-      class-rgx = "[A-Z_][a-zA-Z0-9]+$"
-      const-rgx = "(([A-Z_][A-Z0-9_]*)|(__.*__))$|^urls$|^app$|^User$|^router$"
-      docstring-min-length = "-1"
-      function-rgx = "[A-Za-z_][A-Za-z0-9_]{2,40}$"
-      good-names = "i,j,k,ex,Run,_"
-      inlinevar-rgx = "[A-Za-z_][A-Za-z0-9_]*$"
-      method-rgx = "[A-Za-z_][A-Za-z0-9_]{2,50}$"
-      module-rgx = "(([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$"
-      no-docstring-rgx = ".*"
-      required-attributes = []
-      variable-rgx = "[a-z_][a-z0-9_]{2,30}$|^pk$"
+[tool.pylint.design]
+max-args = 5
+max-attributes = 7
+max-branches = 15
+max-locals = 15
+max-parents = 10
+max-public-methods = 25
+max-returns = 10
+max-statements = 50
+min-public-methods = 1
 
-    [tool.pylint.classes]
-      defining-attr-methods = "__init__,__new__,setUp,__post_init__"
-      valid-classmethod-first-arg = "cls"
-      valid-metaclass-classmethod-first-arg = "mcs"
+[tool.pylint.exceptions]
+overgeneral-exceptions = 'Exception'
 
-    [tool.pylint.design]
-      max-args = 5
-      max-attributes = 7
-      max-branches = 15
-      max-locals = 15
-      max-parents = 10
-      max-public-methods = 25
-      max-returns = 10
-      max-statements = 50
-      min-public-methods = 1
+[tool.pylint.format]
+ignore-long-lines = '^\\s*(# )?<?https?://\\S+>?$'
+{%- if cookiecutter.formatting == "Niall's 2-Space Preference" %}
+indent-string = '  '
+{%- else %}
+indent-string = '    '
+{%- endif %}
+max-line-length = 80
+max-module-lines = 2000
+no-space-check = 'trailing-comma,dict-separator'
+single-line-if-stmt = 'no'
 
-    [tool.pylint.exceptions]
-      overgeneral-exceptions = "Exception"
+[tool.pylint.imports]
+deprecated-modules = 'regsub,TERMIOS,Bastion,rexec'
+ext-import-graph = ''
+import-graph = ''
+int-import-graph = ''
 
-    [tool.pylint.format]
-      ignore-long-lines = "^\\s*(# )?<?https?://\\S+>?$"
-      {%- if cookiecutter.formatting == "Niall's 2-Space Preference" %}
-      indent-string = "  "
-      {%- else %}
-      indent-string = "    "
-      {%- endif %}
-      max-line-length = 80
-      max-module-lines = 2000
-      no-space-check = "trailing-comma,dict-separator"
-      single-line-if-stmt = "no"
+[tool.pylint.master]
+ignore = ''
+ignore-patterns = '.*_pb2.py'
+load-plugins = ''
+persistent = 'yes'
+profile = 'no'
 
-    [tool.pylint.imports]
-      deprecated-modules = "regsub,TERMIOS,Bastion,rexec"
-      ext-import-graph = ""
-      import-graph = ""
-      int-import-graph = ""
+[tool.pylint.message_control]
+disable = 'locally-disabled,fixme,too-few-public-methods,consider-using-f-string,C0411,E1101,R0201'
 
-    [tool.pylint.master]
-      ignore = ""
-      ignore-patterns = ".*_pb2.py"
-      load-plugins = ""
-      persistent = "yes"
-      profile = "no"
+[tool.pylint.miscellaneous]
+notes = 'FIXME,XXX,TODO'
 
-    [tool.pylint.message_control]
-      disable = "locally-disabled,fixme,too-few-public-methods,consider-using-f-string,C0411,E1101,R0201"
+[tool.pylint.reports]
+comment = 'no'
+evaluation = '10.0 - ((float(5 * error + warning + refactor + convention) / statement) * 10)'
+files-output = 'no'
+output-format = 'text'
+reports = 'no'
 
-    [tool.pylint.miscellaneous]
-      notes = "FIXME,XXX,TODO"
+[tool.pylint.similarities]
+ignore-comments = 'yes'
+ignore-docstrings = 'yes'
+ignore-imports = 'no'
+min-similarity-lines = 4
 
-    [tool.pylint.reports]
-      comment = "no"
-      evaluation = "10.0 - ((float(5 * error + warning + refactor + convention) / statement) * 10)"
-      files-output = "no"
-      output-format = "text"
-      reports = "no"
+[tool.pylint.typecheck]
+generated-members = 'REQUEST,acl_users,aq_parent'
+ignore-mixin-members = 'yes'
+ignored-classes = 'SQLObject,optparse.Values,thread._local,_thread._local'
 
-    [tool.pylint.similarities]
-      ignore-comments = "yes"
-      ignore-docstrings = "yes"
-      ignore-imports = "no"
-      min-similarity-lines = 4
+[tool.pylint.variables]
+additional-builtins = ''
+allow-global-unused-variables = 'yes'
+callbacks = 'cb_,_cb'
+dummy-variables-rgx = '_+$|(_[a-zA-Z0-9_]*[a-zA-Z0-9]+?$)|dummy'
+ignored-argument-names = '_.*'
+init-import = 'no'
+redefining-builtins-modules = 'six.moves,past.builtins,future.builtins,builtins,io'
 
-    [tool.pylint.typecheck]
-      generated-members = "REQUEST,acl_users,aq_parent"
-      ignore-mixin-members = "yes"
-      ignored-classes = "SQLObject,optparse.Values,thread._local,_thread._local"
+[tool.pytest]
+[tool.pytest.ini_options]
+filterwarnings = ['ignore::pytest.PytestRemovedIn8Warning', 'ignore::pytest.PytestDeprecationWarning:pytest_cov.*']
+testpaths = ['{{cookiecutter.project_slug}}']
 
-    [tool.pylint.variables]
-      additional-builtins = ""
-      allow-global-unused-variables = "yes"
-      callbacks = "cb_,_cb"
-      dummy-variables-rgx = "_+$|(_[a-zA-Z0-9_]*[a-zA-Z0-9]+?$)|dummy"
-      ignored-argument-names = "_.*"
-      init-import = "no"
-      redefining-builtins-modules = "six.moves,past.builtins,future.builtins,builtins,io"
+[tool.yapf]
+{%- if cookiecutter.formatting == "Niall's 2-Space Preference" %}
+align_closing_bracket_with_visual_indent = false
+based_on_style = 'google'
+dedent_closing_brackets = true
+force_multiline_dict = true
+indent_width = 2
+split_before_logical_operator = true
+{%- else %}
+based_on_style = 'pep8'
+{%- endif %}
 
-  [tool.pytest]
-
-    [tool.pytest.ini_options]
-      filterwarnings = ["ignore::pytest.PytestRemovedIn8Warning", "ignore::pytest.PytestDeprecationWarning:pytest_cov.*"]
-      testpaths = ["{{cookiecutter.project_slug}}"]
-
-  [tool.yapf]
-    {%- if cookiecutter.formatting == "Niall's 2-Space Preference" %}
-    align_closing_bracket_with_visual_indent = false
-    based_on_style = "google"
-    dedent_closing_brackets = true
-    force_multiline_dict = true
-    indent_width = 2
-    split_before_logical_operator = true
-    {%- else %}
-    based_on_style = "pep8"
-    {%- endif %}
-
-  [tool.yapfignore]
-    ignore_patterns = []
+[tool.yapfignore]
+ignore_patterns = []

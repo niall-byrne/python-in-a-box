@@ -1,0 +1,14 @@
+(i?)mmmm
+Pycharm
+[T|t]rufflehog
+aspell
+check_container
+check_spelling
+cli|CLI
+commitizen
+mmmm_cookies
+pib_cli
+protected_branches
+shellcheck
+tomll
+yamllint

@@ -13,14 +13,14 @@ class TestBaseHook(TestCase):
     def setUp(self) -> None:
         self.instance = ConcreteBaseHookFilter()
 
-    def test_instantiate(self) -> None:
+    def test_initialize__has_correct_properties(self) -> None:
         self.assertIsInstance(self.instance, BaseHook)
         self.assertIsInstance(self.instance, BaseHookFilter)
 
     @patch("os.path.exists")
     @patch("os.remove")
     @patch("shutil.rmtree")
-    def test_remove_does_not_exist(
+    def test_remove__when_files_do_not_exist__no_exception(
         self,
         m_rmtree: Mock,
         m_remove: Mock,
@@ -37,7 +37,7 @@ class TestBaseHook(TestCase):
     @patch("os.path")
     @patch("os.remove")
     @patch("shutil.rmtree")
-    def test_remove_exists(
+    def test_remove__when_files_exist__removes_files(
         self,
         m_rmtree: Mock,
         m_remove: Mock,

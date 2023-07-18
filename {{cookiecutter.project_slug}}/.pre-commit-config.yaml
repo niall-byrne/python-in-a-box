@@ -1,5 +1,56 @@
 ---
+default_install_hook_types:
+  - pre-commit
+  - commit-msg
 repos:
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.22.0
+    hooks:
+      - id: check-jsonschema
+        name: check-github-workflow-push-schema
+        files: "^\\.github/config/workflows/workflow-push.json$"
+        args:
+          - "--schemafile"
+          - ".github/config/schemas/workflows/workflow-push.json"
+        stages: [commit]
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: 3.2.2
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+  - repo: https://github.com/cicd-tools-org/pre-commit.git
+    rev: 0.2.0
+    hooks:
+      - id: format-shell
+        args:
+          - "-w"
+          - "--indent=2"
+          - "-ci"
+          - "-sr"
+        exclude: "^.github/deprecated/.+$"
+{%- if cookiecutter.optional_toml_linting == 'true' %}
+      - id: format-toml
+{%- endif %}
+{%- if cookiecutter.optional_workflow_linting == 'true' %}
+      - id: lint-github-workflow-header
+        exclude: "^.github/deprecated/.+$"
+      - id: lint-github-workflow
+        exclude: "^.github/deprecated/.+$"
+{%- endif %}
+      - id: lint-markdown
+        args:
+          - "-c"
+          - ".markdownlint.yml"
+      - id: lint-shell
+        args:
+          - "--color=always"
+          - "--source-path=SCRIPTDIR"
+          - "--exclude=SC2317"
+          - "-x"
+        exclude: "^.github/deprecated/.+$"
+      - id: security-credentials
+      - id: spelling-commit-message
+      - id: spelling-markdown
   - repo: local
     hooks:
       - id: check_container
@@ -9,25 +60,6 @@ repos:
         language: system
         stages: [commit]
         pass_filenames: false
-        require_serial: true
-        always_run: true
-      - id: check_spelling
-        name: check commit spelling
-        description: "Check spelling on commit messages."
-        entry: ./scripts/hooks/check_spelling.sh
-        language: system
-        stages: [commit-msg]
-        minimum_pre_commit_version: "0.15.4"
-        require_serial: true
-        always_run: true
-      - id: commitizen
-        name: commitizen check
-        description: "Check whether the commit message follows committing rules."
-        entry: cz check --commit-msg-file
-        language: python
-        language_version: python3
-        stages: [commit-msg]
-        minimum_pre_commit_version: "0.15.4"
         require_serial: true
         always_run: true
 {%- if cookiecutter.optional_sphinx_support == 'true' %}
@@ -48,33 +80,12 @@ repos:
         pass_filenames: false
         require_serial: true
         always_run: true
-      - id: pyproject.toml
-        name: pyproject.toml lint
-        description: "Lint the pyproject.toml file."
-        entry: bash -c 'tomll pyproject.toml; git diff --exit-code'
-        language: system
-        stages: [commit]
-        files: ^pyproject.toml$
-      - id: shellcheck
-        name: shellcheck scripts
-        description: "Lint shell script files."
-        entry: shellcheck
-        language: system
-        stages: [commit]
-        types: [file, shell]
-      - id: trufflehog
-        name: TruffleHog
-        description: "Scan the commit for leaked credentials."
-        entry: bash -c 'trufflehog git file://. --since-commit HEAD --only-verified --fail --no-update'
-        language: system
-        stages: [commit]
-        pass_filenames: false
-        require_serial: true
-        always_run: true
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.32.0
+    hooks:
       - id: yamllint
-        name: yamllint
-        description: "Lint YAML files."
-        entry: yamllint
-        language: python
+        args:
+          - "-c"
+          - ".yamllint.yml"
         stages: [commit]
-        types: [file, yaml]
+        exclude: "^.github/deprecated/.+$"

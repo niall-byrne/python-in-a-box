@@ -153,3 +153,5 @@ documentation/source/codebase/{{cookiecutter.project_slug}}/_autosummary/
 
 # ASDF Version Files
 .tool-versions
+.cicd-tools/boxes/*
+!.cicd-tools/boxes/bootstrap

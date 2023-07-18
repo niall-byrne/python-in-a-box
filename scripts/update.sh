@@ -20,31 +20,31 @@ error() {
 main() {
 
   pushd "$1" || error
-    cookiecutter_project_upgrader                                         \
-      -c .cookiecutter/cookiecutter.json                                  \
-      -b "update-template"                                                \
-      -u "$2"                                                             \
-      -f https://github.com/niall-byrne/python-in-a-box.git   \
-      -e "assets"                                                         \
-      -e "documentation"                                                  \
-      -e "$1"                                                             \
-      -e ".bandit"                                                        \
-      -e ".bandit.rc"                                                     \
-      -e ".dockerignore"                                                  \
-      -e ".gitignore"                                                     \
-      -e ".readthedocs.yml"                                               \
-      -e ".style.yapf"                                                    \
-      -e ".yamllint.yml"                                                  \
-      -e ".yapfignore"                                                    \
-      -e "container"                                                      \
-      -e "docker-compose.yml"                                             \
-      -e "LICENSE"                                                        \
-      -e "pyproject.toml"                                                 \
-      -e "pytest.ini"                                                     \
-      -e "README.md"                                                      \
-      -e "testing_shim"
+  cookiecutter_project_upgrader \
+    -c .cookiecutter/cookiecutter.json \
+    -b "update-template" \
+    -u "$2" \
+    -f https://github.com/niall-byrne/python-in-a-box.git \
+    -e "assets" \
+    -e "documentation" \
+    -e "$1" \
+    -e ".bandit" \
+    -e ".bandit.rc" \
+    -e ".dockerignore" \
+    -e ".gitignore" \
+    -e ".readthedocs.yml" \
+    -e ".style.yapf" \
+    -e ".yamllint.yml" \
+    -e ".yapfignore" \
+    -e "container" \
+    -e "docker-compose.yml" \
+    -e "LICENSE" \
+    -e "pyproject.toml" \
+    -e "pytest.ini" \
+    -e "README.md" \
+    -e "testing_shim"
 
-    git checkout update-template
+  git checkout update-template
   popd || true
 
 }

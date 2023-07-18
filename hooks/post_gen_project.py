@@ -1,9 +1,10 @@
 """Template post-generation hooks."""
 
 # Environment Variable Overrides:
-# PIB_SKIP_FMT_INIT:        set to a value to skip initial formatting
-# PIB_SKIP_GIT_INIT:        set to a value to skip repository initialization
-# PIB_SKIP_POETRY_INIT:     set to a value to skip poetry installation
+# TEMPLATE_SKIP_FMT_INIT:        Optionally set to 1 to skip the initial code formatting.
+# TEMPLATE_SKIP_GIT_INIT:        Optionally set to 1 to skip creating branches and initial commit.
+# TEMPLATE_SKIP_POETRY:          Optionally set to 1 to skip installing dependencies.
+# TEMPLATE_SKIP_PRECOMMIT:       Optionally set to 1 to skip installing pre-commit hooks.
 
 import abc
 import importlib
@@ -12,16 +13,6 @@ import re
 import shutil
 import sys
 from typing import List
-
-
-class Template:
-    """Template values from the end-user."""
-
-    option_base_branch_name = "{{cookiecutter.git_base_branch}}"
-    option_docstrings = "{{cookiecutter.optional_docstring_linting}}"
-    option_formatting_type = "{{cookiecutter.formatting}}"
-    option_project_slug = "{{cookiecutter.project_slug}}"
-    option_sphinx = "{{cookiecutter.optional_sphinx_support}}"
 
 
 class BaseHook(abc.ABC):
@@ -58,7 +49,7 @@ class BaseHookFilter(BaseHook, abc.ABC):
     excluded: List[str]
 
     def hook(self) -> None:
-        """Remove the specified first or folders."""
+        """Remove the specified files or folders."""
         for file_path in self.excluded:
             self._remove(file_path)
 
@@ -70,16 +61,37 @@ class BaseHookFilter(BaseHook, abc.ABC):
                 os.remove(file_path)
 
 
+class Template:
+    """Template values from the end-user."""
+
+    option_base_branch_name = "{{cookiecutter.git_base_branch}}"
+    option_dev_branch_name = "{{cookiecutter.git_dev_branch}}"
+    option_docstrings = "{{cookiecutter.optional_docstring_linting}}"
+    option_formatting_type = "{{cookiecutter.formatting}}"
+    option_project_slug = "{{cookiecutter.project_slug}}"
+    option_sphinx = "{{cookiecutter.optional_sphinx_support}}"
+
+
+def main() -> None:
+    """Call all post-generation Cookiecutter hooks."""
+    PostGen2SpaceFormattingSetup().execute()
+    PostGenPoetrySetup().execute()
+    PostGenGitSetup().execute()
+    PostGenPrecommitSetup().execute()
+    PostGenDocstringFilter().execute()
+    PostGenSphinxFilter().execute()
+
+
 class PostGen2SpaceFormattingSetup(BaseHookSystemCalls):
     """Niall's preferred 2-space setup."""
 
     formatting_option = "Niall's 2-Space Preference"
 
     def condition(self) -> bool:
-        """Run the hook if selected, and the env var is not set."""
+        """Skip this hook if it's not selected or if an env var is set."""
         return (
             Template.option_formatting_type == self.formatting_option
-            and os.getenv("PIB_SKIP_FMT_INIT") is None
+            and os.getenv("TEMPLATE_SKIP_FMT_INIT") != "1"
         )
 
     def hook(self) -> None:
@@ -109,17 +121,19 @@ class PostGen2SpaceFormattingSetup(BaseHookSystemCalls):
 
 
 class PostGenPoetrySetup(BaseHookSystemCalls):
-    """Post-generation hook to configure a git repository."""
+    """Post-generation hook to configure dependencies with poetry."""
 
-    poetry_setup_command = "poetry lock"
+    poetry_lock_command = "poetry lock"
+    poetry_install_command = "poetry install"
 
     def condition(self) -> bool:
         """Skip this hook if an env var is set."""
-        return os.getenv("PIB_SKIP_POETRY_INIT") is None
+        return os.getenv("TEMPLATE_SKIP_POETRY") != "1"
 
     def hook(self) -> None:
-        """Create a poetry lock file."""
-        self.system_call(self.poetry_setup_command)
+        """Create a poetry lock file and install the project."""
+        self.system_call(self.poetry_lock_command)
+        self.system_call(self.poetry_install_command)
 
 
 class PostGenGitSetup(BaseHookSystemCalls):
@@ -128,17 +142,17 @@ class PostGenGitSetup(BaseHookSystemCalls):
     git_initial_commit_message = "build(COOKIECUTTER): Initial Generation"
     git_root_folder = ".git"
     git_default_branch_name = Template.option_base_branch_name
-    git_production_branch_name = "production"
+    git_dev_branch_name = Template.option_dev_branch_name
 
     def condition(self) -> bool:
-        """Skip this hook if git is already setup or if an env var is set."""
+        """Skip this hook if git is initialized or if an env var is set."""
         return (
             (not os.path.exists(self.git_root_folder))
-            and os.getenv("PIB_SKIP_GIT_INIT") is None
+            and os.getenv("TEMPLATE_SKIP_GIT_INIT") != "1"
         )
 
     def hook(self) -> None:
-        """Configure Git for the template."""
+        """Configure git for the template."""
         list(map(self.system_call, self._get_setup_commands()))
 
     def _get_setup_commands(self) -> List[str]:
@@ -149,41 +163,43 @@ class PostGenGitSetup(BaseHookSystemCalls):
             "git commit -m '{message}'".format(
                 message=self.git_initial_commit_message
             ),
-            "git tag v0.0.0",
-            "git checkout -b {name}".format(
-                name=self.git_production_branch_name
-            ),
+            "git checkout -b {name}".format(name=self.git_dev_branch_name),
             "git checkout {name}".format(name=self.git_default_branch_name),
         ]
 
 
+class PostGenPrecommitSetup(BaseHookSystemCalls):
+    """Post-generation hook to configure the pre-commit hooks."""
+
+    precommit_setup_command = "poetry run pre-commit install"
+
+    def condition(self) -> bool:
+        """Skip this hook if an env var is set."""
+        return os.getenv("TEMPLATE_SKIP_PRECOMMIT") != "1"
+
+    def hook(self) -> None:
+        """Configure the pre-commit hooks."""
+        self.system_call(self.precommit_setup_command)
+
+
 class PostGenDocstringFilter(BaseHookFilter):
-    """Post-generation hook to configure a git repository."""
+    """Post-generation hook to filter pydocstyle files."""
 
     excluded = [".pydocstyle", ".pydocstyle.tests"]
 
     def condition(self) -> bool:
-        """Run the hook if sphinx documentation was not selected."""
+        """Run the hook if docstrings was not selected."""
         return Template.option_docstrings == "false"
 
 
 class PostGenSphinxFilter(BaseHookFilter):
-    """Post-generation hook to configure a git repository."""
+    """Post-generation hook to filter sphinx/documentation files."""
 
     excluded = [".darglint", ".readthedocs.yml", "documentation"]
 
     def condition(self) -> bool:
-        """Run the hook if docstring linting was not selected."""
+        """Run the hook if sphinx was not selected."""
         return Template.option_sphinx == "false"
-
-
-def main() -> None:
-    """Call all post-generation Cookiecutter hooks."""
-    PostGen2SpaceFormattingSetup().execute()
-    PostGenPoetrySetup().execute()
-    PostGenGitSetup().execute()
-    PostGenDocstringFilter().execute()
-    PostGenSphinxFilter().execute()
 
 
 main()

@@ -15,7 +15,7 @@ main() {
   fi
 
   set -eo pipefail
-    terminalizer render demo.yml -o demo.gif
+  terminalizer render demo.yml -o demo.gif
   set +eo pipefail
 
 }

@@ -11,7 +11,7 @@ class TestTemplate(TestCase):
     def setUp(self) -> None:
         self.instance = Template()
 
-    def test_instantiate(self) -> None:
+    def test_initialize__has_correct_properties(self) -> None:
         self.assertEqual(
             self.instance.option_base_branch_name,
             "{{cookiecutter.git_base_branch}}",

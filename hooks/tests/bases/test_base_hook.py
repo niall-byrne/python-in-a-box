@@ -12,15 +12,15 @@ class TestBaseHook(TestCase):
     def setUp(self) -> None:
         self.instance = ConcreteBaseHook()
 
-    def test_instantiate(self) -> None:
+    def test_initialize__has_correct_properties(self) -> None:
         self.assertIsInstance(self.instance, BaseHook)
 
-    def test_execute_true(self) -> None:
+    def test_execute__when_condition_is_true__is_called(self) -> None:
         self.instance.condition_value = True
         self.instance.execute()
         self.instance.hook_called.assert_called_once_with()
 
-    def test_execute_false(self) -> None:
+    def test_execute__when_condition_is_false__is_not_called(self) -> None:
         self.instance.condition_value = False
         self.instance.execute()
         self.instance.hook_called.assert_not_called()

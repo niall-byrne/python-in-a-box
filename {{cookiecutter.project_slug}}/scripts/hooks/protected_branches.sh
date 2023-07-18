@@ -13,7 +13,7 @@ bypass() {
   TARGET_BRANCHES="${GIT_HOOKS_PROTECTED_BRANCHES}"
 
   if [[ ! ${LOCAL_BRANCH} =~ ${TARGET_BRANCHES} ]]; then
-        exit 0
+    exit 0
   fi
 
 }

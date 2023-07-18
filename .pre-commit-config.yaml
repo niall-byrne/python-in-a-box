@@ -1,57 +1,61 @@
 ---
+default_install_hook_types:
+  - pre-commit
+  - commit-msg
 repos:
-  - repo: local
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.23.0
     hooks:
-      - id: check_spelling
-        name: check commit spelling
-        description: "Check spelling on commit messages."
-        entry: env GIT_HOOKS_ASPELL_ENCODING="utf-8" GIT_HOOKS_ASPELL_LANG="en_US" USER_DICTIONARY=./{{cookiecutter.project_slug}}/.aspell.pws ./{{cookiecutter.project_slug}}/scripts/hooks/check_spelling.sh
-        language: system
-        stages: [commit-msg]
-        minimum_pre_commit_version: "0.15.4"
-        require_serial: true
-        always_run: true
+      - id: check-jsonschema
+        name: check-cookiecutter-schema
+        files: "^(cookiecutter\\.json|\\.github/scenarios/.*\\.json)$"
+        args:
+          - "--schemafile"
+          - ".cicd-tools/boxes/bootstrap/schemas/cookiecutter.json"
+        stages: [commit]
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: 3.2.2
+    hooks:
       - id: commitizen
-        name: commitizen check
-        description: "Check whether the commit message follows committing rules."
-        entry: cz check --commit-msg-file
-        language: python
-        language_version: python3
         stages: [commit-msg]
-        minimum_pre_commit_version: "0.15.4"
-        require_serial: true
-        always_run: true
-      - id: pyproject.toml
-        name: pyproject.toml lint
-        description: "Lint the pyproject.toml file."
-        entry: bash -c 'tomll pyproject.toml; git diff --exit-code'
-        language: system
-        stages: [commit]
-        pass_filenames: false
-        always_run: true
-      - id: shellcheck
-        name: shellcheck scripts
-        description: "Run shellcheck on select shell scripts."
-        entry: bash -c 'find . -name "*.sh" -not -path "./{{cookiecutter.project_slug}}/*"  | xargs shellcheck'
-        language: system
-        stages: [commit]
-        pass_filenames: false
-        require_serial: true
-        always_run: true
-      - id: trufflehog
-        name: TruffleHog
-        description: "Scan the commit for leaked credentials."
-        entry: bash -c 'trufflehog git file://. --since-commit HEAD --only-verified --fail --no-update'
-        language: system
-        stages: [commit]
-        pass_filenames: false
-        require_serial: true
-        always_run: true
+  - repo: https://github.com/cicd-tools-org/pre-commit.git
+    rev: 0.2.0
+    hooks:
+      - id: format-shell
+        args:
+          - "-w"
+          - "--indent=2"
+          - "-ci"
+          - "-sr"
+        exclude: "^{{cookiecutter\\.project_slug}}/.+$|^\\.cicd-tools/boxes/.+$"
+      - id: format-toml
+        exclude: "^{{cookiecutter\\.project_slug}}/.+$"
+      - id: lint-github-workflow
+        exclude: "^{{cookiecutter\\.project_slug}}/.+$"
+      - id: lint-github-workflow-header
+        exclude: "^{{cookiecutter\\.project_slug}}/.+$"
+      - id: lint-markdown
+        args:
+          - "-c"
+          - "{{cookiecutter.project_slug}}/.markdownlint.yml"
+        exclude: "^{{cookiecutter\\.project_slug}}/.+$"
+      - id: lint-shell
+        args:
+          - "--color=always"
+          - "--source-path=SCRIPTDIR"
+          - "--exclude=SC2317"
+          - "-x"
+        exclude: "^{{cookiecutter\\.project_slug}}/.+$|^\\.cicd-tools/boxes/.+$"
+      - id: security-credentials
+      - id: spelling-commit-message
+      - id: spelling-markdown
+        exclude: "^{{cookiecutter\\.project_slug}}/.+$"
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.32.0
+    hooks:
       - id: yamllint
-        name: lint yaml files
-        description: "Run yamllint on select YAML files."
-        entry: yamllint .pre-commit-config.yaml .github .pib.yml -c ./{{cookiecutter.project_slug}}/.yamllint.yml
-        language: system
+        args:
+          - "-c"
+          - "./{{cookiecutter.project_slug}}/.yamllint.yml"
+        exclude: "^{{cookiecutter\\.project_slug}}/.+$|^scripts/terminalizer/.+$"
         stages: [commit]
-        pass_filenames: false
-        always_run: true

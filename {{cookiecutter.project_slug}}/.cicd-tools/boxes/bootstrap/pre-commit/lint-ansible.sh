@@ -1,0 +1,1 @@
+../../../../../.cicd-tools/boxes/bootstrap/pre-commit/lint-ansible.sh

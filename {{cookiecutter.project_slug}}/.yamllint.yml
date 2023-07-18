@@ -20,13 +20,16 @@ rules:
   empty-lines: enable
   empty-values: disable
   hyphens: enable
-  indentation: {spaces: 2}
+  indentation:
+    spaces: 2
   key-duplicates: enable
   key-ordering: disable
   line-length: disable
   new-line-at-end-of-file: enable
-  new-lines: enable
-  octal-values: disable
+  new-lines:
+    type: unix
+  octal-values:
+    forbid-implicit-octal: true
   quoted-strings: disable
   trailing-spaces: enable
   truthy:
