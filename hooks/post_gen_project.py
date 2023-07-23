@@ -1,10 +1,14 @@
 """Template post-generation hooks."""
 
 # Environment Variable Overrides:
-# TEMPLATE_SKIP_FMT_INIT:        Optionally set to 1 to skip the initial code formatting.
-# TEMPLATE_SKIP_GIT_INIT:        Optionally set to 1 to skip creating branches and initial commit.
-# TEMPLATE_SKIP_POETRY:          Optionally set to 1 to skip installing dependencies.
-# TEMPLATE_SKIP_PRECOMMIT:       Optionally set to 1 to skip installing pre-commit hooks.
+# TEMPLATE_SKIP_FMT_INIT:
+#           Optionally set to 1 to skip the initial code formatting.
+# TEMPLATE_SKIP_GIT_INIT:
+#           Optionally set to 1 to skip creating branches and initial commit.
+# TEMPLATE_SKIP_POETRY:
+#           Optionally set to 1 to skip installing dependencies.
+# TEMPLATE_SKIP_PRECOMMIT:
+#           Optionally set to 1 to skip installing pre-commit hooks.
 
 import abc
 import importlib

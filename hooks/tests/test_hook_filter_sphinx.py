@@ -1,31 +1,45 @@
-"""Test the PostGenDocstringFilter class."""
+"""Test the PostGenSphinxFilter class."""
 
-from unittest import TestCase
 from unittest.mock import patch
 
-from .. import post_gen_project
-from ..post_gen_project import BaseHookFilter, PostGenSphinxFilter
+from hooks import post_gen_project
+from hooks.post_gen_project import BaseHookFilter, PostGenSphinxFilter
 
 
-class TestPostGenDocstringFilter(TestCase):
-    """Test the PostGenDocstringFilter class."""
+class TestPostGenSphinxFilter:
+    """Test the PostGenSphinxFilter class."""
 
-    def setUp(self) -> None:
-        self.instance = PostGenSphinxFilter()
+    def test_instance__when_initialized__has_correct_inheritance(
+        self,
+        sphinx_filter: PostGenSphinxFilter,
+    ) -> None:
+        assert isinstance(sphinx_filter, BaseHookFilter)
+        assert isinstance(sphinx_filter, PostGenSphinxFilter)
 
-    def test_initialize__has_correct_properties(self) -> None:
-        self.assertIsInstance(self.instance, BaseHookFilter)
-        self.assertListEqual(
-            self.instance.excluded,
-            [".darglint", ".readthedocs.yml", "documentation"],
-        )
+    def test_instance__when_initialized__has_correct_properties(
+        self,
+        sphinx_filter: PostGenSphinxFilter,
+    ) -> None:
+        assert sphinx_filter.excluded == [
+            ".darglint",
+            ".readthedocs.yml",
+            "documentation",
+        ]
 
-    def test_condition__when_sphinx_enabled__false(self) -> None:
+    def test_condition__when_sphinx_enabled__false(
+        self,
+        sphinx_filter: PostGenSphinxFilter,
+    ) -> None:
         with patch(post_gen_project.__name__ + ".Template") as m_template:
             m_template.option_sphinx = "true"
-            self.assertFalse(self.instance.condition())
 
-    def test_condition__when_sphinx_disabled__true(self) -> None:
+            assert sphinx_filter.condition() is False
+
+    def test_condition__when_sphinx_disabled__true(
+        self,
+        sphinx_filter: PostGenSphinxFilter,
+    ) -> None:
         with patch(post_gen_project.__name__ + ".Template") as m_template:
             m_template.option_sphinx = "false"
-            self.assertTrue(self.instance.condition())
+
+            assert sphinx_filter.condition() is True

@@ -1,6 +1,6 @@
 """ConcreteBaseHookSystemCalls class."""
 
-from ...post_gen_project import BaseHookSystemCalls
+from hooks.post_gen_project import BaseHookSystemCalls
 
 
 class ConcreteBaseHookSystemCalls(BaseHookSystemCalls):

@@ -1,6 +1,6 @@
 """ConcreteBaseHookFilter class."""
 
-from ...post_gen_project import BaseHookFilter
+from hooks.post_gen_project import BaseHookFilter
 
 
 class ConcreteBaseHookFilter(BaseHookFilter):

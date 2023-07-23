@@ -1,40 +1,36 @@
 """Test the main function."""
 
-from unittest import TestCase
-from unittest.mock import DEFAULT, Mock, call, patch
+from typing import ContextManager
+from unittest.mock import Mock, call
 
-from .. import post_gen_project
-from ..post_gen_project import main
+import pytest
 
-mock_base_hook_execute = Mock()
+from hooks.post_gen_project import main
+
+HooksContextType = ContextManager[dict]
 
 
-@patch(post_gen_project.__name__ + ".BaseHook.execute", mock_base_hook_execute)
-class TestTemplate(TestCase):
+class TestTemplate:
     """Test the main function."""
 
-    def setUp(self):
-        mock_base_hook_execute.reset_mock()
+    def test_base_hook_execute__when_main_called__call_count(
+        self,
+        m_base_class_execute: Mock,
+    ) -> None:
 
-    def test_base_hook_execute__call_count(self) -> None:
         main()
 
-        assert mock_base_hook_execute.call_count == 6
+        assert m_base_class_execute.call_count == 6
 
-    def test_base_hook_execute__call_sequence(self) -> None:
+    def test_base_hook_execute__when_main_called__hook_class_sequence(
+        self,
+        patch_hooks_context: HooksContextType,
+    ) -> None:
         expected_calls = [
             getattr(call, f"execute{counter}")() for counter in range(0, 6)
         ]
         mock_manager = Mock()
-        with patch.multiple(
-            post_gen_project.__name__,
-            PostGen2SpaceFormattingSetup=DEFAULT,
-            PostGenPoetrySetup=DEFAULT,
-            PostGenGitSetup=DEFAULT,
-            PostGenPrecommitSetup=DEFAULT,
-            PostGenDocstringFilter=DEFAULT,
-            PostGenSphinxFilter=DEFAULT,
-        ) as mock_classes:
+        with patch_hooks_context as mock_classes:
             for sequence, mock_class in enumerate(mock_classes.values()):
                 mock_manager.attach_mock(
                     mock_class.return_value.execute, f"execute{sequence}"
@@ -44,44 +40,22 @@ class TestTemplate(TestCase):
 
         assert mock_manager.mock_calls == expected_calls
 
-    @patch(post_gen_project.__name__ + ".PostGenSphinxFilter.execute")
-    def test_render__calls_sphinx_filter(self, m_sphinx_filter: Mock) -> None:
-        main()
-
-        m_sphinx_filter.assert_called_once()
-
-    @patch(post_gen_project.__name__ + ".PostGenDocstringFilter.execute")
-    def test_render__calls_docstring_filter(
-        self, m_docstring_filter: Mock
+    @pytest.mark.parametrize(
+        "class_name", [
+            "PostGen2SpaceFormattingSetup",
+            "PostGenPoetrySetup",
+            "PostGenGitSetup",
+            "PostGenPrecommitSetup",
+            "PostGenDocstringFilter",
+            "PostGenSphinxFilter",
+        ]
+    )
+    def test_render__when_given_a_class_name_and_main_called__calls_execute(
+        self,
+        patch_hooks_context: HooksContextType,
+        class_name: str,
     ) -> None:
-        main()
+        with patch_hooks_context as mock_classes:
+            main()
 
-        m_docstring_filter.assert_called_once()
-
-    @patch(post_gen_project.__name__ + ".PostGenPrecommitSetup.execute")
-    def test_render__calls_docstring_setup(
-        self, m_precommit_setup: Mock
-    ) -> None:
-        main()
-
-        m_precommit_setup.assert_called_once()
-
-    @patch(post_gen_project.__name__ + ".PostGenGitSetup.execute")
-    def test_render__calls_git_setup(self, m_git_setup: Mock) -> None:
-        main()
-
-        m_git_setup.assert_called_once()
-
-    @patch(post_gen_project.__name__ + ".PostGenPoetrySetup.execute")
-    def test_render__calls_poetry_setup(self, m_poetry_setup: Mock) -> None:
-        main()
-
-        m_poetry_setup.assert_called_once()
-
-    @patch(post_gen_project.__name__ + ".PostGen2SpaceFormattingSetup.execute")
-    def test_render__calls_formatting_setup(
-        self, m_formatting_setup: Mock
-    ) -> None:
-        main()
-
-        m_formatting_setup.assert_called_once()
+        mock_classes[class_name].return_value.execute.assert_called_once()

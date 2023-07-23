@@ -1,96 +1,90 @@
 """Test the PostGenGitSetup class."""
 
 import os
-from typing import List
-from unittest import TestCase
 from unittest.mock import Mock, call, patch
 
-from .. import post_gen_project
-from ..post_gen_project import BaseHookSystemCalls, PostGenGitSetup
+import pytest
+
+from hooks.post_gen_project import BaseHookSystemCalls, PostGenGitSetup
 
 
-class TestPostGenGitSetup(TestCase):
+class TestPostGenGitSetup:
     """Test the PostGenGitSetup class."""
 
-    def expected_system_calls(self) -> List[str]:
-        return [
+    def test_instance__when_initialized__has_correct_inheritance(
+        self,
+        git_setup_hook: PostGenGitSetup,
+    ) -> None:
+        assert isinstance(git_setup_hook, BaseHookSystemCalls)
+        assert isinstance(git_setup_hook, PostGenGitSetup)
+
+    def test_instance__when_initialized__has_correct_properties(
+        self,
+        git_setup_hook: PostGenGitSetup,
+    ) -> None:
+        assert git_setup_hook.git_initial_commit_message == \
+               "build(COOKIECUTTER): Initial Generation"
+        assert git_setup_hook.git_root_folder == \
+               ".git"
+        assert git_setup_hook.git_default_branch_name == \
+               "{{cookiecutter.git_base_branch}}"
+        assert git_setup_hook.git_dev_branch_name == \
+               "{{cookiecutter.git_dev_branch}}"
+
+    @pytest.mark.parametrize(
+        "env,root_exists,expected", [
+            [{}, False, True],
+            [{}, True, False],
+            [{}, True, False],
+            [{
+                "TEMPLATE_SKIP_GIT_INIT": "0"
+            }, False, True],
+            [{
+                "TEMPLATE_SKIP_GIT_INIT": "0"
+            }, True, False],
+            [{
+                "TEMPLATE_SKIP_GIT_INIT": "1"
+            }, False, False],
+            [{
+                "TEMPLATE_SKIP_GIT_INIT": "1"
+            }, True, False],
+        ]
+    )
+    def test_condition__with_parametrized_scenario__returns_expected(
+        self,
+        env: dict,
+        root_exists: bool,
+        expected: bool,
+        git_setup_hook: PostGenGitSetup,
+    ) -> None:
+        with patch.dict(os.environ, env, clear=True):
+            with patch("os.path.exists", Mock(return_value=root_exists)):
+                assert git_setup_hook.condition() == expected
+
+    @patch("os.system")
+    def test_hook__when_called__has_correct_system_calls(
+        self,
+        m_system: Mock,
+        git_setup_hook: PostGenGitSetup,
+    ) -> None:
+        m_system.return_value = 1
+        expected_calls = [
             "git init",
             "git stage .",
             "git branch -m {name}".format(
-                name=self.instance.git_default_branch_name
+                name=git_setup_hook.git_default_branch_name
             ),
             "git commit -m '{message}'".format(
-                message=self.instance.git_initial_commit_message
+                message=git_setup_hook.git_initial_commit_message
             ),
             "git checkout -b {name}".format(
-                name=self.instance.git_dev_branch_name
+                name=git_setup_hook.git_dev_branch_name
             ),
             "git checkout {name}".format(
-                name=self.instance.git_default_branch_name
+                name=git_setup_hook.git_default_branch_name
             ),
         ]
 
-    def setUp(self) -> None:
-        self.instance = PostGenGitSetup()
+        git_setup_hook.hook()
 
-    def test_initialize__has_correct_properties(self) -> None:
-        self.assertIsInstance(self.instance, BaseHookSystemCalls)
-        self.assertEqual(
-            self.instance.git_initial_commit_message,
-            "build(COOKIECUTTER): Initial Generation",
-        )
-        self.assertEqual(
-            self.instance.git_root_folder,
-            ".git",
-        )
-        self.assertEqual(
-            self.instance.git_default_branch_name,
-            "{{cookiecutter.git_base_branch}}",
-        )
-        self.assertEqual(
-            self.instance.git_dev_branch_name,
-            "{{cookiecutter.git_dev_branch}}",
-        )
-
-    @patch.dict(os.environ, {}, clear=True)
-    def test_condition__no_existing_git__no_env__true(self) -> None:
-        with patch("os.path.exists", Mock(return_value=False)):
-            self.assertTrue(self.instance.condition())
-
-    @patch.dict(os.environ, {}, clear=True)
-    def test_condition__existing_git__no_env__false(self) -> None:
-        with patch("os.path.exists", Mock(return_value=True)):
-            self.assertFalse(self.instance.condition())
-
-    @patch.dict(os.environ, {"TEMPLATE_SKIP_GIT_INIT": "0"}, clear=True)
-    def test_condition__no_existing_git__non_1_env__true(self) -> None:
-        with patch("os.path.exists", Mock(return_value=False)):
-            self.assertTrue(self.instance.condition())
-
-    @patch.dict(os.environ, {"TEMPLATE_SKIP_GIT_INIT": "0"}, clear=True)
-    def test_condition__existing_git__non_1_env__false(self) -> None:
-        with patch("os.path.exists", Mock(return_value=True)):
-            self.assertFalse(self.instance.condition())
-
-    @patch.dict(os.environ, {"TEMPLATE_SKIP_GIT_INIT": "1"}, clear=True)
-    def test_condition__no_existing_git__env_1__false(self) -> None:
-        with patch("os.path.exists", Mock(return_value=False)):
-            self.assertFalse(self.instance.condition())
-
-    @patch.dict(os.environ, {"TEMPLATE_SKIP_GIT_INIT": "1"}, clear=True)
-    def test_condition__existing_git__env_1__false(self) -> None:
-        with patch("os.path.exists", Mock(return_value=True)):
-            self.assertFalse(self.instance.condition())
-
-    @patch("os.system")
-    def test_hook__correct_system_calls(self, m_system: Mock) -> None:
-        m_system.return_value = 1
-        expected_calls = list(map(call, self.expected_system_calls()))
-
-        with patch(post_gen_project.__name__ + ".Template") as m_template:
-            m_template.option_base_branch_name = (
-                self.instance.git_default_branch_name
-            )
-            self.instance.hook()
-
-        m_system.assert_has_calls(expected_calls)
+        assert m_system.call_args_list == list(map(call, expected_calls))
