@@ -15,6 +15,9 @@
   "ignorePatterns": [
     {
       "pattern": "^https://github.com/{{cookiecutter.git_username}}/{{cookiecutter.project_slug}}/"
+    },
+    {
+      "pattern": "^https://linux.die.net/"
     }
   ]
 }
